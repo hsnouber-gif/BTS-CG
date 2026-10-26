@@ -1613,7 +1613,7 @@
     }
 
     // ============================================================================
-    // MOTEUR D'AUDIT COMPTABLE INTELLIGENT (STRICT SUR LES COMPTES, SOUPLE SUR TES LIBELLÉS)
+    // MOTEUR D'AUDIT COMPTABLE ULTRA-INTELLIGENT (INTER-OPÉRATIONS & ANTI-INVERSION)
     // ============================================================================
     function verifierToutLeBordereauP1() {
       synchroniserDOMVersStateP1();
@@ -1622,6 +1622,13 @@
       let resumeOperations = [];
       let grandTotalDeb = 0;
       let grandTotalCre = 0;
+
+      // Mémoire globale du bordereau pour relier les règlements aux factures (Lettrage)
+      let totalDettesFournisseursCre = 0; // 401/404 crédités sur factures d'achat
+      let totalReglementsFournDeb = 0;    // 401/404 débités sur règlements
+      let totalCreancesClientsDeb = 0;    // 411 débités sur factures de vente
+      let totalEncaissementsCliCre = 0;   // 411 crédités sur encaissements
+      let texteToutLeBordereau = p1OperationsState.map(o => normTxt(o.libelle)).join(' ');
 
       p1OperationsState.forEach((op, opIdx) => {
         const numOp = opIdx + 1;
@@ -1633,6 +1640,7 @@
           num: (l.num || '').trim(),
           tiers: (l.tiers || '').trim(),
           lib: normTxt(l.lib),
+          libBrut: (l.lib || '').trim(),
           deb: parseFloat(l.deb) || 0,
           cre: parseFloat(l.cre) || 0
         })).filter(l => l.num !== '' || l.deb > 0 || l.cre > 0 || l.lib !== '');
@@ -1643,10 +1651,11 @@
         grandTotalCre += totCre;
 
         if (lignesActives.length < 2) {
-          erreursGlobales.push(`<b>Opération #${numOp} (${journal})</b> : Il faut au moins 2 lignes (un débit et un crédit).`);
+          erreursGlobales.push(`<b>Opération #${numOp} (${journal})</b> : Il faut au moins 2 lignes (un compte débité et un compte crédité).`);
           return;
         }
 
+        // 1. Équilibre Partie Double
         if (Math.abs(totDeb - totCre) > 0.01 || totDeb === 0) {
           erreursGlobales.push(`<b>Opération #${numOp} (${journal})</b> : Partie double non équilibrée ! Total Débit (<b>${totDeb.toFixed(2)} €</b>) ≠ Total Crédit (<b>${totCre.toFixed(2)} €</b>). Écart de ${Math.abs(totDeb - totCre).toFixed(2)} €.`);
         }
@@ -1656,10 +1665,11 @@
         const hasImmo2 = lignesActives.some(l => /^2[01]/.test(l.num));
         const isVente = (journal === 'VTE') || libGlobal.includes('vente') || has70;
         const isAchat = (journal === 'ACH') || libGlobal.includes('achat') || has60_62 || hasImmo2;
-        const isAvoir = libGlobal.includes('avoir') || libGlobal.includes('retour');
+        const isAvoir = libGlobal.includes('avoir') || libGlobal.includes('retour') || libGlobal.includes('remboursement');
 
         let vuCredit = false;
 
+        // 2. Inspection ligne par ligne
         lignesActives.forEach(l => {
           if (!l.num) {
             erreursGlobales.push(`<b>Opération #${numOp}, Ligne ${l.idx}</b> : Numéro de compte PCG manquant.`);
@@ -1676,11 +1686,36 @@
             erreursGlobales.push(`<b>Opération #${numOp}, Ligne ${l.idx} (compte ${l.num})</b> : Montant à zéro.`);
           }
 
+          // Ordre Débit avant Crédit
           if (l.cre > 0) vuCredit = true;
           if (l.deb > 0 && vuCredit) {
             erreursGlobales.push(`<b>Opération #${numOp}, Ligne ${l.idx} (compte ${l.num})</b> : <b>Ordre incorrect</b>. Au journal, tous les comptes débités doivent être placés en haut avant les comptes crédités.`);
           }
 
+          // --- DÉTECTION DES CONTRESENS ENTRE LE NUMÉRO DE COMPTE ET L'INTITULÉ SAISI ---
+          // (Tolérant sur l'orthographe ex: "marcahndise", mais strict si on écrit "Fournisseur" en face de 512 ou "Banque" en face de 401)
+          if (l.lib !== '') {
+            if (l.num.startsWith('512') && (l.lib.includes('fourn') || l.lib.includes('client') || l.lib.includes('caisse') || l.lib.includes('achat') || l.lib.includes('vente'))) {
+              erreursGlobales.push(`<b>Opération #${numOp}, Ligne ${l.idx}</b> : <b>Inversion numéro / intitulé !</b> Le compte <b>512</b> est le compte <b>Banques</b>, mais vous avez écrit l'intitulé <i>"${l.libBrut}"</i>.`);
+            }
+            if (l.num.startsWith('53') && (l.lib.includes('fourn') || l.lib.includes('client') || l.lib.includes('banque') || l.lib.includes('achat') || l.lib.includes('vente'))) {
+              erreursGlobales.push(`<b>Opération #${numOp}, Ligne ${l.idx}</b> : <b>Inversion numéro / intitulé !</b> Le compte <b>530</b> est le compte <b>Caisse</b>, mais vous avez écrit <i>"${l.libBrut}"</i>.`);
+            }
+            if ((l.num.startsWith('401') || l.num.startsWith('404')) && (l.lib.includes('banque') || l.lib.includes('caisse') || l.lib.includes('client') || l.lib.includes('vente'))) {
+              erreursGlobales.push(`<b>Opération #${numOp}, Ligne ${l.idx}</b> : <b>Inversion numéro / intitulé !</b> Le compte <b>${l.num}</b> est le compte <b>Fournisseurs</b>, mais vous avez écrit l'intitulé <i>"${l.libBrut}"</i>.`);
+            }
+            if (l.num.startsWith('411') && (l.lib.includes('banque') || l.lib.includes('caisse') || l.lib.includes('fourn') || l.lib.includes('achat'))) {
+              erreursGlobales.push(`<b>Opération #${numOp}, Ligne ${l.idx}</b> : <b>Inversion numéro / intitulé !</b> Le compte <b>411</b> est le compte <b>Clients</b>, mais vous avez écrit <i>"${l.libBrut}"</i>.`);
+            }
+            if (l.num.startsWith('6') && (l.lib.includes('vente') || l.lib.includes('client') || l.lib.includes('fourn') || l.lib.includes('banque'))) {
+              erreursGlobales.push(`<b>Opération #${numOp}, Ligne ${l.idx}</b> : Le compte <b>${l.num}</b> est un compte de <b>Charges (classe 6)</b>, ce qui contredit votre intitulé <i>"${l.libBrut}"</i>.`);
+            }
+            if (l.num.startsWith('7') && (l.lib.includes('achat') || l.lib.includes('fourn') || l.lib.includes('client') || l.lib.includes('banque'))) {
+              erreursGlobales.push(`<b>Opération #${numOp}, Ligne ${l.idx}</b> : Le compte <b>${l.num}</b> est un compte de <b>Produits / Ventes (classe 7)</b>, ce qui contredit votre intitulé <i>"${l.libBrut}"</i>.`);
+            }
+          }
+
+          // --- CONTRÔLE STRICT DE LA TVA ---
           const estTvaDed = l.num.startsWith('4456') || l.lib.includes('deduct');
           const estTvaCol = l.num.startsWith('4457') || l.lib.includes('collect');
 
@@ -1692,7 +1727,7 @@
               erreursGlobales.push(`<b>Opération #${numOp}, Ligne ${l.idx} (${l.num})</b> : La TVA déductible est une créance sur l'État, elle s'enregistre au <b>DÉBIT</b>.`);
             }
             if (!l.num.startsWith('4456')) {
-              erreursGlobales.push(`<b>Opération #${numOp}, Ligne ${l.idx}</b> : Vous avez écrit TVA déductible mais le numéro <b>${l.num}</b> ne correspond pas (utilisez <b>44566</b> sur autres biens et services ou <b>44562</b> sur immobilisations).`);
+              erreursGlobales.push(`<b>Opération #${numOp}, Ligne ${l.idx}</b> : Vous avez écrit TVA déductible mais le numéro <b>${l.num}</b> ne correspond pas (utilisez <b>44566</b> ou <b>44562</b>).`);
             }
             if (hasImmo2 && l.num.startsWith('44566')) {
               erreursGlobales.push(`<b>Opération #${numOp}, Ligne ${l.idx}</b> : Sur l'achat d'une immobilisation (classe 2), utilisez le compte <b>44562 (TVA sur immobilisations)</b> plutôt que 44566.`);
@@ -1711,6 +1746,7 @@
             }
           }
 
+          // --- SENS DES COMPTES DE CHARGES (6), PRODUITS (7) ET IMMOS (2) ---
           if (l.num.startsWith('6') && !l.num.startsWith('609') && !l.num.startsWith('603') && l.cre > 0 && !isAvoir) {
             erreursGlobales.push(`<b>Opération #${numOp}, Ligne ${l.idx} (compte ${l.num})</b> : Les comptes de <b>Charges (classe 6)</b> augmentent toujours au <b>DÉBIT</b>.`);
           }
@@ -1722,15 +1758,45 @@
           }
         });
 
+        // 3. CONTRÔLE DU SENS DES RÈGLEMENTS DE TRÉSORERIE (BQ / CA) : FOURNISSEUR (401/404) & CLIENT (411)
+        const hasTreso = lignesActives.some(l => l.num.startsWith('512') || l.num.startsWith('53'));
+        if ((journal === 'BQ' || journal === 'CA' || hasTreso) && !isAvoir) {
+          const ligneFourn = lignesActives.find(l => l.num.startsWith('401') || l.num.startsWith('404'));
+          const ligneTreso = lignesActives.find(l => l.num.startsWith('512') || l.num.startsWith('53'));
+          const ligneClient = lignesActives.find(l => l.num.startsWith('411'));
+
+          // Cas A : Règlement d'un Fournisseur (401 ou 404) avec la Banque (512) ou la Caisse (530)
+          if (ligneFourn && ligneTreso) {
+            if (ligneFourn.cre > 0 || ligneTreso.deb > 0) {
+              erreursGlobales.push(`<b>Opération #${numOp} (${journal})</b> : <b>Sens Débit / Crédit inversé sur le paiement fournisseur !</b> Lorsque vous payez un fournisseur, l'argent <b>sort</b> de l'entreprise : vous devez <b>DÉBITER le compte ${ligneFourn.num} (Fournisseurs)</b> en 1ère ligne (pour diminuer votre dette) et <b>CRÉDITER le compte ${ligneTreso.num} (${ligneTreso.num.startsWith('512') ? 'Banques' : 'Caisse'})</b> en 2ème ligne !`);
+            } else {
+              totalReglementsFournDeb += ligneFourn.deb;
+            }
+          }
+
+          // Cas B : Encaissement d'un Client (411) avec la Banque (512) ou la Caisse (530)
+          if (ligneClient && ligneTreso && !has70) {
+            if (ligneClient.deb > 0 || ligneTreso.cre > 0) {
+              erreursGlobales.push(`<b>Opération #${numOp} (${journal})</b> : <b>Sens Débit / Crédit inversé sur l'encaissement client !</b> Lorsqu'un client vous paie, l'argent <b>entre</b> dans l'entreprise : vous devez <b>DÉBITER le compte ${ligneTreso.num} (${ligneTreso.num.startsWith('512') ? 'Banques' : 'Caisse'})</b> en 1ère ligne et <b>CRÉDITER le compte 411 (Clients)</b> en 2ème ligne !`);
+            } else {
+              totalEncaissementsCliCre += ligneClient.cre;
+            }
+          }
+        }
+
+        // 4. Contrôle HT + TVA = TTC sur les factures de Vente et d'Achat
         if (isVente && has70 && !isAvoir) {
           const sumVentesHT = lignesActives.filter(l => l.num.startsWith('70')).reduce((s, l) => s + l.cre, 0);
           const sumTvaCol = lignesActives.filter(l => l.num.startsWith('4457')).reduce((s, l) => s + l.cre, 0);
           const sumClientOuTresoDeb = lignesActives.filter(l => l.num.startsWith('411') || l.num.startsWith('512') || l.num.startsWith('53')).reduce((s, l) => s + l.deb, 0);
 
+          const cliDeb = lignesActives.filter(l => l.num.startsWith('411')).reduce((s, l) => s + l.deb, 0);
+          totalCreancesClientsDeb += cliDeb;
+
           if (sumClientOuTresoDeb === 0) {
-            erreursGlobales.push(`<b>Opération #${numOp} (Vente)</b> : Vous devez débiter le compte <b>411 (Clients)</b> (ou 512/530 si paiement immédiat) en première ligne pour le montant TTC.`);
+            erreursGlobales.push(`<b>Opération #${numOp} (Vente)</b> : Vous devez débiter le compte <b>411 (Clients)</b> en première ligne pour le montant TTC.`);
           } else if (Math.abs(sumClientOuTresoDeb - (sumVentesHT + sumTvaCol)) > 0.05) {
-            erreursGlobales.push(`<b>Opération #${numOp} (Vente)</b> : Incohérence des montants ! Le Débit Client/Trésorerie TTC (<b>${sumClientOuTresoDeb.toFixed(2)} €</b>) doit être égal au total Ventes HT (<b>${sumVentesHT.toFixed(2)} €</b>) + TVA collectée (<b>${sumTvaCol.toFixed(2)} €</b>).`);
+            erreursGlobales.push(`<b>Opération #${numOp} (Vente)</b> : Incohérence des montants ! Le Débit Client TTC (<b>${sumClientOuTresoDeb.toFixed(2)} €</b>) doit être égal au total Ventes HT (<b>${sumVentesHT.toFixed(2)} €</b>) + TVA collectée (<b>${sumTvaCol.toFixed(2)} €</b>).`);
           }
         }
 
@@ -1739,10 +1805,13 @@
           const sumTvaDed = lignesActives.filter(l => l.num.startsWith('4456')).reduce((s, l) => s + l.deb, 0);
           const sumFournOuTresoCre = lignesActives.filter(l => l.num.startsWith('401') || l.num.startsWith('404') || l.num.startsWith('512') || l.num.startsWith('53')).reduce((s, l) => s + l.cre, 0);
 
+          const fournCre = lignesActives.filter(l => l.num.startsWith('401') || l.num.startsWith('404')).reduce((s, l) => s + l.cre, 0);
+          totalDettesFournisseursCre += fournCre;
+
           if (sumFournOuTresoCre === 0) {
-            erreursGlobales.push(`<b>Opération #${numOp} (Achat)</b> : Vous devez créditer le compte <b>401 (Fournisseurs)</b>, <b>404 (Fournisseurs d'immobilisations)</b> ou la trésorerie (512/530) pour le montant TTC.`);
+            erreursGlobales.push(`<b>Opération #${numOp} (Achat)</b> : Vous devez créditer le compte <b>401 (Fournisseurs)</b> ou <b>404 (Fournisseurs d'immobilisations)</b> pour le montant TTC.`);
           } else if (Math.abs(sumFournOuTresoCre - (sumAchatsHT + sumTvaDed)) > 0.05) {
-            erreursGlobales.push(`<b>Opération #${numOp} (Achat)</b> : Le Crédit Fournisseur/Trésorerie TTC (<b>${sumFournOuTresoCre.toFixed(2)} €</b>) doit être égal au total HT (<b>${sumAchatsHT.toFixed(2)} €</b>) + TVA déductible (<b>${sumTvaDed.toFixed(2)} €</b>).`);
+            erreursGlobales.push(`<b>Opération #${numOp} (Achat)</b> : Le Crédit Fournisseur TTC (<b>${sumFournOuTresoCre.toFixed(2)} €</b>) doit être égal au total HT (<b>${sumAchatsHT.toFixed(2)} €</b>) + TVA déductible (<b>${sumTvaDed.toFixed(2)} €</b>).`);
           }
 
           if (hasImmo2 && lignesActives.some(l => l.num.startsWith('401'))) {
@@ -1750,6 +1819,7 @@
           }
         }
 
+        // 5. Cohérence du Journal Auxiliaire
         if (journal === 'BQ' && !lignesActives.some(l => l.num.startsWith('512') || l.num.startsWith('511'))) {
           erreursGlobales.push(`<b>Opération #${numOp} (Journal BQ)</b> : Une écriture dans le journal de Banque (BQ) doit obligatoirement mouvementer le compte <b>512 (Banques)</b>.`);
         }
@@ -1766,11 +1836,25 @@
         resumeOperations.push(`Opération #${numOp} (${journal}) : ${totDeb.toFixed(2)} €`);
       });
 
+      // 6. Contrôle inter-opérations (si le bordereau contient une facture ET ses règlements complets)
+      const parleDeMoitie = texteToutLeBordereau.includes('moitie') || texteToutLeBordereau.includes('motier') || texteToutLeBordereau.includes('50%');
+      if (totalDettesFournisseursCre > 0 && totalReglementsFournDeb > 0 && parleDeMoitie) {
+        if (Math.abs(totalDettesFournisseursCre - totalReglementsFournDeb) > 0.05) {
+          erreursGlobales.push(`<b>Contrôle inter-opérations (Lettrage Fournisseur 401)</b> : Votre facture d'achat est de <b>${totalDettesFournisseursCre.toFixed(2)} € TTC</b>, mais le total de vos règlements fournisseurs (au débit du 401) est de <b>${totalReglementsFournDeb.toFixed(2)} €</b>. Le fournisseur n'est pas correctement soldé !`);
+        }
+      }
+      if (totalCreancesClientsDeb > 0 && totalEncaissementsCliCre > 0 && parleDeMoitie) {
+        if (Math.abs(totalCreancesClientsDeb - totalEncaissementsCliCre) > 0.05) {
+          erreursGlobales.push(`<b>Contrôle inter-opérations (Lettrage Client 411)</b> : Votre facture de vente est de <b>${totalCreancesClientsDeb.toFixed(2)} € TTC</b>, mais le total des encaissements clients (au crédit du 411) est de <b>${totalEncaissementsCliCre.toFixed(2)} €</b>.`);
+        }
+      }
+
+      // Affichage du bilan de vérification
       if (erreursGlobales.length > 0) {
         resBox.innerHTML = `
           <div class="p-5 bg-rose-950/80 border border-rose-500 rounded-2xl text-xs space-y-2.5 text-rose-100 shadow-xl">
             <div class="font-extrabold text-sm flex items-center gap-2 text-rose-300">
-              <i class="fa-solid fa-circle-xmark text-lg"></i> ${erreursGlobales.length} anomalie${erreursGlobales.length > 1 ? 's' : ''} détectée${erreursGlobales.length > 1 ? 's' : ''} sur votre bordereau :
+              <i class="fa-solid fa-circle-xmark text-lg"></i> ${erreursGlobales.length} erreur${erreursGlobales.length > 1 ? 's' : ''} détectée${erreursGlobales.length > 1 ? 's' : ''} sur votre bordereau :
             </div>
             <ul class="list-disc list-inside space-y-1.5 leading-relaxed">${erreursGlobales.map(e => `<li>${e}</li>`).join('')}</ul>
           </div>
@@ -1781,7 +1865,7 @@
             <div class="font-extrabold text-sm flex items-center gap-2 text-emerald-300">
               <i class="fa-solid fa-circle-check text-lg"></i> Bordereau 100 % Conforme au Plan Comptable Général 2026 !
             </div>
-            <p>• <b>Total Général du Bordereau :</b> Débit = <b>${grandTotalDeb.toFixed(2)} €</b> | Crédit = <b>${grandTotalCre.toFixed(2)} €</b> (Partie double respectée sur les ${p1OperationsState.length} opération${p1OperationsState.length > 1 ? 's' : ''}).</p>
+            <p>• <b>Total Général du Bordereau :</b> Débit = <b>${grandTotalDeb.toFixed(2)} €</b> | Crédit = <b>${grandTotalCre.toFixed(2)} €</b> (Partie double, sens des règlements et lettrage des tiers respectés sur les ${p1OperationsState.length} opération${p1OperationsState.length > 1 ? 's' : ''}).</p>
             <p>• <b>Détail validé :</b> ${resumeOperations.join(' • ')}</p>
           </div>
         `;
