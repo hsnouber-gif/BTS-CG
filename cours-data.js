@@ -1347,7 +1347,7 @@ window.COURS_DATABASE.push({
 });
 
 // ==============================================================
-// 4. PROCESSUS 1 (P1) : FONDAMENTAUX, BILAN, RÉSULTAT, BALANCE & SIMULATEUR
+// 4. PROCESSUS 1 (P1) : FONDAMENTAUX, BILAN, RÉSULTAT, BALANCE
 // ==============================================================
 window.COURS_DATABASE.push({
   subjectId: "p1",
@@ -1846,8 +1846,6 @@ window.COURS_DATABASE.push({
 
   syntheseHtml: `
     <div class="bg-slate-900/90 border border-slate-800 rounded-3xl p-6 sm:p-10 space-y-8 shadow-xl">
-      
-      <!-- En-tête -->
       <div class="border-b border-slate-800 pb-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <div class="flex items-center gap-2">
@@ -1864,7 +1862,6 @@ window.COURS_DATABASE.push({
         </button>
       </div>
 
-      <!-- SECTION 1 : LES 7 CLASSES DU PCG PAR CŒUR -->
       <div class="space-y-4">
         <h4 class="text-base font-extrabold text-indigo-300 uppercase tracking-wider flex items-center gap-2">
           <span class="w-6 h-6 rounded-lg bg-indigo-600/30 text-indigo-400 flex items-center justify-center text-xs">1</span>
@@ -1875,7 +1872,7 @@ window.COURS_DATABASE.push({
             <span class="font-bold text-amber-300 block text-sm">COMPTES DE BILAN (Classes 1 à 5)</span>
             <ul class="space-y-1.5 text-slate-300">
               <li>• <strong class="text-white">Classe 1 : Comptes de capitaux</strong> (Capital 101, Résultat 120/129, Emprunts 164, Compte exploitant 108)</li>
-              <li>• <strong class="text-white">Classe 2 : Comptes d'immobilisations</strong> (Terrains 211, Constructions 213, Matériel 215, Mobilier/Informatique 218)</li>
+              <li>• <strong class="text-white">Classe 2 : Comptes d'immobilisations</strong> (Terrains 211, Constructions 213, Matériel 215, Transport 2182, Mobilier/Info 2183/2184)</li>
               <li>• <strong class="text-white">Classe 3 : Comptes de stocks et en-cours</strong> (Matières premières 31, Marchandises 37)</li>
               <li>• <strong class="text-white">Classe 4 : Comptes de tiers</strong> (Fournisseurs 401, Fournisseurs d'immo 404, Clients 411, Personnel 421, État/TVA 445)</li>
               <li>• <strong class="text-white">Classe 5 : Comptes financiers</strong> (Banque 512, Caisse 530, Virements internes 580)</li>
@@ -1891,7 +1888,6 @@ window.COURS_DATABASE.push({
         </div>
       </div>
 
-      <!-- SECTION 2 : STRUCTURE DU BILAN -->
       <div class="space-y-4">
         <h4 class="text-base font-extrabold text-indigo-300 uppercase tracking-wider flex items-center gap-2">
           <span class="w-6 h-6 rounded-lg bg-indigo-600/30 text-indigo-400 flex items-center justify-center text-xs">2</span>
@@ -1909,30 +1905,30 @@ window.COURS_DATABASE.push({
               <tr>
                 <td class="p-3.5 space-y-1">
                   <strong class="text-white block">1. ACTIF IMMOBILISÉ (Classe 2)</strong>
-                  <p>• Incorporel : logiciels, brevets, fonds de commerce</p>
-                  <p>• Corporel : terrains, bâtiments, matériel industriel, mobilier</p>
-                  <p>• Financier : titres de participation, dépôts de garantie</p>
+                  <p>• Incorporel : logiciels (205), fonds commercial (207)</p>
+                  <p>• Corporel : terrains (211), constructions (213), matériel industriel (2154), matériel de transport (2182), mobilier (2184)</p>
+                  <p>• Financier : titres, prêts aux salariés (2743)</p>
                 </td>
                 <td class="p-3.5 space-y-1">
                   <strong class="text-white block">1. CAPITAUX PROPRES (Classe 1)</strong>
-                  <p>• Capital social (compte 101) ou Compte exploitant (108)</p>
-                  <p>• Réserves (légale, statutaire)</p>
-                  <p>• Résultat net de l'exercice (Bénéfice + ou Perte -)</p>
+                  <p>• Capital social (compte 101) ou Compte de l'exploitant (108)</p>
+                  <p>• Réserves (106)</p>
+                  <p>• Résultat de l'exercice : Bénéfice (120) ou Perte (129)</p>
                 </td>
               </tr>
               <tr>
                 <td class="p-3.5 space-y-1">
                   <strong class="text-white block">2. ACTIF CIRCULANT (Classes 3, 4, 5)</strong>
                   <p>• Stocks : marchandises (37), matières premières (31)</p>
-                  <p>• Créances : Clients (compte 411), État crédit de TVA (44567)</p>
-                  <p>• Disponibilités : Banque (compte 512), Caisse (compte 530)</p>
+                  <p>• Créances : Clients (411), TVA déductible (44566)</p>
+                  <p>• Disponibilités : Banque (512), Caisse (530)</p>
                 </td>
                 <td class="p-3.5 space-y-1">
                   <strong class="text-white block">2. DETTES (Classes 1, 4, 5)</strong>
-                  <p>• Emprunts bancaires et dettes financières (compte 164)</p>
-                  <p>• Fournisseurs d'exploitation (401) et d'immobilisations (404)</p>
-                  <p>• Dettes fiscales et sociales (TVA due 44551, Salaires 421, URSSAF 431)</p>
-                  <p>• Découverts et concours bancaires (compte 519)</p>
+                  <p>• Emprunts auprès des établissements de crédit (164)</p>
+                  <p>• Dettes fournisseurs (401) et fournisseurs d'immobilisations (404)</p>
+                  <p>• Dettes fiscales et sociales (TVA collectée 44571, État)</p>
+                  <p>• Découverts bancaires (519)</p>
                 </td>
               </tr>
               <tr class="bg-slate-850 font-bold text-white">
@@ -1944,125 +1940,26 @@ window.COURS_DATABASE.push({
         </div>
       </div>
 
-      <!-- SECTION 3 : COMPTE DE RÉSULTAT ET BALANCE -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-5 text-xs">
         <div class="p-4 bg-slate-850 rounded-2xl border border-slate-800 space-y-2">
           <span class="font-bold text-indigo-300 block text-sm">3. Le Compte de Résultat (3 Niveaux)</span>
           <p>• <strong class="text-white">Résultat d'Exploitation :</strong> Produits d'exploitation (70 à 75) - Charges d'exploitation (60 à 65)</p>
-          <p>• <strong class="text-white">Résultat Financier :</strong> Produits financiers (76) - Charges financières (66, intérêts d'emprunts)</p>
-          <p>• <strong class="text-white">Résultat Exceptionnel :</strong> Produits exceptionnels (77) - Charges exceptionnelles (67, pénalités, sinistres)</p>
+          <p>• <strong class="text-white">Résultat Financier :</strong> Produits financiers (76) - Charges financières (66, intérêts d'emprunts 661)</p>
+          <p>• <strong class="text-white">Résultat Exceptionnel :</strong> Produits exceptionnels (77) - Charges exceptionnelles (67)</p>
           <div class="p-2.5 rounded-xl bg-slate-900 border border-slate-700 font-mono text-emerald-400">
-            Résultat Net = R. Exploitation + R. Financier + R. Exceptionnel - Impôt sur les bénéfices
+            Résultat Net = R. Exploitation + R. Financier + R. Exceptionnel
           </div>
         </div>
         <div class="p-4 bg-slate-850 rounded-2xl border border-slate-800 space-y-2">
-          <span class="font-bold text-emerald-400 block text-sm">4. La Balance Générale des Comptes</span>
-          <p>La Balance reprend l'ensemble des comptes du Grand-Livre classés de 1 à 7.</p>
-          <p><strong class="text-white">Les 2 équilibres fondamentaux à contrôler :</strong></p>
-          <ul class="list-disc list-inside space-y-1 text-slate-300">
-            <li><code>Total Débits = Total Crédits</code> (égal au total du Journal)</li>
-            <li><code>Total Soldes Débiteurs = Total Soldes Créditeurs</code></li>
-          </ul>
-          <p class="text-[11px] text-slate-400 mt-1">À partir de la Balance, les classes 1 à 5 sont reportées au Bilan et les classes 6 et 7 au Compte de résultat.</p>
+          <span class="font-bold text-emerald-400 block text-sm">4. Comment construire la Balance, le Bilan et le Résultat de A à Z</span>
+          <ol class="list-decimal list-inside space-y-1 text-slate-300">
+            <li><strong class="text-white">Journal :</strong> Enregistrer chronologiquement chaque opération (Débit = Crédit).</li>
+            <li><strong class="text-white">Grand-Livre :</strong> Reporter les montants dans chaque compte en T et calculer le solde (Débiteur si D > C, Créditeur si C > D).</li>
+            <li><strong class="text-white">Balance :</strong> Lister tous les comptes par numéro croissant (1 à 7). Vérifier que Total Débits = Total Crédits et Total Soldes Débiteurs = Total Soldes Créditeurs.</li>
+            <li><strong class="text-white">États de synthèse :</strong> Prendre les soldes des classes 6 et 7 de la Balance pour calculer le Résultat, puis reporter les classes 1 à 5 et ce Résultat dans le Bilan.</li>
+          </ol>
         </div>
       </div>
-
-      <!-- SECTION 4 : LE SIMULATEUR D'ÉCRITURES INTERACTIF -->
-      <div class="space-y-4 pt-2">
-        <h4 class="text-base font-extrabold text-amber-400 uppercase tracking-wider flex items-center gap-2">
-          <i class="fa-solid fa-gamepad"></i>
-          Simulateur Interactif d'Écritures Comptables
-        </h4>
-        <div class="p-6 bg-slate-950 rounded-3xl border border-indigo-500/30 space-y-5">
-          <p class="text-xs text-slate-300">
-            Choisis ton journal, écris ton libellé d'opération, saisis tes numéros de compte et tes montants au Débit et au Crédit, puis teste ton écriture pour vérifier si elle est conforme !
-          </p>
-
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            <div>
-              <label class="block text-[11px] font-bold text-slate-400 uppercase mb-1">1. Journal Auxiliaire</label>
-              <select id="sim-ecr-journal" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-xs text-white">
-                <option value="ACH">ACH (HA) - Achats de biens & services</option>
-                <option value="VTE">VTE (VT) - Ventes de marchandises & prestations</option>
-                <option value="BQ">BQ - Banque (règlements & encaissements)</option>
-                <option value="CA">CA - Caisse (espèces)</option>
-                <option value="OD">OD - Opérations diverses</option>
-              </select>
-            </div>
-            <div class="sm:col-span-2">
-              <label class="block text-[11px] font-bold text-slate-400 uppercase mb-1">2. Libellé de l'opération</label>
-              <input type="text" id="sim-ecr-libelle" placeholder="Ex: Achat d'une voiture pour 1000 euros HT au comptant" value="Achat de marchandises 1000 € HT TVA 20% à crédit" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-xs text-white">
-            </div>
-          </div>
-
-          <!-- Lignes d'écriture -->
-          <div class="space-y-2 text-xs font-mono">
-            <div class="grid grid-cols-12 gap-2 text-slate-400 font-bold px-1">
-              <span class="col-span-3">N° Compte</span>
-              <span class="col-span-5">Intitulé</span>
-              <span class="col-span-2 text-right">Débit (€)</span>
-              <span class="col-span-2 text-right">Crédit (€)</span>
-            </div>
-            
-            <!-- Ligne 1 -->
-            <div class="grid grid-cols-12 gap-2 items-center">
-              <input type="text" id="sim-c1-num" value="607000" placeholder="607" class="col-span-3 bg-slate-900 border border-slate-700 rounded-lg p-2 text-white">
-              <input type="text" id="sim-c1-lib" value="Achats de marchandises" placeholder="Intitulé" class="col-span-5 bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-300">
-              <input type="number" id="sim-c1-deb" value="1000" placeholder="0" class="col-span-2 bg-slate-900 border border-slate-700 rounded-lg p-2 text-right text-emerald-400 font-bold">
-              <input type="number" id="sim-c1-cre" value="0" placeholder="0" class="col-span-2 bg-slate-900 border border-slate-700 rounded-lg p-2 text-right text-amber-400 font-bold">
-            </div>
-
-            <!-- Ligne 2 -->
-            <div class="grid grid-cols-12 gap-2 items-center">
-              <input type="text" id="sim-c2-num" value="445660" placeholder="44566" class="col-span-3 bg-slate-900 border border-slate-700 rounded-lg p-2 text-white">
-              <input type="text" id="sim-c2-lib" value="TVA déductible sur biens et services" placeholder="Intitulé" class="col-span-5 bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-300">
-              <input type="number" id="sim-c2-deb" value="200" placeholder="0" class="col-span-2 bg-slate-900 border border-slate-700 rounded-lg p-2 text-right text-emerald-400 font-bold">
-              <input type="number" id="sim-c2-cre" value="0" placeholder="0" class="col-span-2 bg-slate-900 border border-slate-700 rounded-lg p-2 text-right text-amber-400 font-bold">
-            </div>
-
-            <!-- Ligne 3 -->
-            <div class="grid grid-cols-12 gap-2 items-center">
-              <input type="text" id="sim-c3-num" value="401000" placeholder="401" class="col-span-3 bg-slate-900 border border-slate-700 rounded-lg p-2 text-white">
-              <input type="text" id="sim-c3-lib" value="Fournisseur d'exploitation" placeholder="Intitulé" class="col-span-5 bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-300">
-              <input type="number" id="sim-c3-deb" value="0" placeholder="0" class="col-span-2 bg-slate-900 border border-slate-700 rounded-lg p-2 text-right text-emerald-400 font-bold">
-              <input type="number" id="sim-c3-cre" value="1200" placeholder="0" class="col-span-2 bg-slate-900 border border-slate-700 rounded-lg p-2 text-right text-amber-400 font-bold">
-            </div>
-          </div>
-
-          <div class="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-slate-800">
-            <button type="button" onclick="window.verifierEcritureSimulateur()" class="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs transition flex items-center gap-2">
-              <i class="fa-solid fa-check-double"></i> Vérifier mon écriture
-            </button>
-            <div id="sim-ecr-resultat" class="text-xs font-bold text-slate-300"></div>
-          </div>
-        </div>
-      </div>
-
     </div>
   `
 });
-
-// Logique de validation du simulateur P1
-window.verifierEcritureSimulateur = function() {
-  const d1 = parseFloat(document.getElementById('sim-c1-deb').value) || 0;
-  const c1 = parseFloat(document.getElementById('sim-c1-cre').value) || 0;
-  const d2 = parseFloat(document.getElementById('sim-c2-deb').value) || 0;
-  const c2 = parseFloat(document.getElementById('sim-c2-cre').value) || 0;
-  const d3 = parseFloat(document.getElementById('sim-c3-deb').value) || 0;
-  const c3 = parseFloat(document.getElementById('sim-c3-cre').value) || 0;
-
-  const totalDeb = d1 + d2 + d3;
-  const totalCre = c1 + c2 + c3;
-  const res = document.getElementById('sim-ecr-resultat');
-
-  if (totalDeb === 0 && totalCre === 0) {
-    res.innerHTML = "<span class='text-amber-400'><i class='fa-solid fa-triangle-exclamation mr-1'></i>Veuillez saisir des montants au Débit et au Crédit.</span>";
-    return;
-  }
-
-  if (Math.abs(totalDeb - totalCre) > 0.01) {
-    res.innerHTML = `<span class='text-rose-400'><i class='fa-solid fa-xmark mr-1'></i>Écriture déséquilibrée ! Total Débit (${totalDeb} €) ≠ Total Crédit (${totalCre} €). Écart : ${Math.abs(totalDeb - totalCre).toFixed(2)} €</span>`;
-  } else {
-    res.innerHTML = `<span class='text-emerald-400'><i class='fa-solid fa-circle-check mr-1'></i>Parfait ! Écriture équilibrée : Total Débit (${totalDeb} €) = Total Crédit (${totalCre} €). Principe de la partie double respecté.</span>`;
-  }
-};
