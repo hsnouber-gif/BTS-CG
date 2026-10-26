@@ -1966,4 +1966,103 @@ window.COURS_DATABASE.push({
           <p class="text-[11px] text-slate-400 mt-1">À partir de la Balance, les classes 1 à 5 sont reportées au Bilan et les classes 6 et 7 au Compte de résultat.</p>
         </div>
       </div>
-      };
+
+      <!-- SECTION 4 : LE SIMULATEUR D'ÉCRITURES INTERACTIF -->
+      <div class="space-y-4 pt-2">
+        <h4 class="text-base font-extrabold text-amber-400 uppercase tracking-wider flex items-center gap-2">
+          <i class="fa-solid fa-gamepad"></i>
+          Simulateur Interactif d'Écritures Comptables
+        </h4>
+        <div class="p-6 bg-slate-950 rounded-3xl border border-indigo-500/30 space-y-5">
+          <p class="text-xs text-slate-300">
+            Choisis ton journal, écris ton libellé d'opération, saisis tes numéros de compte et tes montants au Débit et au Crédit, puis teste ton écriture pour vérifier si elle est conforme !
+          </p>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div>
+              <label class="block text-[11px] font-bold text-slate-400 uppercase mb-1">1. Journal Auxiliaire</label>
+              <select id="sim-ecr-journal" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-xs text-white">
+                <option value="ACH">ACH (HA) - Achats de biens & services</option>
+                <option value="VTE">VTE (VT) - Ventes de marchandises & prestations</option>
+                <option value="BQ">BQ - Banque (règlements & encaissements)</option>
+                <option value="CA">CA - Caisse (espèces)</option>
+                <option value="OD">OD - Opérations diverses</option>
+              </select>
+            </div>
+            <div class="sm:col-span-2">
+              <label class="block text-[11px] font-bold text-slate-400 uppercase mb-1">2. Libellé de l'opération</label>
+              <input type="text" id="sim-ecr-libelle" placeholder="Ex: Achat d'une voiture pour 1000 euros HT au comptant" value="Achat de marchandises 1000 € HT TVA 20% à crédit" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-xs text-white">
+            </div>
+          </div>
+
+          <!-- Lignes d'écriture -->
+          <div class="space-y-2 text-xs font-mono">
+            <div class="grid grid-cols-12 gap-2 text-slate-400 font-bold px-1">
+              <span class="col-span-3">N° Compte</span>
+              <span class="col-span-5">Intitulé</span>
+              <span class="col-span-2 text-right">Débit (€)</span>
+              <span class="col-span-2 text-right">Crédit (€)</span>
+            </div>
+            
+            <!-- Ligne 1 -->
+            <div class="grid grid-cols-12 gap-2 items-center">
+              <input type="text" id="sim-c1-num" value="607000" placeholder="607" class="col-span-3 bg-slate-900 border border-slate-700 rounded-lg p-2 text-white">
+              <input type="text" id="sim-c1-lib" value="Achats de marchandises" placeholder="Intitulé" class="col-span-5 bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-300">
+              <input type="number" id="sim-c1-deb" value="1000" placeholder="0" class="col-span-2 bg-slate-900 border border-slate-700 rounded-lg p-2 text-right text-emerald-400 font-bold">
+              <input type="number" id="sim-c1-cre" value="0" placeholder="0" class="col-span-2 bg-slate-900 border border-slate-700 rounded-lg p-2 text-right text-amber-400 font-bold">
+            </div>
+
+            <!-- Ligne 2 -->
+            <div class="grid grid-cols-12 gap-2 items-center">
+              <input type="text" id="sim-c2-num" value="445660" placeholder="44566" class="col-span-3 bg-slate-900 border border-slate-700 rounded-lg p-2 text-white">
+              <input type="text" id="sim-c2-lib" value="TVA déductible sur biens et services" placeholder="Intitulé" class="col-span-5 bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-300">
+              <input type="number" id="sim-c2-deb" value="200" placeholder="0" class="col-span-2 bg-slate-900 border border-slate-700 rounded-lg p-2 text-right text-emerald-400 font-bold">
+              <input type="number" id="sim-c2-cre" value="0" placeholder="0" class="col-span-2 bg-slate-900 border border-slate-700 rounded-lg p-2 text-right text-amber-400 font-bold">
+            </div>
+
+            <!-- Ligne 3 -->
+            <div class="grid grid-cols-12 gap-2 items-center">
+              <input type="text" id="sim-c3-num" value="401000" placeholder="401" class="col-span-3 bg-slate-900 border border-slate-700 rounded-lg p-2 text-white">
+              <input type="text" id="sim-c3-lib" value="Fournisseur d'exploitation" placeholder="Intitulé" class="col-span-5 bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-300">
+              <input type="number" id="sim-c3-deb" value="0" placeholder="0" class="col-span-2 bg-slate-900 border border-slate-700 rounded-lg p-2 text-right text-emerald-400 font-bold">
+              <input type="number" id="sim-c3-cre" value="1200" placeholder="0" class="col-span-2 bg-slate-900 border border-slate-700 rounded-lg p-2 text-right text-amber-400 font-bold">
+            </div>
+          </div>
+
+          <div class="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-slate-800">
+            <button type="button" onclick="window.verifierEcritureSimulateur()" class="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs transition flex items-center gap-2">
+              <i class="fa-solid fa-check-double"></i> Vérifier mon écriture
+            </button>
+            <div id="sim-ecr-resultat" class="text-xs font-bold text-slate-300"></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  `
+});
+
+// Logique de validation du simulateur P1
+window.verifierEcritureSimulateur = function() {
+  const d1 = parseFloat(document.getElementById('sim-c1-deb').value) || 0;
+  const c1 = parseFloat(document.getElementById('sim-c1-cre').value) || 0;
+  const d2 = parseFloat(document.getElementById('sim-c2-deb').value) || 0;
+  const c2 = parseFloat(document.getElementById('sim-c2-cre').value) || 0;
+  const d3 = parseFloat(document.getElementById('sim-c3-deb').value) || 0;
+  const c3 = parseFloat(document.getElementById('sim-c3-cre').value) || 0;
+
+  const totalDeb = d1 + d2 + d3;
+  const totalCre = c1 + c2 + c3;
+  const res = document.getElementById('sim-ecr-resultat');
+
+  if (totalDeb === 0 && totalCre === 0) {
+    res.innerHTML = "<span class='text-amber-400'><i class='fa-solid fa-triangle-exclamation mr-1'></i>Veuillez saisir des montants au Débit et au Crédit.</span>";
+    return;
+  }
+
+  if (Math.abs(totalDeb - totalCre) > 0.01) {
+    res.innerHTML = `<span class='text-rose-400'><i class='fa-solid fa-xmark mr-1'></i>Écriture déséquilibrée ! Total Débit (${totalDeb} €) ≠ Total Crédit (${totalCre} €). Écart : ${Math.abs(totalDeb - totalCre).toFixed(2)} €</span>`;
+  } else {
+    res.innerHTML = `<span class='text-emerald-400'><i class='fa-solid fa-circle-check mr-1'></i>Parfait ! Écriture équilibrée : Total Débit (${totalDeb} €) = Total Crédit (${totalCre} €). Principe de la partie double respecté.</span>`;
+  }
+};
