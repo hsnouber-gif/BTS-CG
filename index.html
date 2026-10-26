@@ -17,9 +17,7 @@
       theme: {
         extend: {
           colors: {
-            slate: {
-              850: '#0f172a'
-            }
+            slate: { 850: '#0f172a' }
           },
           fontFamily: {
             sans: ['"Plus Jakarta Sans"', 'sans-serif'],
@@ -41,15 +39,12 @@
     ::-webkit-scrollbar-thumb:hover { background: rgba(99, 102, 241, 0.8); }
     code { font-family: 'JetBrains Mono', monospace; }
     .card-glow:hover { box-shadow: 0 0 25px -5px rgba(99, 102, 241, 0.35); }
-    /* Force le fond sombre et le texte clair sur tous les champs du simulateur */
     .sim-input {
       background-color: #020617 !important;
       color: #f8fafc !important;
       border: 1px solid #334155 !important;
     }
-    .sim-input::placeholder {
-      color: #64748b !important;
-    }
+    .sim-input::placeholder { color: #64748b !important; }
     .sim-input-deb {
       background-color: #020617 !important;
       color: #34d399 !important;
@@ -223,6 +218,7 @@
         </button>
       </div>
 
+      <!-- TAB 1: QUIZ -->
       <div id="subtab-quiz" class="tab-pane space-y-6">
         <div class="bg-slate-900/80 p-4 rounded-2xl border border-slate-800 space-y-3">
           <div class="flex justify-between items-center text-xs">
@@ -257,6 +253,7 @@
         </div>
       </div>
 
+      <!-- TAB 2: FLASHCARDS -->
       <div id="subtab-flashcards" class="tab-pane hidden space-y-6">
         <div class="flex justify-center">
           <div class="w-full max-w-xl h-80 perspective-1000 cursor-pointer" onclick="flipCard()">
@@ -284,80 +281,89 @@
       <!-- TAB 3: SIMULATEUR -->
       <div id="subtab-simulator" class="tab-pane hidden space-y-6">
         
-        <div id="p1-simulator-container" class="space-y-5 bg-slate-900/90 border border-slate-800 rounded-3xl p-6 sm:p-8 shadow-xl">
-          <div class="border-b border-slate-800 pb-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+        <!-- SIMULATEUR P1 : BORDEREAU MULTI-OPÉRATIONS & BANQUE PCG INTÉGRALE -->
+        <div id="p1-simulator-container" class="space-y-6 bg-slate-900/90 border border-slate-800 rounded-3xl p-5 sm:p-8 shadow-xl">
+          
+          <div class="border-b border-slate-800 pb-4 flex flex-col lg:flex-row lg:items-center justify-between gap-3">
             <div>
-              <h3 class="font-extrabold text-base text-white flex items-center gap-2">
-                <i class="fa-solid fa-gamepad text-indigo-400"></i> Simulateur d'Écritures Comptables Intelligent (P1)
+              <h3 class="font-extrabold text-base sm:text-lg text-white flex items-center gap-2">
+                <i class="fa-solid fa-table-list text-indigo-400"></i> Bordereau d'Imputation Comptable Multi-Journaux (P1)
               </h3>
-              <p class="text-xs text-slate-400 mt-0.5">Vérifie le journal, la cohérence des numéros de compte (TVA collectée vs déductible, etc.), le sens (Débit/Crédit), l'ordre et les montants. Indulgent sur l'orthographe des libellés.</p>
+              <p class="text-xs text-slate-400 mt-1">
+                Banque officielle de <b>+130 comptes PCG</b> intégrée • Nombre de lignes illimité • Multi-opérations (ex: Vente en VTE puis Règlement moitié CB en BQ et moitié espèces en CA).
+              </p>
             </div>
-            <span class="text-xs px-2.5 py-1 rounded bg-indigo-500/20 text-indigo-300 font-mono font-bold self-start">Audit PCG Strict</span>
-          </div>
-
-          <div class="flex flex-wrap gap-2 items-center text-xs">
-            <span class="text-slate-400 font-bold">Exemples rapides :</span>
-            <button type="button" onclick="chargerExempleP1('voiture')" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-indigo-300 border border-slate-700 transition">Achat voiture 1000 €</button>
-            <button type="button" onclick="chargerExempleP1('achat_m')" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-indigo-300 border border-slate-700 transition">Achat marchandises + TVA</button>
-            <button type="button" onclick="chargerExempleP1('vente')" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-indigo-300 border border-slate-700 transition">Vente client + TVA</button>
-            <button type="button" onclick="chargerExempleP1('reglement')" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-indigo-300 border border-slate-700 transition">Paiement fournisseur BQ</button>
-          </div>
-
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            <div>
-              <label class="block text-[11px] font-bold text-slate-400 uppercase mb-1">1. Journal Auxiliaire</label>
-              <select id="sim-ecr-journal" class="sim-input w-full rounded-xl p-2.5 text-xs font-bold">
-                <option value="ACH">ACH (HA) - Journal des Achats</option>
-                <option value="VTE">VTE (VT) - Journal des Ventes</option>
-                <option value="BQ">BQ - Journal de Banque</option>
-                <option value="CA">CA - Journal de Caisse</option>
-                <option value="OD">OD - Opérations Diverses</option>
-              </select>
-            </div>
-            <div class="sm:col-span-2">
-              <label class="block text-[11px] font-bold text-slate-400 uppercase mb-1">2. Phrase / Libellé de l'opération (libre)</label>
-              <input type="text" id="sim-ecr-libelle" placeholder="Ex: Vente de marchandises ou Achat voiture..." value="Achat d'une voiture pour 1000 euros" class="sim-input w-full rounded-xl p-2.5 text-xs">
+            <div class="flex flex-wrap items-center gap-2">
+              <button type="button" onclick="togglePcgModal()" class="px-3.5 py-2 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 text-xs font-bold transition flex items-center gap-1.5">
+                <i class="fa-solid fa-book"></i> Plan Comptable (PCG)
+              </button>
+              <button type="button" onclick="resetBordereauP1()" class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 text-xs font-bold transition">
+                <i class="fa-solid fa-rotate-left"></i> Vider
+              </button>
             </div>
           </div>
 
-          <div class="space-y-2.5 text-xs font-mono">
-            <div class="grid grid-cols-12 gap-2 text-slate-400 font-bold px-1">
-              <span class="col-span-3">N° Compte PCG</span>
-              <span class="col-span-5">Intitulé du compte (tolérant)</span>
-              <span class="col-span-2 text-right">Débit (€)</span>
-              <span class="col-span-2 text-right">Crédit (€)</span>
-            </div>
-            <!-- Ligne 1 -->
-            <div class="grid grid-cols-12 gap-2 items-center">
-              <input type="text" id="sim-c1-num" value="218200" placeholder="Ex: 2182" class="sim-input col-span-3 rounded-xl p-2.5 font-bold">
-              <input type="text" id="sim-c1-lib" value="Matériel de transport" placeholder="Intitulé libre" class="sim-input col-span-5 rounded-xl p-2.5">
-              <input type="number" id="sim-c1-deb" value="1000" placeholder="0" class="sim-input-deb col-span-2 rounded-xl p-2.5 text-right font-bold">
-              <input type="number" id="sim-c1-cre" value="0" placeholder="0" class="sim-input-cre col-span-2 rounded-xl p-2.5 text-right font-bold">
-            </div>
-            <!-- Ligne 2 -->
-            <div class="grid grid-cols-12 gap-2 items-center">
-              <input type="text" id="sim-c2-num" value="404000" placeholder="Ex: 404" class="sim-input col-span-3 rounded-xl p-2.5 font-bold">
-              <input type="text" id="sim-c2-lib" value="Fournisseur d'immobilisations" placeholder="Intitulé libre" class="sim-input col-span-5 rounded-xl p-2.5">
-              <input type="number" id="sim-c2-deb" value="0" placeholder="0" class="sim-input-deb col-span-2 rounded-xl p-2.5 text-right font-bold">
-              <input type="number" id="sim-c2-cre" value="1000" placeholder="0" class="sim-input-cre col-span-2 rounded-xl p-2.5 text-right font-bold">
-            </div>
-            <!-- Ligne 3 -->
-            <div class="grid grid-cols-12 gap-2 items-center">
-              <input type="text" id="sim-c3-num" value="" placeholder="(Optionnel)" class="sim-input col-span-3 rounded-xl p-2.5 font-bold">
-              <input type="text" id="sim-c3-lib" value="" placeholder="Intitulé libre" class="sim-input col-span-5 rounded-xl p-2.5">
-              <input type="number" id="sim-c3-deb" value="0" placeholder="0" class="sim-input-deb col-span-2 rounded-xl p-2.5 text-right font-bold">
-              <input type="number" id="sim-c3-cre" value="0" placeholder="0" class="sim-input-cre col-span-2 rounded-xl p-2.5 text-right font-bold">
-            </div>
-          </div>
-
-          <div class="pt-3 border-t border-slate-800 flex flex-col gap-3">
-            <button type="button" onclick="verifierEcritureP1Intelligente()" class="self-start px-5 py-3 rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs transition flex items-center gap-2 shadow-lg shadow-indigo-600/30">
-              <i class="fa-solid fa-check-double"></i> Vérifier mon écriture (Comptes, TVA, Sens & Partie Double)
+          <!-- Scénarios complets d'entraînement -->
+          <div class="flex flex-wrap gap-2 items-center text-xs bg-slate-950/70 p-3 rounded-2xl border border-slate-800/80">
+            <span class="text-slate-400 font-bold"><i class="fa-solid fa-wand-magic-sparkles text-indigo-400 mr-1"></i> Scénarios types :</span>
+            <button type="button" onclick="chargerScenarioP1('vente_mixte')" class="px-2.5 py-1.5 rounded-xl bg-indigo-600/20 hover:bg-indigo-600/40 text-indigo-300 border border-indigo-500/30 font-semibold transition">
+              Vente + Paiement moitié CB / moitié Espèces (3 journaux)
             </button>
-            <div id="sim-ecr-resultat-box" class="w-full"></div>
+            <button type="button" onclick="chargerScenarioP1('achat_immo')" class="px-2.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition">
+              Achat Voiture + TVA + Chèque
+            </button>
+            <button type="button" onclick="chargerScenarioP1('emprunt')" class="px-2.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition">
+              Remboursement Emprunt (Capital + Intérêts)
+            </button>
+            <button type="button" onclick="chargerScenarioP1('affacturage_salaires')" class="px-2.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition">
+              Facture Achat multiple (Cas HUET)
+            </button>
+          </div>
+
+          <!-- Datalist automatique pour l'autocomplétion des numéros de compte -->
+          <datalist id="pcg-accounts-datalist"></datalist>
+
+          <!-- Conteneur dynamique de toutes les opérations du bordereau -->
+          <div id="p1-operations-list" class="space-y-6"></div>
+
+          <!-- Boutons d'action du bordereau -->
+          <div class="pt-4 border-t border-slate-800 flex flex-wrap items-center justify-between gap-3">
+            <button type="button" onclick="ajouterOperationP1()" class="px-4 py-2.5 rounded-2xl bg-slate-800 hover:bg-slate-700 text-indigo-300 border border-indigo-500/40 font-bold text-xs transition flex items-center gap-2">
+              <i class="fa-solid fa-plus-circle"></i> Ajouter une opération (autre journal / autre date)
+            </button>
+
+            <button type="button" onclick="verifierToutLeBordereauP1()" class="px-6 py-3 rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white font-extrabold text-xs sm:text-sm transition flex items-center gap-2 shadow-lg shadow-indigo-600/30">
+              <i class="fa-solid fa-check-double"></i> Vérifier tout mon bordereau
+            </button>
+          </div>
+
+          <!-- Zone de résultat global et détaillé -->
+          <div id="sim-ecr-resultat-box" class="w-full"></div>
+
+        </div>
+
+        <!-- MODAL / TIROIR PLAN COMPTABLE GÉNÉRAL (PCG) -->
+        <div id="pcg-modal" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
+          <div class="bg-slate-900 border border-slate-700 rounded-3xl max-w-4xl w-full max-h-[85vh] flex flex-col shadow-2xl overflow-hidden">
+            <div class="p-4 sm:p-5 border-b border-slate-800 flex items-center justify-between">
+              <div>
+                <h4 class="font-black text-white text-base flex items-center gap-2">
+                  <i class="fa-solid fa-book-open text-amber-400"></i> Plan Comptable Général Officiel (Classes 1 à 7)
+                </h4>
+                <p class="text-xs text-slate-400">Cherche par numéro ou par mot-clé (ex: voiture, tva, client, emprunt, loyer, caisse...)</p>
+              </div>
+              <button onclick="togglePcgModal()" class="w-9 h-9 rounded-xl bg-slate-800 text-slate-300 hover:text-white flex items-center justify-center">
+                <i class="fa-solid fa-xmark"></i>
+              </button>
+            </div>
+            <div class="p-4 bg-slate-950 border-b border-slate-800">
+              <input type="text" id="pcg-search-input" oninput="filtrerPcgModal()" placeholder="Rechercher un compte (ex: 445, transport, électricité, 607, exploitant...)" class="sim-input w-full rounded-xl p-3 text-xs">
+            </div>
+            <div id="pcg-modal-list" class="p-4 overflow-y-auto space-y-1.5 text-xs font-mono flex-1"></div>
           </div>
         </div>
 
+        <!-- SIMULATEUR P3 -->
         <div id="p3-simulator-container" class="hidden grid grid-cols-1 lg:grid-cols-12 gap-6">
           <div class="lg:col-span-5 bg-slate-900/90 border border-slate-800 rounded-3xl p-6 space-y-4">
             <h3 class="font-bold text-sm text-white">Paramètres P3 (IR vs IS & Micro)</h3>
@@ -381,11 +387,705 @@
 
       </div>
 
+      <!-- TAB 4: SYNTHESE -->
       <div id="subtab-synthese" class="tab-pane hidden space-y-6"></div>
     </div>
   </main>
 
   <script>
+    // ============================================================================
+    // VRAIE BANQUE DE DONNÉES OFFICIELLE DU PLAN COMPTABLE GÉNÉRAL (PCG BTS CG)
+    // ============================================================================
+    const PCG_DATABASE = [
+      // CLASSE 1 : COMPTES DE CAPITAUX
+      { num: "101", label: "Capital social", cat: "PASSIF", sensNormal: "CREDIT", keywords: ["capital"] },
+      { num: "101000", label: "Capital social", cat: "PASSIF", sensNormal: "CREDIT", keywords: ["capital"] },
+      { num: "106", label: "Réserves", cat: "PASSIF", sensNormal: "CREDIT", keywords: ["reserve"] },
+      { num: "108", label: "Compte de l'exploitant", cat: "CAPITAUX", sensNormal: "BOTH", keywords: ["exploitant", "prelevement personnel", "besoins personnels", "ferin"] },
+      { num: "108000", label: "Compte de l'exploitant", cat: "CAPITAUX", sensNormal: "BOTH", keywords: ["exploitant"] },
+      { num: "120", label: "Résultat de l'exercice (Bénéfice)", cat: "PASSIF", sensNormal: "CREDIT", keywords: ["benefice", "resultat"] },
+      { num: "129", label: "Résultat de l'exercice (Perte)", cat: "PASSIF", sensNormal: "DEBIT", keywords: ["perte", "deficit"] },
+      { num: "151", label: "Provisions pour risques", cat: "PASSIF", sensNormal: "CREDIT", keywords: ["provision"] },
+      { num: "164", label: "Emprunts auprès des établissements de crédit", cat: "DETTE_FIN", sensNormal: "BOTH", keywords: ["emprunt", "annuite", "pret bancaire"] },
+      { num: "164000", label: "Emprunts auprès des établissements de crédit", cat: "DETTE_FIN", sensNormal: "BOTH", keywords: ["emprunt"] },
+      { num: "165", label: "Dépôts et cautionnements reçus", cat: "PASSIF", sensNormal: "CREDIT", keywords: ["caution"] },
+
+      // CLASSE 2 : COMPTES D'IMMOBILISATIONS
+      { num: "201", label: "Frais d'établissement", cat: "IMMO", sensNormal: "DEBIT", keywords: ["frais d'etablissement"] },
+      { num: "205", label: "Concessions, brevets, licences, logiciels", cat: "IMMO", sensNormal: "DEBIT", keywords: ["logiciel", "brevet", "licence", "site internet"] },
+      { num: "205000", label: "Logiciels et brevets", cat: "IMMO", sensNormal: "DEBIT", keywords: ["logiciel"] },
+      { num: "207", label: "Fonds commercial", cat: "IMMO", sensNormal: "DEBIT", keywords: ["fonds commercial"] },
+      { num: "211", label: "Terrains", cat: "IMMO", sensNormal: "DEBIT", keywords: ["terrain"] },
+      { num: "213", label: "Constructions / Bâtiments", cat: "IMMO", sensNormal: "DEBIT", keywords: ["construction", "batiment", "local", "immeuble"] },
+      { num: "215", label: "Installations techniques, matériel et outillage industriels", cat: "IMMO", sensNormal: "DEBIT", keywords: ["machine", "materiel industriel", "outillage"] },
+      { num: "2154", label: "Matériel industriel", cat: "IMMO", sensNormal: "DEBIT", keywords: ["machine", "gonfler", "materiel industriel", "outil"] },
+      { num: "215400", label: "Matériel industriel", cat: "IMMO", sensNormal: "DEBIT", keywords: ["machine", "materiel industriel"] },
+      { num: "2181", label: "Installations générales, agencements, aménagements", cat: "IMMO", sensNormal: "DEBIT", keywords: ["agencement", "amenagement", "travaux"] },
+      { num: "2182", label: "Matériel de transport", cat: "IMMO", sensNormal: "DEBIT", keywords: ["voiture", "vehicule", "camion", "fourgon", "utilitaire", "moto", "transport"] },
+      { num: "218200", label: "Matériel de transport", cat: "IMMO", sensNormal: "DEBIT", keywords: ["voiture", "vehicule", "camion"] },
+      { num: "2183", label: "Matériel de bureau et matériel informatique", cat: "IMMO", sensNormal: "DEBIT", keywords: ["ordinateur", "pc", "imprimante", "informatique", "serveur"] },
+      { num: "218300", label: "Matériel de bureau et informatique", cat: "IMMO", sensNormal: "DEBIT", keywords: ["ordinateur", "informatique"] },
+      { num: "2184", label: "Mobilier", cat: "IMMO", sensNormal: "DEBIT", keywords: ["mobilier", "bureau", "chaise", "armoire", "table", "comptoir"] },
+      { num: "218400", label: "Mobilier", cat: "IMMO", sensNormal: "DEBIT", keywords: ["mobilier"] },
+      { num: "274", label: "Prêts", cat: "IMMO_FIN", sensNormal: "BOTH", keywords: ["pret"] },
+      { num: "2743", label: "Prêts au personnel / salariés", cat: "IMMO_FIN", sensNormal: "BOTH", keywords: ["pret a un salarie", "pret salarie"] },
+      { num: "275", label: "Dépôts et cautionnements versés", cat: "IMMO_FIN", sensNormal: "BOTH", keywords: ["caution", "depot de garantie"] },
+      { num: "28", label: "Amortissements des immobilisations", cat: "AMORT", sensNormal: "CREDIT", keywords: ["amortissement"] },
+
+      // CLASSE 3 : COMPTES DE STOCKS
+      { num: "31", label: "Matières premières (et fournitures)", cat: "STOCK", sensNormal: "BOTH", keywords: ["stock matiere"] },
+      { num: "32", label: "Autres approvisionnements", cat: "STOCK", sensNormal: "BOTH", keywords: ["stock emballage"] },
+      { num: "35", label: "Stocks de produits finis", cat: "STOCK", sensNormal: "BOTH", keywords: ["stock produit"] },
+      { num: "37", label: "Stocks de marchandises", cat: "STOCK", sensNormal: "BOTH", keywords: ["stock marchandise"] },
+      { num: "370000", label: "Stocks de marchandises", cat: "STOCK", sensNormal: "BOTH", keywords: ["stock marchandise"] },
+
+      // CLASSE 4 : COMPTES DE TIERS
+      { num: "401", label: "Fournisseurs", cat: "FOURN", sensNormal: "BOTH", keywords: ["fournisseur", "facture d'achat", "a credit"] },
+      { num: "401000", label: "Fournisseurs d'exploitation", cat: "FOURN", sensNormal: "BOTH", keywords: ["fournisseur"] },
+      { num: "403", label: "Fournisseurs - Effets à payer", cat: "FOURN", sensNormal: "BOTH", keywords: ["effet a payer", "lettre de change", "traite"] },
+      { num: "404", label: "Fournisseurs d'immobilisations", cat: "FOURN_IMMO", sensNormal: "BOTH", keywords: ["fournisseur d'immobilisation", "ombru"] },
+      { num: "404000", label: "Fournisseurs d'immobilisations", cat: "FOURN_IMMO", sensNormal: "BOTH", keywords: ["fournisseur d'immobilisation"] },
+      { num: "408", label: "Fournisseurs - Factures non parvenues", cat: "FOURN", sensNormal: "BOTH", keywords: ["fnp"] },
+      { num: "4091", label: "Fournisseurs - Avances et acomptes versés sur commandes", cat: "AVANCE_FOURN", sensNormal: "BOTH", keywords: ["acompte verse", "avance fournisseur"] },
+      { num: "411", label: "Clients", cat: "CLIENT", sensNormal: "BOTH", keywords: ["client", "vente a credit"] },
+      { num: "411000", label: "Clients", cat: "CLIENT", sensNormal: "BOTH", keywords: ["client"] },
+      { num: "413", label: "Clients - Effets à recevoir", cat: "CLIENT", sensNormal: "BOTH", keywords: ["effet a recevoir", "traite client"] },
+      { num: "416", label: "Clients douteux ou litigieux", cat: "CLIENT", sensNormal: "BOTH", keywords: ["client douteux", "impaye"] },
+      { num: "418", label: "Clients - Produits non encore facturés", cat: "CLIENT", sensNormal: "BOTH", keywords: ["fae"] },
+      { num: "4191", label: "Clients - Avances et acomptes reçus sur commandes", cat: "AVANCE_CLI", sensNormal: "BOTH", keywords: ["acompte recu", "avance client"] },
+      { num: "421", label: "Personnel - Rémunérations dues", cat: "TIERS_SOC", sensNormal: "BOTH", keywords: ["salaire net", "remuneration due", "paie"] },
+      { num: "425", label: "Personnel - Avances et acomptes", cat: "TIERS_SOC", sensNormal: "BOTH", keywords: ["acompte salarie"] },
+      { num: "431", label: "Sécurité sociale (URSSAF)", cat: "TIERS_SOC", sensNormal: "BOTH", keywords: ["urssaf", "securite sociale", "cotisation"] },
+      { num: "437", label: "Autres organismes sociaux (Retraite, Prévoyance)", cat: "TIERS_SOC", sensNormal: "BOTH", keywords: ["caisse de retraite", "prevoyance", "mutuelle"] },
+      { num: "444", label: "État - Impôts sur les bénéfices (IS)", cat: "ETAT", sensNormal: "BOTH", keywords: ["impot sur les societes", "acompte is"] },
+      { num: "44551", label: "TVA à décaisser", cat: "TVA_DEC", sensNormal: "BOTH", keywords: ["tva a decaisser", "ca3", "ca12"] },
+      { num: "44562", label: "TVA déductible sur immobilisations", cat: "TVA_DED_IMMO", sensNormal: "DEBIT", keywords: ["tva sur immo", "tva immobilisation"] },
+      { num: "445620", label: "TVA déductible sur immobilisations", cat: "TVA_DED_IMMO", sensNormal: "DEBIT", keywords: ["tva sur immo"] },
+      { num: "44566", label: "TVA déductible sur autres biens et services (ABS)", cat: "TVA_DED_ABS", sensNormal: "DEBIT", keywords: ["tva deductible", "tva sur achat"] },
+      { num: "445660", label: "TVA déductible sur biens et services", cat: "TVA_DED_ABS", sensNormal: "DEBIT", keywords: ["tva deductible"] },
+      { num: "44567", label: "Crédit de TVA à reporter", cat: "ETAT", sensNormal: "DEBIT", keywords: ["credit de tva"] },
+      { num: "44571", label: "TVA collectée", cat: "TVA_COL", sensNormal: "CREDIT", keywords: ["tva collectee", "tva sur vente"] },
+      { num: "445710", label: "TVA collectée", cat: "TVA_COL", sensNormal: "CREDIT", keywords: ["tva collectee"] },
+      { num: "455", label: "Associés - Comptes courants", cat: "TIERS", sensNormal: "BOTH", keywords: ["compte courant d'associe"] },
+      { num: "467", label: "Autres comptes débiteurs ou créditeurs", cat: "TIERS", sensNormal: "BOTH", keywords: ["debiteur divers", "crediteur divers"] },
+      { num: "471", label: "Compte d'attente", cat: "TIERS", sensNormal: "BOTH", keywords: ["attente"] },
+
+      // CLASSE 5 : COMPTES FINANCIERS (TRÉSORERIE)
+      { num: "50", label: "Valeurs mobilières de placement (VMP)", cat: "TRESO", sensNormal: "BOTH", keywords: ["vmp", "actions", "placement"] },
+      { num: "511", label: "Valeurs à l'encaissement (Chèques / Cartes à encaisser)", cat: "TRESO", sensNormal: "BOTH", keywords: ["cheque a encaisser", "carte bancaire"] },
+      { num: "512", label: "Banque", cat: "BANQUE", sensNormal: "BOTH", keywords: ["banque", "virement", "cheque", "carte bancaire", "cb", "prelevement"] },
+      { num: "512000", label: "Banque", cat: "BANQUE", sensNormal: "BOTH", keywords: ["banque"] },
+      { num: "512100", label: "Banque CRCA / Principale", cat: "BANQUE", sensNormal: "BOTH", keywords: ["banque", "crca"] },
+      { num: "519", label: "Concours bancaires courants (Découvert)", cat: "BANQUE", sensNormal: "CREDIT", keywords: ["decouvert"] },
+      { num: "53", label: "Caisse", cat: "CAISSE", sensNormal: "BOTH", keywords: ["caisse", "especes", "liquide"] },
+      { num: "530", label: "Caisse", cat: "CAISSE", sensNormal: "BOTH", keywords: ["caisse", "especes", "liquide"] },
+      { num: "530000", label: "Caisse", cat: "CAISSE", sensNormal: "BOTH", keywords: ["caisse", "especes"] },
+      { num: "58", label: "Virements internes", cat: "VIREMENT_INT", sensNormal: "BOTH", keywords: ["virement interne"] },
+      { num: "580", label: "Virements internes", cat: "VIREMENT_INT", sensNormal: "BOTH", keywords: ["virement interne"] },
+      { num: "580000", label: "Virements internes", cat: "VIREMENT_INT", sensNormal: "BOTH", keywords: ["virement interne"] },
+
+      // CLASSE 6 : COMPTES DE CHARGES
+      { num: "601", label: "Achats stockés - Matières premières", cat: "CHARGE", sensNormal: "DEBIT", keywords: ["matiere premiere", "farine", "cuir", "bois"] },
+      { num: "601000", label: "Achats de matières premières", cat: "CHARGE", sensNormal: "DEBIT", keywords: ["matiere premiere"] },
+      { num: "602", label: "Achats stockés - Autres approvisionnements (Emballages)", cat: "CHARGE", sensNormal: "DEBIT", keywords: ["emballage", "carton", "sachet"] },
+      { num: "604", label: "Achats d'études et prestations de services", cat: "CHARGE", sensNormal: "DEBIT", keywords: ["sous-traitance", "prestation"] },
+      { num: "606", label: "Achats non stockés de matières et fournitures", cat: "CHARGE", sensNormal: "DEBIT", keywords: ["fourniture", "eau", "electricite", "edf", "gaz", "carburant", "essence", "papeterie"] },
+      { num: "6061", label: "Fournitures non stockables (eau, énergie, électricité, gaz)", cat: "CHARGE", sensNormal: "DEBIT", keywords: ["eau", "electricite", "edf", "energie", "gaz", "essence", "carburant"] },
+      { num: "606100", label: "Fournitures non stockables (eau, énergie...)", cat: "CHARGE", sensNormal: "DEBIT", keywords: ["edf", "eau", "energie"] },
+      { num: "6063", label: "Fournitures d'entretien et de petit équipement (< 500€ HT)", cat: "CHARGE", sensNormal: "DEBIT", keywords: ["entretien", "petit outillage", "petit equipement", "ampoule", "vis"] },
+      { num: "6064", label: "Fournitures administratives (papeterie, stylos, ramettes)", cat: "CHARGE", sensNormal: "DEBIT", keywords: ["fourniture de bureau", "papeterie", "ramette", "stylo", "encre"] },
+      { num: "607", label: "Achats de marchandises", cat: "CHARGE", sensNormal: "DEBIT", keywords: ["achat de marchandise", "achat kit", "achat poudre", "ballon", "vetement"] },
+      { num: "607000", label: "Achats de marchandises", cat: "CHARGE", sensNormal: "DEBIT", keywords: ["achat de marchandise"] },
+      { num: "607001", label: "Achat poudre collagène", cat: "CHARGE", sensNormal: "DEBIT", keywords: ["collagene"] },
+      { num: "607002", label: "Achat pack / kit sérum", cat: "CHARGE", sensNormal: "DEBIT", keywords: ["serum"] },
+      { num: "607005", label: "Achat poudre teint", cat: "CHARGE", sensNormal: "DEBIT", keywords: ["poudre teint"] },
+      { num: "607010", label: "Achat kit ongulaire", cat: "CHARGE", sensNormal: "DEBIT", keywords: ["kit ongulaire"] },
+      { num: "609", label: "Rabais, remises et ristournes obtenus sur achats", cat: "RRR_ACHAT", sensNormal: "CREDIT", keywords: ["remise obtenue", "rabais obtenu", "ristourne obtenue"] },
+      { num: "611", label: "Sous-traitance générale", cat: "CHARGE", sensNormal: "DEBIT", keywords: ["sous-traitance"] },
+      { num: "612", label: "Redevances de crédit-bail (Leasing)", cat: "CHARGE", sensNormal: "DEBIT", keywords: ["credit-bail", "leasing", "loa"] },
+      { num: "613", label: "Locations (Loyers immobiliers et mobiliers)", cat: "CHARGE", sensNormal: "DEBIT", keywords: ["loyer", "location", "bail"] },
+      { num: "6132", label: "Locations immobilières (Loyer du local)", cat: "CHARGE", sensNormal: "DEBIT", keywords: ["loyer", "location local"] },
+      { num: "615", label: "Entretien et réparations", cat: "CHARGE", sensNormal: "DEBIT", keywords: ["reparation", "maintenance", "entretien", "garage"] },
+      { num: "616", label: "Primes d'assurances", cat: "CHARGE", sensNormal: "DEBIT", keywords: ["assurance", "axa", "maif", "allianz"] },
+      { num: "622", label: "Rémunérations d'intermédiaires et honoraires (Expert-comptable, Avocat)", cat: "CHARGE", sensNormal: "DEBIT", keywords: ["honoraire", "expert-comptable", "avocat", "notaire", "commission"] },
+      { num: "623", label: "Publicité, publications, relations publiques", cat: "CHARGE", sensNormal: "DEBIT", keywords: ["publicite", "pub", "flyer", "annonce", "cadeau client", "instagram"] },
+      { num: "624", label: "Transports de biens et transports collectifs du personnel", cat: "CHARGE", sensNormal: "DEBIT", keywords: ["frais de port", "transport sur achat", "livraison", "chronopost", "ups"] },
+      { num: "625", label: "Déplacements, missions et réceptions (Hôtel, Restaurant, Péage, Train)", cat: "CHARGE", sensNormal: "DEBIT", keywords: ["deplacement", "restaurant", "hotel", "peage", "train", "sncf", "mission", "reception"] },
+      { num: "626", label: "Frais postaux et de télécommunications (Internet, Orange, Timbres)", cat: "CHARGE", sensNormal: "DEBIT", keywords: ["telecom", "telephone", "internet", "orange", "sfr", "bouygues", "free", "timbre", "La Poste", "frais postaux"] },
+      { num: "626000", label: "Frais postaux et de télécommunications", cat: "CHARGE", sensNormal: "DEBIT", keywords: ["orange", "telecom", "frais postaux"] },
+      { num: "627", label: "Services bancaires et assimilés (Frais de tenue de compte, commissions CB)", cat: "CHARGE", sensNormal: "DEBIT", keywords: ["frais bancaires", "service bancaire", "commission bancaire"] },
+      { num: "635", label: "Autres impôts, taxes et versements assimilés (CFE, CVAE, Taxe foncière)", cat: "CHARGE", sensNormal: "DEBIT", keywords: ["impot", "taxe fonciere", "cfe", "cvae", "timbre fiscal"] },
+      { num: "641", label: "Rémunérations du personnel (Salaires bruts)", cat: "CHARGE", sensNormal: "DEBIT", keywords: ["salaire brut", "remuneration du personnel", "paie"] },
+      { num: "645", label: "Charges de sécurité sociale et de prévoyance (Cotisations patronales)", cat: "CHARGE", sensNormal: "DEBIT", keywords: ["charge patronale", "cotisation patronale", "urssaf"] },
+      { num: "65", label: "Autres charges de gestion courante", cat: "CHARGE", sensNormal: "DEBIT", keywords: ["redevance", "perte sur creance"] },
+      { num: "661", label: "Charges d'intérêts (Intérêts des emprunts et découverts)", cat: "CHARGE_FIN", sensNormal: "DEBIT", keywords: ["interet", "agios", "frais financiers"] },
+      { num: "661000", label: "Charges d'intérêts", cat: "CHARGE_FIN", sensNormal: "DEBIT", keywords: ["interet"] },
+      { num: "665", label: "Escomptes accordés aux clients", cat: "CHARGE_FIN", sensNormal: "DEBIT", keywords: ["escompte accorde"] },
+      { num: "671", label: "Charges exceptionnelles sur opérations de gestion (Pénalités, Amendes, Dons)", cat: "CHARGE_EXCEP", sensNormal: "DEBIT", keywords: ["amende", "penalite", "exceptionnel", "sinistre"] },
+      { num: "675", label: "Valeurs comptables des éléments d'actif cédés (VNC)", cat: "CHARGE_EXCEP", sensNormal: "DEBIT", keywords: ["vnc", "cession"] },
+      { num: "681", label: "Dotations aux amortissements, dépréciations et provisions", cat: "CHARGE", sensNormal: "DEBIT", keywords: ["dotation aux amortissements"] },
+      { num: "695", label: "Impôts sur les bénéfices (IS)", cat: "CHARGE", sensNormal: "DEBIT", keywords: ["impot sur les benefices"] },
+
+      // CLASSE 7 : COMPTES DE PRODUITS
+      { num: "701", label: "Ventes de produits finis", cat: "PRODUIT", sensNormal: "CREDIT", keywords: ["vente de produit fini", "sneakers", "fabrication"] },
+      { num: "706", label: "Prestations de services", cat: "PRODUIT", sensNormal: "CREDIT", keywords: ["prestation de service", "atelier", "reparation", "main d'oeuvre"] },
+      { num: "706000", label: "Prestations de services", cat: "PRODUIT", sensNormal: "CREDIT", keywords: ["prestation"] },
+      { num: "707", label: "Ventes de marchandises", cat: "PRODUIT", sensNormal: "CREDIT", keywords: ["vente de marchandise", "vente kit", "vente poudre"] },
+      { num: "707000", label: "Ventes de marchandises", cat: "PRODUIT", sensNormal: "CREDIT", keywords: ["vente de marchandise"] },
+      { num: "707001", label: "Vente poudre collagène", cat: "PRODUIT", sensNormal: "CREDIT", keywords: ["vente poudre collagene"] },
+      { num: "707002", label: "Vente pack / kit sérum", cat: "PRODUIT", sensNormal: "CREDIT", keywords: ["vente kit serum", "vente pack serum"] },
+      { num: "707005", label: "Vente poudre teint", cat: "PRODUIT", sensNormal: "CREDIT", keywords: ["vente poudre teint"] },
+      { num: "707010", label: "Vente kit ongulaire", cat: "PRODUIT", sensNormal: "CREDIT", keywords: ["vente kit ongulaire"] },
+      { num: "708", label: "Produits des activités annexes (Port forfaitaire facturé aux clients)", cat: "PRODUIT", sensNormal: "CREDIT", keywords: ["port facture", "frais de port facture", "location diverse"] },
+      { num: "7085", label: "Ports et frais accessoires facturés", cat: "PRODUIT", sensNormal: "CREDIT", keywords: ["port facture"] },
+      { num: "709", label: "Rabais, remises et ristournes accordés par l'entreprise", cat: "RRR_VENTE", sensNormal: "DEBIT", keywords: ["remise accordee", "rabais accorde"] },
+      { num: "74", label: "Subventions d'exploitation", cat: "PRODUIT", sensNormal: "CREDIT", keywords: ["subvention"] },
+      { num: "75", label: "Autres produits de gestion courante", cat: "PRODUIT", sensNormal: "CREDIT", keywords: ["produit de gestion"] },
+      { num: "76", label: "Produits financiers (Intérêts des prêts, revenus de placements)", cat: "PRODUIT_FIN", sensNormal: "CREDIT", keywords: ["produit financier", "interet recu", "dividende"] },
+      { num: "765", label: "Escomptes obtenus des fournisseurs", cat: "PRODUIT_FIN", sensNormal: "CREDIT", keywords: ["escompte obtenu"] },
+      { num: "775", label: "Produits des cessions d'éléments d'actif", cat: "PRODUIT_EXCEP", sensNormal: "CREDIT", keywords: ["prix de cession", "vente immobilisation"] },
+      { num: "781", label: "Reprises sur amortissements, dépréciations et provisions", cat: "PRODUIT", sensNormal: "CREDIT", keywords: ["reprise"] }
+    ];
+
+    // Recherche d'un compte dans la base PCG (exact ou par préfixe le plus long)
+    function trouverComptePCG(numeroSaisi) {
+      const clean = (numeroSaisi || '').trim();
+      if (!clean) return null;
+      // 1. Correspondance exacte
+      let exact = PCG_DATABASE.find(c => c.num === clean);
+      if (exact) return exact;
+      // 2. Si l'utilisateur tape 607000 et qu'on a 607, ou s'il tape 411 et qu'on a 411000
+      let prefixMatch = PCG_DATABASE
+        .filter(c => clean.startsWith(c.num) || c.num.startsWith(clean))
+        .sort((a, b) => b.num.length - a.num.length)[0];
+      return prefixMatch || null;
+    }
+
+    // Initialisation de la datalist et de la modale PCG
+    function initPcgSystem() {
+      const dl = document.getElementById('pcg-accounts-datalist');
+      if (dl) {
+        dl.innerHTML = PCG_DATABASE.map(c => `<option value="${c.num}">${c.num} - ${c.label}</option>`).join('');
+      }
+      filtrerPcgModal();
+    }
+
+    function togglePcgModal() {
+      const m = document.getElementById('pcg-modal');
+      m.classList.toggle('hidden');
+      if (!m.classList.contains('hidden')) {
+        document.getElementById('pcg-search-input').focus();
+      }
+    }
+
+    function filtrerPcgModal() {
+      const q = normTxt(document.getElementById('pcg-search-input')?.value || '');
+      const list = document.getElementById('pcg-modal-list');
+      if (!list) return;
+      const filtered = PCG_DATABASE.filter(c => {
+        if (!q) return true;
+        return c.num.includes(q) || normTxt(c.label).includes(q) || (c.keywords || []).some(k => normTxt(k).includes(q));
+      });
+      list.innerHTML = filtered.map(c => `
+        <div class="p-2.5 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between hover:border-indigo-500/50 transition">
+          <div>
+            <span class="font-bold text-indigo-400 mr-2">${c.num}</span>
+            <span class="text-slate-200">${c.label}</span>
+          </div>
+          <span class="text-[10px] px-2 py-0.5 rounded bg-slate-800 text-slate-400">${c.cat} • Sens normal : ${c.sensNormal === 'DEBIT' ? 'Débit' : c.sensNormal === 'CREDIT' ? 'Crédit' : 'Débit/Crédit'}</span>
+        </div>
+      `).join('');
+    }
+
+    // ============================================================================
+    // GESTION DU BORDEREAU DYNAMIQUE P1 (MULTI-OPÉRATIONS & LIGNES ILLIMITÉES)
+    // ============================================================================
+    let p1OperationsState = [];
+
+    function creerOperationVide(journal = 'ACH', date = '01/01/20N', libelle = '') {
+      return {
+        id: 'op_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4),
+        date: date,
+        journal: journal,
+        libelle: libelle,
+        lignes: [
+          { num: '', tiers: '', lib: '', deb: '', cre: '' },
+          { num: '', tiers: '', lib: '', deb: '', cre: '' }
+        ]
+      };
+    }
+
+    function synchroniserDOMVersStateP1() {
+      p1OperationsState.forEach((op, opIdx) => {
+        const jEl = document.getElementById(`op-${opIdx}-journal`);
+        const dEl = document.getElementById(`op-${opIdx}-date`);
+        const lEl = document.getElementById(`op-${opIdx}-libelle`);
+        if (jEl) op.journal = jEl.value;
+        if (dEl) op.date = dEl.value;
+        if (lEl) op.libelle = lEl.value;
+
+        op.lignes.forEach((lig, ligIdx) => {
+          const numEl = document.getElementById(`op-${opIdx}-l-${ligIdx}-num`);
+          const tiersEl = document.getElementById(`op-${opIdx}-l-${ligIdx}-tiers`);
+          const libEl = document.getElementById(`op-${opIdx}-l-${ligIdx}-lib`);
+          const debEl = document.getElementById(`op-${opIdx}-l-${ligIdx}-deb`);
+          const creEl = document.getElementById(`op-${opIdx}-l-${ligIdx}-cre`);
+          if (numEl) lig.num = numEl.value;
+          if (tiersEl) lig.tiers = tiersEl.value;
+          if (libEl) lig.lib = libEl.value;
+          if (debEl) lig.deb = debEl.value;
+          if (creEl) lig.cre = creEl.value;
+        });
+      });
+    }
+
+    function autoRemplirIntitulePCG(opIdx, ligIdx) {
+      const numEl = document.getElementById(`op-${opIdx}-l-${ligIdx}-num`);
+      const libEl = document.getElementById(`op-${opIdx}-l-${ligIdx}-lib`);
+      const badgeEl = document.getElementById(`op-${opIdx}-l-${ligIdx}-badge`);
+      if (!numEl || !libEl) return;
+
+      const compte = trouverComptePCG(numEl.value);
+      if (compte) {
+        // Si l'intitulé est vide, on le pré-remplit automatiquement pour aider l'étudiant
+        if (!libEl.value.trim()) {
+          libEl.value = compte.label;
+        }
+        if (badgeEl) {
+          badgeEl.innerHTML = `<span class="text-[10px] text-emerald-400 font-mono"><i class="fa-solid fa-check"></i> PCG : ${compte.label}</span>`;
+        }
+      } else if (numEl.value.trim().length >= 3) {
+        if (badgeEl) {
+          badgeEl.innerHTML = `<span class="text-[10px] text-amber-400 font-mono">Compte personnalisé (Classe ${numEl.value.trim()[0]})</span>`;
+        }
+      } else {
+        if (badgeEl) badgeEl.innerHTML = '';
+      }
+    }
+
+    function renderBordereauP1() {
+      const container = document.getElementById('p1-operations-list');
+      if (!container) return;
+
+      container.innerHTML = p1OperationsState.map((op, opIdx) => {
+        const lignesHtml = op.lignes.map((lig, ligIdx) => {
+          const compteInfo = trouverComptePCG(lig.num);
+          const badgeText = compteInfo ? `<span class="text-[10px] text-emerald-400 font-mono"><i class="fa-solid fa-check"></i> PCG : ${compteInfo.label}</span>` : '';
+          return `
+            <div class="space-y-1">
+              <div class="grid grid-cols-12 gap-2 items-center">
+                <div class="col-span-3 sm:col-span-2">
+                  <input type="text" list="pcg-accounts-datalist" id="op-${opIdx}-l-${ligIdx}-num" value="${lig.num}" oninput="autoRemplirIntitulePCG(${opIdx}, ${ligIdx})" placeholder="N° (ex: 411)" class="sim-input w-full rounded-xl p-2 text-xs font-mono font-bold">
+                </div>
+                <div class="col-span-2 sm:col-span-2">
+                  <input type="text" id="op-${opIdx}-l-${ligIdx}-tiers" value="${lig.tiers || ''}" placeholder="Tiers (0CARP)" class="sim-input w-full rounded-xl p-2 text-xs font-mono">
+                </div>
+                <div class="col-span-7 sm:col-span-4">
+                  <input type="text" id="op-${opIdx}-l-${ligIdx}-lib" value="${lig.lib}" placeholder="Intitulé du compte (tolérant)" class="sim-input w-full rounded-xl p-2 text-xs">
+                </div>
+                <div class="col-span-5 sm:col-span-2">
+                  <input type="number" step="0.01" id="op-${opIdx}-l-${ligIdx}-deb" value="${lig.deb}" placeholder="Débit €" class="sim-input-deb w-full rounded-xl p-2 text-right text-xs font-mono font-bold">
+                </div>
+                <div class="col-span-5 sm:col-span-1">
+                  <input type="number" step="0.01" id="op-${opIdx}-l-${ligIdx}-cre" value="${lig.cre}" placeholder="Crédit €" class="sim-input-cre w-full rounded-xl p-2 text-right text-xs font-mono font-bold">
+                </div>
+                <div class="col-span-2 sm:col-span-1 flex justify-end">
+                  <button type="button" onclick="supprimerLigneP1(${opIdx}, ${ligIdx})" title="Supprimer cette ligne" class="w-8 h-8 rounded-lg bg-slate-900 hover:bg-rose-950 text-slate-400 hover:text-rose-400 border border-slate-800 flex items-center justify-center transition">
+                    <i class="fa-solid fa-trash-can text-xs"></i>
+                  </button>
+                </div>
+              </div>
+              <div id="op-${opIdx}-l-${ligIdx}-badge" class="pl-1">${badgeText}</div>
+            </div>
+          `;
+        }).join('');
+
+        return `
+          <div class="p-4 sm:p-5 rounded-2xl bg-slate-950/90 border border-slate-800 space-y-4 shadow-lg">
+            <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800/80 pb-3">
+              <div class="flex items-center gap-2">
+                <span class="px-2.5 py-1 rounded-lg bg-indigo-600 text-white font-mono font-black text-xs">Opération #${opIdx + 1}</span>
+                <span class="text-xs text-slate-400">Bordereau d'imputation</span>
+              </div>
+              ${p1OperationsState.length > 1 ? `
+                <button type="button" onclick="supprimerOperationP1(${opIdx})" class="text-xs text-rose-400 hover:text-rose-300 font-bold flex items-center gap-1">
+                  <i class="fa-solid fa-xmark"></i> Retirer cette opération
+                </button>
+              ` : ''}
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-12 gap-3">
+              <div class="sm:col-span-2">
+                <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Date</label>
+                <input type="text" id="op-${opIdx}-date" value="${op.date}" placeholder="23/01/20N" class="sim-input w-full rounded-xl p-2 text-xs font-mono">
+              </div>
+              <div class="sm:col-span-3">
+                <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Journal Auxiliaire</label>
+                <select id="op-${opIdx}-journal" class="sim-input w-full rounded-xl p-2 text-xs font-bold">
+                  <option value="ACH" ${op.journal === 'ACH' ? 'selected' : ''}>ACH (HA) - Achats</option>
+                  <option value="VTE" ${op.journal === 'VTE' ? 'selected' : ''}>VTE (VT) - Ventes</option>
+                  <option value="BQ" ${op.journal === 'BQ' ? 'selected' : ''}>BQ (BQ1) - Banque</option>
+                  <option value="CA" ${op.journal === 'CA' ? 'selected' : ''}>CA (CAI) - Caisse</option>
+                  <option value="OD" ${op.journal === 'OD' ? 'selected' : ''}>OD - Opérations Diverses</option>
+                </select>
+              </div>
+              <div class="sm:col-span-7">
+                <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Libellé de l'opération / Facture / Règlement</label>
+                <input type="text" id="op-${opIdx}-libelle" value="${op.libelle}" placeholder="Ex: Vente de marchandises 1000 € HT TVA 20% ou Règlement CB..." class="sim-input w-full rounded-xl p-2 text-xs">
+              </div>
+            </div>
+
+            <div class="hidden sm:grid grid-cols-12 gap-2 text-[11px] text-slate-400 font-bold px-1 pt-1">
+              <span class="col-span-2">N° Compte</span>
+              <span class="col-span-2">Code Tiers (opt.)</span>
+              <span class="col-span-4">Intitulé du compte</span>
+              <span class="col-span-2 text-right text-emerald-400">Débit (€)</span>
+              <span class="col-span-1 text-right text-amber-400">Crédit (€)</span>
+              <span class="col-span-1 text-right">Action</span>
+            </div>
+
+            <div class="space-y-2.5">
+              ${lignesHtml}
+            </div>
+
+            <div class="pt-2 flex items-center justify-between">
+              <button type="button" onclick="ajouterLigneP1(${opIdx})" class="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-indigo-300 border border-slate-700 text-xs font-bold transition flex items-center gap-1.5">
+                <i class="fa-solid fa-plus"></i> Ajouter une ligne de compte
+              </button>
+              <div id="op-${opIdx}- diagnostic-rapide" class="text-xs font-mono text-slate-400"></div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function ajouterLigneP1(opIdx) {
+      synchroniserDOMVersStateP1();
+      p1OperationsState[opIdx].lignes.push({ num: '', tiers: '', lib: '', deb: '', cre: '' });
+      renderBordereauP1();
+    }
+
+    function supprimerLigneP1(opIdx, ligIdx) {
+      synchroniserDOMVersStateP1();
+      if (p1OperationsState[opIdx].lignes.length <= 2) {
+        p1OperationsState[opIdx].lignes[ligIdx] = { num: '', tiers: '', lib: '', deb: '', cre: '' };
+      } else {
+        p1OperationsState[opIdx].lignes.splice(ligIdx, 1);
+      }
+      renderBordereauP1();
+    }
+
+    function ajouterOperationP1() {
+      synchroniserDOMVersStateP1();
+      p1OperationsState.push(creerOperationVide('BQ', '23/01/20N', ''));
+      renderBordereauP1();
+    }
+
+    function supprimerOperationP1(opIdx) {
+      synchroniserDOMVersStateP1();
+      if (p1OperationsState.length > 1) {
+        p1OperationsState.splice(opIdx, 1);
+        renderBordereauP1();
+      }
+    }
+
+    function resetBordereauP1() {
+      p1OperationsState = [creerOperationVide('ACH', '01/01/20N', '')];
+      renderBordereauP1();
+      document.getElementById('sim-ecr-resultat-box').innerHTML = '';
+    }
+
+    // Scénarios types pré-configurés (dont la vente payée moitié CB et moitié espèces)
+    function chargerScenarioP1(nom) {
+      if (nom === 'vente_mixte') {
+        p1OperationsState = [
+          {
+            id: 'op_1',
+            date: '23/01/20N',
+            journal: 'VTE',
+            libelle: "Facture de vente de marchandises 1000 € HT avec TVA 20% (1200 € TTC)",
+            lignes: [
+              { num: '411000', tiers: '0CLIE', lib: 'Client', deb: '1200', cre: '0' },
+              { num: '707000', tiers: '', lib: 'Ventes de marchandises', deb: '0', cre: '1000' },
+              { num: '445710', tiers: '', lib: 'TVA collectée', deb: '0', cre: '200' }
+            ]
+          },
+          {
+            id: 'op_2',
+            date: '23/01/20N',
+            journal: 'BQ',
+            libelle: "Règlement du client de la moitié par Carte Bancaire (600 €)",
+            lignes: [
+              { num: '512100', tiers: '', lib: 'Banque', deb: '600', cre: '0' },
+              { num: '411000', tiers: '0CLIE', lib: 'Client', deb: '0', cre: '600' }
+            ]
+          },
+          {
+            id: 'op_3',
+            date: '23/01/20N',
+            journal: 'CA',
+            libelle: "Règlement du client de l'autre moitié en espèces (600 €)",
+            lignes: [
+              { num: '530000', tiers: '', lib: 'Caisse', deb: '600', cre: '0' },
+              { num: '411000', tiers: '0CLIE', lib: 'Client', deb: '0', cre: '600' }
+            ]
+          }
+        ];
+      } else if (nom === 'achat_immo') {
+        p1OperationsState = [
+          {
+            id: 'op_1',
+            date: '10/01/20N',
+            journal: 'ACH',
+            libelle: "Facture d'achat d'une voiture utilitaire 1000 € HT avec TVA 20%",
+            lignes: [
+              { num: '218200', tiers: '', lib: 'Matériel de transport', deb: '1000', cre: '0' },
+              { num: '445620', tiers: '', lib: 'TVA déductible sur immobilisations', deb: '200', cre: '0' },
+              { num: '404000', tiers: '9AUTO', lib: "Fournisseur d'immobilisations", deb: '0', cre: '1200' }
+            ]
+          },
+          {
+            id: 'op_2',
+            date: '10/01/20N',
+            journal: 'BQ',
+            libelle: "Règlement par chèque du fournisseur d'immobilisations",
+            lignes: [
+              { num: '404000', tiers: '9AUTO', lib: "Fournisseur d'immobilisations", deb: '1200', cre: '0' },
+              { num: '512100', tiers: '', lib: 'Banque', deb: '0', cre: '1200' }
+            ]
+          }
+        ];
+      } else if (nom === 'emprunt') {
+        p1OperationsState = [
+          {
+            id: 'op_1',
+            date: '16/09/20N',
+            journal: 'BQ',
+            libelle: "Prélèvement annuité d'emprunt (Capital 10 000 € et Intérêts 3 600 €)",
+            lignes: [
+              { num: '164000', tiers: '', lib: 'Emprunts auprès des établissements de crédit', deb: '10000', cre: '0' },
+              { num: '661000', tiers: '', lib: "Charges d'intérêts", deb: '3600', cre: '0' },
+              { num: '512100', tiers: '', lib: 'Banque', deb: '0', cre: '13600' }
+            ]
+          }
+        ];
+      } else if (nom === 'affacturage_salaires') {
+        p1OperationsState = [
+          {
+            id: 'op_1',
+            date: '28/01/20N',
+            journal: 'ACH',
+            libelle: "Facture F20N-099 : Achat poudre teint (200€), kit sérum (300€), kit ongulaire (350€) + TVA 20%",
+            lignes: [
+              { num: '607005', tiers: '', lib: 'Achat poudre teint', deb: '200', cre: '0' },
+              { num: '607002', tiers: '', lib: 'Achat kit sérum', deb: '300', cre: '0' },
+              { num: '607010', tiers: '', lib: 'Achat kit ongulaire', deb: '350', cre: '0' },
+              { num: '445660', tiers: '', lib: 'TVA déductible sur biens et services', deb: '170', cre: '0' },
+              { num: '401000', tiers: '9TOUT', lib: "Fournisseur Tout pour l'esthétisme", deb: '0', cre: '1020' }
+            ]
+          }
+        ];
+      }
+      renderBordereauP1();
+      verifierToutLeBordereauP1();
+    }
+
+    // Normalisation tolérante pour ignorer accents et majuscules
+    function normTxt(str) {
+      return (str || '').toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
+    }
+
+    // ============================================================================
+    // MOTEUR D'AUDIT COMPTABLE INTELLIGENT (VÉRIFIE TOUTES LES OPÉRATIONS)
+    // ============================================================================
+    function verifierToutLeBordereauP1() {
+      synchroniserDOMVersStateP1();
+      const resBox = document.getElementById('sim-ecr-resultat-box');
+      let erreursGlobales = [];
+      let resumeOperations = [];
+      let grandTotalDeb = 0;
+      let grandTotalCre = 0;
+
+      p1OperationsState.forEach((op, opIdx) => {
+        const numOp = opIdx + 1;
+        const journal = op.journal;
+        const libGlobal = normTxt(op.libelle);
+
+        const lignesActives = op.lignes.map((l, i) => ({
+          idx: i + 1,
+          num: (l.num || '').trim(),
+          tiers: (l.tiers || '').trim(),
+          lib: normTxt(l.lib),
+          deb: parseFloat(l.deb) || 0,
+          cre: parseFloat(l.cre) || 0
+        })).filter(l => l.num !== '' || l.deb > 0 || l.cre > 0 || l.lib !== '');
+
+        const totDeb = lignesActives.reduce((s, l) => s + l.deb, 0);
+        const totCre = lignesActives.reduce((s, l) => s + l.cre, 0);
+        grandTotalDeb += totDeb;
+        grandTotalCre += totCre;
+
+        if (lignesActives.length < 2) {
+          erreursGlobales.push(`<b>Opération #${numOp} (${journal})</b> : Il faut au moins 2 lignes (un débit et un crédit).`);
+          return;
+        }
+
+        // 1. Équilibre Partie Double de l'opération
+        if (Math.abs(totDeb - totCre) > 0.01 || totDeb === 0) {
+          erreursGlobales.push(`<b>Opération #${numOp} (${journal})</b> : Partie double non équilibrée ! Total Débit (<b>${totDeb.toFixed(2)} €</b>) ≠ Total Crédit (<b>${totCre.toFixed(2)} €</b>). Écart de ${Math.abs(totDeb - totCre).toFixed(2)} €.`);
+        }
+
+        // Contexte de l'opération
+        const has70 = lignesActives.some(l => l.num.startsWith('70')) || lignesActives.some(l => l.lib.includes('vente'));
+        const has60_62 = lignesActives.some(l => /^6[012]/.test(l.num)) || lignesActives.some(l => l.lib.includes('achat'));
+        const hasImmo2 = lignesActives.some(l => /^2[01]/.test(l.num));
+        const isVente = (journal === 'VTE') || libGlobal.includes('vente') || has70;
+        const isAchat = (journal === 'ACH') || libGlobal.includes('achat') || has60_62 || hasImmo2;
+        const isAvoir = libGlobal.includes('avoir') || libGlobal.includes('retour');
+
+        // 2. Analyse ligne par ligne avec la banque PCG
+        let vuCredit = false;
+
+        lignesActives.forEach(l => {
+          if (!l.num) {
+            erreursGlobales.push(`<b>Opération #${numOp}, Ligne ${l.idx}</b> : Numéro de compte PCG manquant.`);
+            return;
+          }
+          if (!/^[1-7][0-9]{1,7}$/.test(l.num)) {
+            erreursGlobales.push(`<b>Opération #${numOp}, Ligne ${l.idx}</b> : Le numéro <b>"${l.num}"</b> n'est pas un compte PCG valide (doit commencer par une classe de 1 à 7).`);
+          }
+
+          if (l.deb > 0 && l.cre > 0) {
+            erreursGlobales.push(`<b>Opération #${numOp}, Ligne ${l.idx} (compte ${l.num})</b> : Un compte ne peut pas avoir un Débit et un Crédit sur la même ligne.`);
+          }
+          if (l.deb === 0 && l.cre === 0) {
+            erreursGlobales.push(`<b>Opération #${numOp}, Ligne ${l.idx} (compte ${l.num})</b> : Montant à zéro.`);
+          }
+
+          // Ordre Débit avant Crédit
+          if (l.cre > 0) vuCredit = true;
+          if (l.deb > 0 && vuCredit) {
+            erreursGlobales.push(`<b>Opération #${numOp}, Ligne ${l.idx} (compte ${l.num})</b> : <b>Ordre incorrect</b>. Au journal, tous les comptes débités doivent être placés en haut avant les comptes crédités.`);
+          }
+
+          // Vérification via la base PCG
+          const pcg = trouverComptePCG(l.num);
+
+          // Contrôle strict de la TVA
+          const estTvaDed = l.num.startsWith('4456') || l.lib.includes('deduct');
+          const estTvaCol = l.num.startsWith('4457') || l.lib.includes('collect');
+
+          if (estTvaDed) {
+            if (isVente && !isAchat) {
+              erreursGlobales.push(`<b>Opération #${numOp}, Ligne ${l.idx}</b> : <b>Erreur de TVA !</b> Pour une Vente, il est interdit d'utiliser la TVA déductible (4456). Utilisez le compte <b>44571 (TVA collectée) au CRÉDIT</b>.`);
+            }
+            if (l.cre > 0 && !isAvoir) {
+              erreursGlobales.push(`<b>Opération #${numOp}, Ligne ${l.idx} (${l.num})</b> : La TVA déductible est une créance sur l'État, elle s'enregistre au <b>DÉBIT</b>.`);
+            }
+            if (!l.num.startsWith('4456')) {
+              erreursGlobales.push(`<b>Opération #${numOp}, Ligne ${l.idx}</b> : Vous avez écrit TVA déductible mais le numéro <b>${l.num}</b> ne correspond pas (utilisez <b>44566</b> sur biens/services ou <b>44562</b> sur immobilisations).`);
+            }
+            if (hasImmo2 && l.num.startsWith('44566')) {
+              erreursGlobales.push(`<b>Opération #${numOp}, Ligne ${l.idx}</b> : Sur l'achat d'une immobilisation (classe 2), utilisez le compte <b>44562 (TVA déductible sur immobilisations)</b> plutôt que 44566.`);
+            }
+          }
+
+          if (estTvaCol) {
+            if (isAchat && !isVente) {
+              erreursGlobales.push(`<b>Opération #${numOp}, Ligne ${l.idx}</b> : <b>Erreur de TVA !</b> Sur un Achat, on utilise la <b>TVA déductible (44566 ou 44562) au DÉBIT</b>, jamais la TVA collectée (44571).`);
+            }
+            if (l.deb > 0 && !isAvoir) {
+              erreursGlobales.push(`<b>Opération #${numOp}, Ligne ${l.idx} (${l.num})</b> : La TVA collectée (44571) est une dette envers l'État, elle s'enregistre obligatoirement au <b>CRÉDIT</b>.`);
+            }
+            if (!l.num.startsWith('4457')) {
+              erreursGlobales.push(`<b>Opération #${numOp}, Ligne ${l.idx}</b> : Vous mentionnez la TVA collectée mais le numéro <b>${l.num}</b> est faux (utilisez <b>44571</b>).`);
+            }
+          }
+
+          // Sens des comptes de charges (classe 6) et produits (classe 7)
+          if (l.num.startsWith('6') && !l.num.startsWith('609') && l.cre > 0 && !isAvoir) {
+            erreursGlobales.push(`<b>Opération #${numOp}, Ligne ${l.idx} (compte ${l.num})</b> : Les comptes de <b>Charges (classe 6)</b> augmentent toujours au <b>DÉBIT</b>.`);
+          }
+          if (l.num.startsWith('7') && !l.num.startsWith('709') && l.deb > 0 && !isAvoir) {
+            erreursGlobales.push(`<b>Opération #${numOp}, Ligne ${l.idx} (compte ${l.num})</b> : Les comptes de <b>Produits / Ventes (classe 7)</b> augmentent toujours au <b>CRÉDIT</b>.`);
+          }
+          if (/^2[01]/.test(l.num) && l.cre > 0 && !isAvoir && !libGlobal.includes('cession')) {
+            erreursGlobales.push(`<b>Opération #${numOp}, Ligne ${l.idx} (compte ${l.num})</b> : L'entrée d'une <b>Immobilisation (classe 2)</b> dans le patrimoine s'enregistre au <b>DÉBIT</b>.`);
+          }
+        });
+
+        // 3. Vérification de la cohérence des montants HT + TVA = TTC
+        if (isVente && has70) {
+          const sumVentesHT = lignesActives.filter(l => l.num.startsWith('70')).reduce((s, l) => s + l.cre, 0);
+          const sumTvaCol = lignesActives.filter(l => l.num.startsWith('4457')).reduce((s, l) => s + l.cre, 0);
+          const sumClientOuTresoDeb = lignesActives.filter(l => l.num.startsWith('411') || l.num.startsWith('512') || l.num.startsWith('53')).reduce((s, l) => s + l.deb, 0);
+
+          if (sumClientOuTresoDeb === 0) {
+            erreursGlobales.push(`<b>Opération #${numOp} (Vente)</b> : Vous devez débiter le compte <b>411 (Client)</b> (ou 512/530 si paiement immédiat) en première ligne pour le montant TTC.`);
+          } else if (Math.abs(sumClientOuTresoDeb - (sumVentesHT + sumTvaCol)) > 0.05) {
+            erreursGlobales.push(`<b>Opération #${numOp} (Vente)</b> : Incohérence des montants ! Le Débit Client/Trésorerie TTC (<b>${sumClientOuTresoDeb.toFixed(2)} €</b>) doit être égal au total Ventes HT (<b>${sumVentesHT.toFixed(2)} €</b>) + TVA collectée (<b>${sumTvaCol.toFixed(2)} €</b>).`);
+          }
+        }
+
+        if (isAchat && (has60_62 || hasImmo2) && !isVente) {
+          const sumAchatsHT = lignesActives.filter(l => l.num.startsWith('6') || l.num.startsWith('2')).reduce((s, l) => s + l.deb, 0);
+          const sumTvaDed = lignesActives.filter(l => l.num.startsWith('4456')).reduce((s, l) => s + l.deb, 0);
+          const sumFournOuTresoCre = lignesActives.filter(l => l.num.startsWith('401') || l.num.startsWith('404') || l.num.startsWith('512') || l.num.startsWith('53')).reduce((s, l) => s + l.cre, 0);
+
+          if (sumFournOuTresoCre === 0) {
+            erreursGlobales.push(`<b>Opération #${numOp} (Achat)</b> : Vous devez créditer le compte <b>401 (Fournisseur)</b>, <b>404 (Fournisseur d'immo)</b> ou la trésorerie (512/530) pour le montant TTC.`);
+          } else if (Math.abs(sumFournOuTresoCre - (sumAchatsHT + sumTvaDed)) > 0.05) {
+            erreursGlobales.push(`<b>Opération #${numOp} (Achat)</b> : Le Crédit Fournisseur/Trésorerie TTC (<b>${sumFournOuTresoCre.toFixed(2)} €</b>) doit être égal au total HT (<b>${sumAchatsHT.toFixed(2)} €</b>) + TVA déductible (<b>${sumTvaDed.toFixed(2)} €</b>).`);
+          }
+
+          if (hasImmo2 && lignesActives.some(l => l.num.startsWith('401'))) {
+            erreursGlobales.push(`<b>Opération #${numOp}</b> : Pour l'achat d'une immobilisation (classe 2), utilisez le compte <b>404 (Fournisseurs d'immobilisations)</b> au lieu de 401.`);
+          }
+        }
+
+        // 4. Règles sur les journaux auxiliaires
+        if (journal === 'BQ' && !lignesActives.some(l => l.num.startsWith('512') || l.num.startsWith('511'))) {
+          erreursGlobales.push(`<b>Opération #${numOp} (Journal BQ)</b> : Une écriture dans le journal de Banque (BQ) doit obligatoirement mouvementer le compte <b>512 (Banque)</b>.`);
+        }
+        if (journal === 'CA' && !lignesActives.some(l => l.num.startsWith('53'))) {
+          erreursGlobales.push(`<b>Opération #${numOp} (Journal CA)</b> : Une écriture dans le journal de Caisse (CA) doit obligatoirement mouvementer le compte <b>530 (Caisse)</b>.`);
+        }
+        if (journal === 'ACH' && lignesActives.some(l => l.num.startsWith('512') || l.num.startsWith('53'))) {
+          erreursGlobales.push(`<b>Opération #${numOp} (Journal ACH)</b> : Le journal des Achats (ACH) enregistre uniquement la facture avec le compte fournisseur (401/404). Le paiement (512 ou 530) doit être enregistré dans une autre opération avec le journal <b>BQ</b> ou <b>CA</b> !`);
+        }
+        if (journal === 'VTE' && lignesActives.some(l => l.num.startsWith('512') || l.num.startsWith('53'))) {
+          erreursGlobales.push(`<b>Opération #${numOp} (Journal VTE)</b> : Le journal des Ventes (VTE) enregistre la facture client (411). Pour enregistrer le règlement par carte (BQ) et/ou espèces (CA), cliquez sur <b>"+ Ajouter une opération"</b> ci-dessus avec les journaux BQ et CA !`);
+        }
+
+        resumeOperations.push(`Opération #${numOp} (${journal}) : ${totDeb.toFixed(2)} €`);
+      });
+
+      // Affichage du bilan de vérification
+      if (erreursGlobales.length > 0) {
+        resBox.innerHTML = `
+          <div class="p-5 bg-rose-950/80 border border-rose-500 rounded-2xl text-xs space-y-2.5 text-rose-100 shadow-xl">
+            <div class="font-extrabold text-sm flex items-center gap-2 text-rose-300">
+              <i class="fa-solid fa-circle-xmark text-lg"></i> ${erreursGlobales.length} anomalie${erreursGlobales.length > 1 ? 's' : ''} détectée${erreursGlobales.length > 1 ? 's' : ''} sur votre bordereau :
+            </div>
+            <ul class="list-disc list-inside space-y-1.5 leading-relaxed">${erreursGlobales.map(e => `<li>${e}</li>`).join('')}</ul>
+          </div>
+        `;
+      } else {
+        resBox.innerHTML = `
+          <div class="p-5 bg-emerald-950/80 border border-emerald-500 rounded-2xl text-xs space-y-2 text-emerald-100 shadow-xl">
+            <div class="font-extrabold text-sm flex items-center gap-2 text-emerald-300">
+              <i class="fa-solid fa-circle-check text-lg"></i> Bordereau 100 % Conforme au Plan Comptable Général !
+            </div>
+            <p>• <b>Total Général du Bordereau :</b> Débit = <b>${grandTotalDeb.toFixed(2)} €</b> | Crédit = <b>${grandTotalCre.toFixed(2)} €</b> (Partie double respectée sur les ${p1OperationsState.length} opération${p1OperationsState.length > 1 ? 's' : ''}).</p>
+            <p>• <b>Détail validé :</b> ${resumeOperations.join(' • ')}</p>
+          </div>
+        `;
+      }
+    }
+
+    // ============================================================================
+    // NAVIGATION GÉNÉRALE DE L'APPLICATION
+    // ============================================================================
     const defaultSubjectCatalog = [
       { id: 'p1', code: 'P1', title: 'Gestion des opérations commerciales et comptables', desc: 'Découverte de la comptabilité, classes 1 à 7, Bilan, Résultat, Balance et écritures.', category: 'process', icon: 'fa-cart-shopping' },
       { id: 'p2', code: 'P2', title: 'Gestion des relations avec les salariés & organismes sociaux', desc: 'Bulletins de paie, déclarations DSN, droit du travail et cotisations.', category: 'process', icon: 'fa-users-gear' },
@@ -530,6 +1230,9 @@
         simTitle.innerText = "Simulateur d'écriture (P1)";
         document.getElementById('p1-simulator-container').classList.remove('hidden');
         document.getElementById('p3-simulator-container').classList.add('hidden');
+        if (p1OperationsState.length === 0) {
+          chargerScenarioP1('vente_mixte');
+        }
       } else if (isP3) {
         simBtn.classList.remove('hidden');
         simTitle.innerText = "Simulateur IR/IS & TVA (P3)";
@@ -705,209 +1408,6 @@
       renderCard();
     }
 
-    function chargerExempleP1(type) {
-      if (type === 'voiture') {
-        document.getElementById('sim-ecr-journal').value = 'ACH';
-        document.getElementById('sim-ecr-libelle').value = "Achat d'une voiture pour 1000 euros";
-        document.getElementById('sim-c1-num').value = '218200'; document.getElementById('sim-c1-lib').value = 'Matériel de transport'; document.getElementById('sim-c1-deb').value = 1000; document.getElementById('sim-c1-cre').value = 0;
-        document.getElementById('sim-c2-num').value = '404000'; document.getElementById('sim-c2-lib').value = "Fournisseur d'immobilisations"; document.getElementById('sim-c2-deb').value = 0; document.getElementById('sim-c2-cre').value = 1000;
-        document.getElementById('sim-c3-num').value = ''; document.getElementById('sim-c3-lib').value = ''; document.getElementById('sim-c3-deb').value = 0; document.getElementById('sim-c3-cre').value = 0;
-      } else if (type === 'achat_m') {
-        document.getElementById('sim-ecr-journal').value = 'ACH';
-        document.getElementById('sim-ecr-libelle').value = "Achat de marchandises 1000 € HT avec TVA 20%";
-        document.getElementById('sim-c1-num').value = '607000'; document.getElementById('sim-c1-lib').value = 'Achats de marchandises'; document.getElementById('sim-c1-deb').value = 1000; document.getElementById('sim-c1-cre').value = 0;
-        document.getElementById('sim-c2-num').value = '445660'; document.getElementById('sim-c2-lib').value = 'TVA déductible sur ABS'; document.getElementById('sim-c2-deb').value = 200; document.getElementById('sim-c2-cre').value = 0;
-        document.getElementById('sim-c3-num').value = '401000'; document.getElementById('sim-c3-lib').value = 'Fournisseur'; document.getElementById('sim-c3-deb').value = 0; document.getElementById('sim-c3-cre').value = 1200;
-      } else if (type === 'vente') {
-        document.getElementById('sim-ecr-journal').value = 'VTE';
-        document.getElementById('sim-ecr-libelle').value = "Vente de marchandises 1000 € HT avec TVA 20%";
-        document.getElementById('sim-c1-num').value = '411000'; document.getElementById('sim-c1-lib').value = 'Client'; document.getElementById('sim-c1-deb').value = 1200; document.getElementById('sim-c1-cre').value = 0;
-        document.getElementById('sim-c2-num').value = '707000'; document.getElementById('sim-c2-lib').value = 'Ventes de marchandises'; document.getElementById('sim-c2-deb').value = 0; document.getElementById('sim-c2-cre').value = 1000;
-        document.getElementById('sim-c3-num').value = '445710'; document.getElementById('sim-c3-lib').value = 'TVA collectée'; document.getElementById('sim-c3-deb').value = 0; document.getElementById('sim-c3-cre').value = 200;
-      } else if (type === 'reglement') {
-        document.getElementById('sim-ecr-journal').value = 'BQ';
-        document.getElementById('sim-ecr-libelle').value = "Règlement fournisseur par chèque bancaire 475,20 €";
-        document.getElementById('sim-c1-num').value = '401000'; document.getElementById('sim-c1-lib').value = 'Fournisseur'; document.getElementById('sim-c1-deb').value = 475.2; document.getElementById('sim-c1-cre').value = 0;
-        document.getElementById('sim-c2-num').value = '512100'; document.getElementById('sim-c2-lib').value = 'Banque'; document.getElementById('sim-c2-deb').value = 0; document.getElementById('sim-c2-cre').value = 475.2;
-        document.getElementById('sim-c3-num').value = ''; document.getElementById('sim-c3-lib').value = ''; document.getElementById('sim-c3-deb').value = 0; document.getElementById('sim-c3-cre').value = 0;
-      }
-      verifierEcritureP1Intelligente();
-    }
-
-    // Fonction de normalisation tolérante (enlève accents, majuscules, espaces superflus)
-    function normTxt(str) {
-      return (str || '').toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
-    }
-
-    function verifierEcritureP1Intelligente() {
-      const journal = document.getElementById('sim-ecr-journal').value;
-      const libelleGlobal = normTxt(document.getElementById('sim-ecr-libelle').value);
-      const resBox = document.getElementById('sim-ecr-resultat-box');
-
-      const lignes = [
-        { idx: 1, num: document.getElementById('sim-c1-num').value.trim(), lib: normTxt(document.getElementById('sim-c1-lib').value), deb: parseFloat(document.getElementById('sim-c1-deb').value) || 0, cre: parseFloat(document.getElementById('sim-c1-cre').value) || 0 },
-        { idx: 2, num: document.getElementById('sim-c2-num').value.trim(), lib: normTxt(document.getElementById('sim-c2-lib').value), deb: parseFloat(document.getElementById('sim-c2-deb').value) || 0, cre: parseFloat(document.getElementById('sim-c2-cre').value) || 0 },
-        { idx: 3, num: document.getElementById('sim-c3-num').value.trim(), lib: normTxt(document.getElementById('sim-c3-lib').value), deb: parseFloat(document.getElementById('sim-c3-deb').value) || 0, cre: parseFloat(document.getElementById('sim-c3-cre').value) || 0 }
-      ].filter(l => l.num !== '' || l.deb > 0 || l.cre > 0 || l.lib !== '');
-
-      const totalDeb = lignes.reduce((acc, l) => acc + l.deb, 0);
-      const totalCre = lignes.reduce((acc, l) => acc + l.cre, 0);
-
-      let erreurs = [];
-
-      // 1. Nombre de lignes et équilibre Débit = Crédit
-      if (lignes.length < 2) {
-        erreurs.push("Une écriture comptable doit comporter au minimum 2 lignes (un compte débité et un compte crédité).");
-      }
-      if (Math.abs(totalDeb - totalCre) > 0.01 || totalDeb === 0) {
-        erreurs.push(`Partie double non respectée : Total Débit (${totalDeb.toFixed(2)} €) ≠ Total Crédit (${totalCre.toFixed(2)} €).`);
-      }
-
-      // Détection du contexte global de l'opération (est-ce une Vente, un Achat, une Immo, un Règlement ?)
-      const hasCompteVente = lignes.some(l => l.num.startsWith('70')) || lignes.some(l => l.lib.includes('vente'));
-      const hasCompteAchat = lignes.some(l => l.num.startsWith('60') || l.num.startsWith('61') || l.num.startsWith('62')) || lignes.some(l => l.lib.includes('achat'));
-      const isContexteVente = (journal === 'VTE') || libelleGlobal.includes('vente') || hasCompteVente;
-      const isContexteAchat = (journal === 'ACH') || libelleGlobal.includes('achat') || hasCompteAchat;
-
-      // 2. Inspection stricte LIGNE PAR LIGNE (Numéro PCG, Ordre Débit avant Crédit, Sens normal des comptes et TVA)
-      let vuCredit = false;
-
-      lignes.forEach(l => {
-        // Numéro de compte manquant ou invalide
-        if (l.num === '') {
-          erreurs.push(`Ligne ${l.idx} : vous avez oublié de saisir le <b>numéro de compte PCG</b>.`);
-          return;
-        }
-        if (!/^[1-7][0-9]{2,7}$/.test(l.num)) {
-          erreurs.push(`Ligne ${l.idx} : le numéro de compte <b>"${l.num}"</b> est invalide (il doit commencer par une classe de 1 à 7 et comporter au moins 3 chiffres, ex: 411, 607000, 44571).`);
-        }
-
-        // Débit et crédit sur la même ligne ou montant à 0
-        if (l.deb > 0 && l.cre > 0) {
-          erreurs.push(`Ligne ${l.idx} (compte ${l.num}) : impossible de mettre un montant au Débit ET au Crédit sur la même ligne.`);
-        }
-        if (l.deb === 0 && l.cre === 0) {
-          erreurs.push(`Ligne ${l.idx} (compte ${l.num}) : veuillez saisir un montant au Débit ou au Crédit.`);
-        }
-
-        // Vérification de l'ordre : Débit toujours AVANT Crédit
-        if (l.cre > 0) vuCredit = true;
-        if (l.deb > 0 && vuCredit) {
-          erreurs.push(`Ligne ${l.idx} (compte ${l.num}) : <b>Mauvais ordre</b> ! Tous les comptes au Débit doivent être inscrits sur les premières lignes, et les comptes au Crédit en bas.`);
-        }
-
-        // --- CONTRÔLE INTELLIGENT DE LA TVA (4456 vs 4457) ---
-        const parleDeTvaDed = l.num.startsWith('4456') || l.lib.includes('deduct');
-        const parleDeTvaCol = l.num.startsWith('4457') || l.lib.includes('collect');
-
-        if (parleDeTvaDed) {
-          if (isContexteVente) {
-            erreurs.push(`Ligne ${l.idx} : <b>Erreur majeure de TVA !</b> Sur une VENTE, vous ne pouvez jamais utiliser de la TVA déductible (44566). Il faut utiliser la <b>TVA collectée (compte 44571) au CRÉDIT</b> !`);
-          } else if (l.cre > 0) {
-            erreurs.push(`Ligne ${l.idx} (compte ${l.num}) : la TVA déductible (44566 / 44562) est une créance sur l'État, elle s'enregistre au <b>DÉBIT</b> (sauf avoir).`);
-          }
-          if (!l.num.startsWith('4456')) {
-            erreurs.push(`Ligne ${l.idx} : votre intitulé mentionne une TVA déductible mais le numéro <b>${l.num}</b> ne commence pas par <b>4456</b> (utilisez 44566 pour biens/services ou 44562 pour immobilisations).`);
-          }
-        }
-
-        if (parleDeTvaCol) {
-          if (isContexteAchat && !isContexteVente) {
-            erreurs.push(`Ligne ${l.idx} : <b>Erreur majeure de TVA !</b> Sur un ACHAT, on ne collecte pas la TVA (44571). Il faut utiliser la <b>TVA déductible (compte 44566 ou 44562) au DÉBIT</b> !`);
-          } else if (l.deb > 0) {
-            erreurs.push(`Ligne ${l.idx} (compte ${l.num}) : la TVA collectée (44571) est une dette envers l'État, elle doit obligatoirement être placée au <b>CRÉDIT</b> !`);
-          }
-          if (!l.num.startsWith('4457')) {
-            erreurs.push(`Ligne ${l.idx} : votre intitulé parle de TVA collectée mais le numéro <b>${l.num}</b> est faux (utilisez le compte <b>44571</b>).`);
-          }
-        }
-
-        // --- CONTRÔLE DU SENS DES COMPTES DE CHARGES (6) ET PRODUITS (7) ---
-        if (l.num.startsWith('6') && l.cre > 0) {
-          erreurs.push(`Ligne ${l.idx} (compte ${l.num}) : un compte de <b>Charge (classe 6)</b> augmente toujours au <b>DÉBIT</b>, il ne doit pas être mis au crédit.`);
-        }
-        if (l.num.startsWith('7') && l.deb > 0) {
-          erreurs.push(`Ligne ${l.idx} (compte ${l.num}) : un compte de <b>Produit / Vente (classe 7)</b> s'enregistre toujours au <b>CRÉDIT</b>, pas au débit.`);
-        }
-        if (l.num.startsWith('2') && l.cre > 0) {
-          erreurs.push(`Ligne ${l.idx} (compte ${l.num}) : l'acquisition d'une <b>Immobilisation (classe 2)</b> est un emploi durable qui s'enregistre au <b>DÉBIT</b>.`);
-        }
-      });
-
-      // 3. CONTRÔLE DE COHÉRENCE DES MONTANTS TTC / HT / TVA SUR VENTE ET ACHAT
-      if (isContexteVente && (journal === 'VTE' || hasCompteVente)) {
-        const ligneClient = lignes.find(l => l.num.startsWith('411') || l.num.startsWith('512') || l.num.startsWith('530'));
-        const ligneVente = lignes.find(l => l.num.startsWith('70'));
-        const ligneTva = lignes.find(l => l.num.startsWith('445'));
-
-        if (!ligneClient || ligneClient.deb === 0) {
-          erreurs.push("Schéma de vente : le compte <b>Client (411)</b> (ou 512/530 au comptant) doit être <b>DÉBITÉ en 1ère ligne</b> pour le montant TTC.");
-        }
-        if (!ligneVente || ligneVente.cre === 0) {
-          erreurs.push("Schéma de vente : le compte de <b>Vente (707 ou 706)</b> doit être <b>CRÉDITÉ</b> pour le montant HT.");
-        }
-        if (ligneClient && ligneVente && ligneTva) {
-          if (ligneClient.deb < ligneVente.cre) {
-            erreurs.push(`Erreur de montants sur la vente : le Client au Débit (${ligneClient.deb} €) doit payer le <b>TTC (HT + TVA)</b>, il doit donc être supérieur au montant HT de la vente (${ligneVente.cre} €) ! Sur une vente : Débit 411 (TTC) = Crédit 707 (HT) + Crédit 44571 (TVA).`);
-          }
-        }
-      }
-
-      if (isContexteAchat && !isContexteVente && (journal === 'ACH' || hasCompteAchat)) {
-        const ligneFourn = lignes.find(l => l.num.startsWith('401') || l.num.startsWith('404') || l.num.startsWith('512') || l.num.startsWith('530'));
-        const ligneCharge = lignes.find(l => l.num.startsWith('6') || l.num.startsWith('2'));
-
-        if (!ligneCharge || ligneCharge.deb === 0) {
-          erreurs.push("Schéma d'achat : le compte d'achat (<b>classe 6</b>) ou d'immobilisation (<b>classe 2</b>) doit être <b>DÉBITÉ en 1ère ligne</b> pour le montant HT.");
-        }
-        if (!ligneFourn || ligneFourn.cre === 0) {
-          erreurs.push("Schéma d'achat : le compte <b>Fournisseur (401 ou 404)</b> doit être <b>CRÉDITÉ en dernière ligne</b> pour le montant TTC.");
-        }
-      }
-
-      // 4. Règles spécifiques selon les mots-clés de l'énoncé
-      if (libelleGlobal.includes('voiture') || libelleGlobal.includes('vehicule') || libelleGlobal.includes('camion')) {
-        if (!lignes.some(l => l.num.startsWith('2182') && l.deb > 0)) {
-          erreurs.push("Règle PCG : une voiture est une immobilisation corporelle, il faut débiter le compte <b>2182 (Matériel de transport)</b> et non un compte d'achat 607.");
-        }
-        if (lignes.some(l => l.num.startsWith('401'))) {
-          erreurs.push("Attention : pour l'achat d'une immobilisation, on utilise le compte <b>404 (Fournisseur d'immobilisations)</b> au crédit et non 401.");
-        }
-      }
-
-      // 5. Cohérence du Journal choisi
-      if (journal === 'ACH' && hasCompteVente) {
-        erreurs.push("Erreur de journal : vous avez sélectionné le journal des <b>Achats (ACH)</b> alors que votre écriture contient une vente (compte 70) !");
-      }
-      if (journal === 'VTE' && hasCompteAchat) {
-        erreurs.push("Erreur de journal : vous avez sélectionné le journal des <b>Ventes (VTE)</b> alors que votre écriture contient un achat (classe 6) !");
-      }
-      if (journal === 'BQ' && !lignes.some(l => l.num.startsWith('512'))) {
-        erreurs.push("Erreur de journal : dans le journal de <b>Banque (BQ)</b>, le compte <b>512 (Banque)</b> doit obligatoirement être utilisé.");
-      }
-      if (journal === 'CA' && !lignes.some(l => l.num.startsWith('53'))) {
-        erreurs.push("Erreur de journal : dans le journal de <b>Caisse (CA)</b>, le compte <b>530 (Caisse)</b> doit obligatoirement être utilisé.");
-      }
-
-      // Affichage du résultat final
-      if (erreurs.length > 0) {
-        resBox.innerHTML = `
-          <div class="p-4 bg-rose-950/80 border border-rose-500 rounded-2xl text-xs space-y-2 text-rose-100 shadow-lg">
-            <span class="font-bold text-sm flex items-center gap-2 text-rose-300"><i class="fa-solid fa-circle-xmark text-base"></i> Écriture Fausse (${erreurs.length} erreur${erreurs.length > 1 ? 's' : ''} détectée${erreurs.length > 1 ? 's' : ''}) :</span>
-            <ul class="list-disc list-inside space-y-1.5 leading-relaxed">${erreurs.map(e => `<li>${e}</li>`).join('')}</ul>
-          </div>
-        `;
-      } else {
-        resBox.innerHTML = `
-          <div class="p-4 bg-emerald-950/80 border border-emerald-500 rounded-2xl text-xs space-y-1.5 text-emerald-100 shadow-lg">
-            <span class="font-bold text-sm flex items-center gap-2 text-emerald-300"><i class="fa-solid fa-circle-check text-base"></i> Écriture 100 % Juste et Validée !</span>
-            <p>• <b>Partie double :</b> Total Débit (${totalDeb.toFixed(2)} €) = Total Crédit (${totalCre.toFixed(2)} €).</p>
-            <p>• <b>Contrôle PCG :</b> Les numéros de compte, le traitement de la TVA, le sens Débit/Crédit, l'ordre des lignes et le journal (<b>${journal}</b>) sont parfaitement exacts.</p>
-          </div>
-        `;
-      }
-    }
-
     function runSimP3() {
       const ca = parseFloat(document.getElementById('sim-p3-ca').value) || 0;
       const ch = parseFloat(document.getElementById('sim-p3-charges').value) || 0;
@@ -916,6 +1416,7 @@
     }
 
     window.onload = function() {
+      initPcgSystem();
       goToYearSelect();
     };
   </script>
