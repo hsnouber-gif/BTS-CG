@@ -41,7 +41,6 @@
 
 <body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col antialiased selection:bg-indigo-500 selection:text-white">
 
-  <!-- Header -->
   <header class="sticky top-0 z-50 backdrop-blur-md bg-slate-900/90 border-b border-slate-800/80">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
       <button onclick="goToYearSelect()" class="flex items-center gap-3 text-left focus:outline-none group">
@@ -76,7 +75,6 @@
 
   <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-6 sm:py-8">
 
-    <!-- VIEW 0: ANNEES -->
     <div id="view-years" class="space-y-8">
       <div class="relative overflow-hidden rounded-3xl p-6 sm:p-10 border border-indigo-500/20 bg-gradient-to-br from-indigo-950/60 via-slate-900 to-slate-900 shadow-2xl text-center sm:text-left">
         <div class="max-w-3xl relative z-10 space-y-3">
@@ -129,7 +127,6 @@
       </div>
     </div>
 
-    <!-- VIEW CG2: BIENTOT -->
     <div id="view-cg2-unavailable" class="hidden space-y-8">
       <div class="relative overflow-hidden rounded-3xl p-8 sm:p-14 border border-purple-500/40 bg-gradient-to-b from-purple-950/40 via-slate-900 to-slate-950 text-center shadow-2xl max-w-4xl mx-auto">
         <h1 class="text-3xl font-black text-white">BIENTÔT DISPONIBLE !</h1>
@@ -138,7 +135,6 @@
       </div>
     </div>
 
-    <!-- VIEW 1: HUB MATIERES -->
     <div id="view-hub" class="hidden space-y-8">
       <div class="p-6 rounded-2xl border border-slate-800 bg-slate-900/80 shadow-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
@@ -150,7 +146,6 @@
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5" id="modules-grid"></div>
     </div>
 
-    <!-- VIEW 2: CHAPITRES -->
     <div id="view-chapters" class="hidden space-y-6">
       <div class="p-6 rounded-2xl border border-slate-800 bg-slate-900/80 shadow-xl flex items-center justify-between">
         <div class="flex items-center gap-4">
@@ -166,7 +161,6 @@
       <div class="grid grid-cols-1 gap-4" id="chapters-list-container"></div>
     </div>
 
-    <!-- VIEW 3: WORKSPACE -->
     <div id="view-workspace" class="hidden space-y-6">
       <div class="bg-gradient-to-r from-slate-900 via-indigo-950/40 to-slate-900 border border-indigo-500/30 rounded-2xl p-5 shadow-xl flex flex-col lg:flex-row lg:items-center justify-between gap-4">
         <div>
@@ -186,7 +180,6 @@
         </div>
       </div>
 
-      <!-- Navigation Tabs : Simulateur dynamique -->
       <div class="flex items-center gap-2 p-1.5 bg-slate-900 border border-slate-800 rounded-2xl overflow-x-auto text-xs sm:text-sm font-semibold">
         <button onclick="switchChapterTab('quiz')" id="tab-btn-quiz" class="px-4 py-2 rounded-xl transition flex items-center gap-2 bg-indigo-600 text-white shadow shrink-0">
           <i class="fa-solid fa-circle-question"></i> <span id="tab-label-quiz">Entraînement Quiz</span>
@@ -194,18 +187,14 @@
         <button onclick="switchChapterTab('flashcards')" id="tab-btn-flashcards" class="px-4 py-2 rounded-xl transition flex items-center gap-2 text-slate-300 hover:text-white shrink-0">
           <i class="fa-solid fa-bolt"></i> <span id="tab-label-flashcards">Flashcards Définitions</span>
         </button>
-        
-        <!-- ONGLET SIMULATEUR DYNAMIQUE (P1 ou P3) -->
         <button onclick="switchChapterTab('simulator')" id="tab-btn-simulator" class="px-4 py-2 rounded-xl transition flex items-center gap-2 text-slate-300 hover:text-white shrink-0">
           <i class="fa-solid fa-calculator"></i> <span id="sim-tab-title">Simulateur</span>
         </button>
-
         <button onclick="switchChapterTab('synthese')" id="tab-btn-synthese" class="px-4 py-2 rounded-xl transition flex items-center gap-2 text-slate-300 hover:text-white shrink-0">
           <i class="fa-solid fa-book-bookmark"></i> <span>Synthèse du cours</span>
         </button>
       </div>
 
-      <!-- TAB 1: QUIZ -->
       <div id="subtab-quiz" class="tab-pane space-y-6">
         <div class="bg-slate-900/80 p-4 rounded-2xl border border-slate-800 space-y-3">
           <div class="flex justify-between items-center text-xs">
@@ -240,7 +229,6 @@
         </div>
       </div>
 
-      <!-- TAB 2: FLASHCARDS -->
       <div id="subtab-flashcards" class="tab-pane hidden space-y-6">
         <div class="flex justify-center">
           <div class="w-full max-w-xl h-80 perspective-1000 cursor-pointer" onclick="flipCard()">
@@ -265,16 +253,25 @@
         </div>
       </div>
 
-      <!-- TAB 3: SIMULATEUR DYNAMIQUE (SIMULATEUR ÉCRITURES P1 OU SIMULATEUR FISCAL P3) -->
       <div id="subtab-simulator" class="tab-pane hidden space-y-6">
         
-        <!-- ZONE 1 : SIMULATEUR ÉCRITURES COMPTABLES INTELLIGENT (POUR P1) -->
         <div id="p1-simulator-container" class="space-y-5 bg-slate-900/90 border border-slate-800 rounded-3xl p-6 sm:p-8 shadow-xl">
-          <div class="border-b border-slate-800 pb-3 flex items-center justify-between">
-            <h3 class="font-extrabold text-base text-white flex items-center gap-2">
-              <i class="fa-solid fa-gamepad text-indigo-400"></i> Simulateur d'Écritures avec Contrôle des Comptes & Sens (P1)
-            </h3>
-            <span class="text-xs px-2.5 py-1 rounded bg-indigo-500/20 text-indigo-300 font-mono font-bold">Audit Automatique</span>
+          <div class="border-b border-slate-800 pb-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <div>
+              <h3 class="font-extrabold text-base text-white flex items-center gap-2">
+                <i class="fa-solid fa-gamepad text-indigo-400"></i> Simulateur d'Écritures Comptables (P1)
+              </h3>
+              <p class="text-xs text-slate-400 mt-0.5">Vérifie le journal, les numéros de compte, l'ordre (Débit avant Crédit) et l'équilibre de la partie double.</p>
+            </div>
+            <span class="text-xs px-2.5 py-1 rounded bg-indigo-500/20 text-indigo-300 font-mono font-bold self-start">Audit PCG Complet</span>
+          </div>
+
+          <div class="flex flex-wrap gap-2 items-center text-xs">
+            <span class="text-slate-400 font-bold">Exemples rapides :</span>
+            <button type="button" onclick="chargerExempleP1('voiture')" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-indigo-300 border border-slate-700 transition">Achat voiture 1000 €</button>
+            <button type="button" onclick="chargerExempleP1('achat_m')" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-indigo-300 border border-slate-700 transition">Achat marchandises + TVA</button>
+            <button type="button" onclick="chargerExempleP1('vente')" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-indigo-300 border border-slate-700 transition">Vente client + TVA</button>
+            <button type="button" onclick="chargerExempleP1('reglement')" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-indigo-300 border border-slate-700 transition">Paiement fournisseur BQ</button>
           </div>
 
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -289,33 +286,30 @@
               </select>
             </div>
             <div class="sm:col-span-2">
-              <label class="block text-[11px] font-bold text-slate-400 uppercase mb-1">2. Libellé / Énoncé de l'opération</label>
-              <input type="text" id="sim-ecr-libelle" placeholder="Ex: Achat d'une voiture pour 1000 euros HT avec TVA à crédit" value="Achat d'une voiture pour 1000 euros" class="w-full bg-slate-850 border border-slate-700 rounded-xl p-2.5 text-xs text-white">
+              <label class="block text-[11px] font-bold text-slate-400 uppercase mb-1">2. Phrase / Libellé de l'opération</label>
+              <input type="text" id="sim-ecr-libelle" placeholder="Ex: Achat d'une voiture pour 1000 euros" value="Achat d'une voiture pour 1000 euros" class="w-full bg-slate-850 border border-slate-700 rounded-xl p-2.5 text-xs text-white">
             </div>
           </div>
 
           <div class="space-y-2 text-xs font-mono">
             <div class="grid grid-cols-12 gap-2 text-slate-400 font-bold px-1">
               <span class="col-span-3">N° Compte PCG</span>
-              <span class="col-span-5">Intitulé</span>
+              <span class="col-span-5">Intitulé du compte</span>
               <span class="col-span-2 text-right">Débit (€)</span>
               <span class="col-span-2 text-right">Crédit (€)</span>
             </div>
-            <!-- Ligne 1 -->
             <div class="grid grid-cols-12 gap-2 items-center">
               <input type="text" id="sim-c1-num" value="218200" placeholder="Ex: 2182" class="col-span-3 bg-slate-850 border border-slate-700 rounded-xl p-2.5 text-white font-bold">
               <input type="text" id="sim-c1-lib" value="Matériel de transport" placeholder="Intitulé" class="col-span-5 bg-slate-850 border border-slate-700 rounded-xl p-2.5 text-slate-300">
               <input type="number" id="sim-c1-deb" value="1000" placeholder="0" class="col-span-2 bg-slate-850 border border-slate-700 rounded-xl p-2.5 text-right text-emerald-400 font-bold">
               <input type="number" id="sim-c1-cre" value="0" placeholder="0" class="col-span-2 bg-slate-850 border border-slate-700 rounded-xl p-2.5 text-right text-amber-400 font-bold">
             </div>
-            <!-- Ligne 2 -->
             <div class="grid grid-cols-12 gap-2 items-center">
               <input type="text" id="sim-c2-num" value="404000" placeholder="Ex: 404" class="col-span-3 bg-slate-850 border border-slate-700 rounded-xl p-2.5 text-white font-bold">
               <input type="text" id="sim-c2-lib" value="Fournisseur d'immobilisations" placeholder="Intitulé" class="col-span-5 bg-slate-850 border border-slate-700 rounded-xl p-2.5 text-slate-300">
               <input type="number" id="sim-c2-deb" value="0" placeholder="0" class="col-span-2 bg-slate-850 border border-slate-700 rounded-xl p-2.5 text-right text-emerald-400 font-bold">
               <input type="number" id="sim-c2-cre" value="1000" placeholder="0" class="col-span-2 bg-slate-850 border border-slate-700 rounded-xl p-2.5 text-right text-amber-400 font-bold">
             </div>
-            <!-- Ligne 3 (optionnelle) -->
             <div class="grid grid-cols-12 gap-2 items-center">
               <input type="text" id="sim-c3-num" value="" placeholder="(Optionnel)" class="col-span-3 bg-slate-850 border border-slate-700 rounded-xl p-2.5 text-white font-bold">
               <input type="text" id="sim-c3-lib" value="" placeholder="Intitulé" class="col-span-5 bg-slate-850 border border-slate-700 rounded-xl p-2.5 text-slate-300">
@@ -324,15 +318,14 @@
             </div>
           </div>
 
-          <div class="pt-3 border-t border-slate-800 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-            <button type="button" onclick="verifierEcritureP1Intelligente()" class="px-5 py-3 rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs transition flex items-center gap-2 shadow-lg shadow-indigo-600/30">
-              <i class="fa-solid fa-wand-magic-sparkles"></i> Vérifier les comptes et la partie double
+          <div class="pt-3 border-t border-slate-800 flex flex-col gap-3">
+            <button type="button" onclick="verifierEcritureP1Intelligente()" class="self-start px-5 py-3 rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs transition flex items-center gap-2 shadow-lg shadow-indigo-600/30">
+              <i class="fa-solid fa-check-double"></i> Vérifier mon écriture (Comptes, Ordre & Partie Double)
             </button>
-            <div id="sim-ecr-resultat-box" class="w-full sm:w-auto"></div>
+            <div id="sim-ecr-resultat-box" class="w-full"></div>
           </div>
         </div>
 
-        <!-- ZONE 2 : SIMULATEUR FISCAL IR/IS & TVA (POUR P3) -->
         <div id="p3-simulator-container" class="hidden grid grid-cols-1 lg:grid-cols-12 gap-6">
           <div class="lg:col-span-5 bg-slate-900/90 border border-slate-800 rounded-3xl p-6 space-y-4">
             <h3 class="font-bold text-sm text-white">Paramètres P3 (IR vs IS & Micro)</h3>
@@ -356,7 +349,6 @@
 
       </div>
 
-      <!-- TAB 4: SYNTHESE -->
       <div id="subtab-synthese" class="tab-pane hidden space-y-6"></div>
     </div>
   </main>
@@ -496,7 +488,6 @@
       document.getElementById('ws-chapter-title').innerText = chap.chapterTitle;
       document.getElementById('ws-chapter-desc').innerText = chap.chapterDesc;
 
-      // Configuration dynamique de l'onglet simulateur selon la matière
       const isP1 = (chap.subjectId === 'p1');
       const isP3 = (chap.subjectId === 'p3');
       const simBtn = document.getElementById('tab-btn-simulator');
@@ -516,7 +507,6 @@
         simBtn.classList.add('hidden');
       }
 
-      // Init Quiz
       activeQuestions = [...(chap.quizQuestions || [])];
       currentQuizIndex = 0;
       quizScore = 0;
@@ -525,12 +515,10 @@
       renderFilters(chap);
       renderQuestion();
 
-      // Init Flashcards
       currentActiveCardsList = [...(chap.flashcards || [])];
       currentCardIndex = 0;
       renderCard();
 
-      // Init Synthese
       document.getElementById('subtab-synthese').innerHTML = chap.syntheseHtml || '';
 
       currentView = 'workspace';
@@ -553,7 +541,6 @@
       });
     }
 
-    // Gestion Quiz
     let activeQuestions = [];
     let currentQuizIndex = 0;
     let selectedOption = null;
@@ -658,7 +645,6 @@
       renderQuestion();
     }
 
-    // Flashcards
     let currentActiveCardsList = [];
     let currentCardIndex = 0;
     let isFlipped = false;
@@ -687,105 +673,174 @@
       renderCard();
     }
 
-    // ==============================================================
-    // SIMULATEUR D'ÉCRITURES INTELLIGENT (PROCESSUS 1)
-    // ==============================================================
+    function chargerExempleP1(type) {
+      if (type === 'voiture') {
+        document.getElementById('sim-ecr-journal').value = 'ACH';
+        document.getElementById('sim-ecr-libelle').value = "Achat d'une voiture pour 1000 euros";
+        document.getElementById('sim-c1-num').value = '218200'; document.getElementById('sim-c1-lib').value = 'Matériel de transport'; document.getElementById('sim-c1-deb').value = 1000; document.getElementById('sim-c1-cre').value = 0;
+        document.getElementById('sim-c2-num').value = '404000'; document.getElementById('sim-c2-lib').value = "Fournisseur d'immobilisations"; document.getElementById('sim-c2-deb').value = 0; document.getElementById('sim-c2-cre').value = 1000;
+        document.getElementById('sim-c3-num').value = ''; document.getElementById('sim-c3-lib').value = ''; document.getElementById('sim-c3-deb').value = 0; document.getElementById('sim-c3-cre').value = 0;
+      } else if (type === 'achat_m') {
+        document.getElementById('sim-ecr-journal').value = 'ACH';
+        document.getElementById('sim-ecr-libelle').value = "Achat de marchandises 1000 € HT avec TVA 20%";
+        document.getElementById('sim-c1-num').value = '607000'; document.getElementById('sim-c1-lib').value = 'Achats de marchandises'; document.getElementById('sim-c1-deb').value = 1000; document.getElementById('sim-c1-cre').value = 0;
+        document.getElementById('sim-c2-num').value = '445660'; document.getElementById('sim-c2-lib').value = 'TVA déductible sur ABS'; document.getElementById('sim-c2-deb').value = 200; document.getElementById('sim-c2-cre').value = 0;
+        document.getElementById('sim-c3-num').value = '401000'; document.getElementById('sim-c3-lib').value = 'Fournisseur'; document.getElementById('sim-c3-deb').value = 0; document.getElementById('sim-c3-cre').value = 1200;
+      } else if (type === 'vente') {
+        document.getElementById('sim-ecr-journal').value = 'VTE';
+        document.getElementById('sim-ecr-libelle').value = "Vente de marchandises 600 € HT avec TVA 20%";
+        document.getElementById('sim-c1-num').value = '411000'; document.getElementById('sim-c1-lib').value = 'Client'; document.getElementById('sim-c1-deb').value = 720; document.getElementById('sim-c1-cre').value = 0;
+        document.getElementById('sim-c2-num').value = '707000'; document.getElementById('sim-c2-lib').value = 'Ventes de marchandises'; document.getElementById('sim-c2-deb').value = 0; document.getElementById('sim-c2-cre').value = 600;
+        document.getElementById('sim-c3-num').value = '445710'; document.getElementById('sim-c3-lib').value = 'TVA collectée'; document.getElementById('sim-c3-deb').value = 0; document.getElementById('sim-c3-cre').value = 120;
+      } else if (type === 'reglement') {
+        document.getElementById('sim-ecr-journal').value = 'BQ';
+        document.getElementById('sim-ecr-libelle').value = "Règlement fournisseur par chèque bancaire 475,20 €";
+        document.getElementById('sim-c1-num').value = '401000'; document.getElementById('sim-c1-lib').value = 'Fournisseur'; document.getElementById('sim-c1-deb').value = 475.2; document.getElementById('sim-c1-cre').value = 0;
+        document.getElementById('sim-c2-num').value = '512100'; document.getElementById('sim-c2-lib').value = 'Banque'; document.getElementById('sim-c2-deb').value = 0; document.getElementById('sim-c2-cre').value = 475.2;
+        document.getElementById('sim-c3-num').value = ''; document.getElementById('sim-c3-lib').value = ''; document.getElementById('sim-c3-deb').value = 0; document.getElementById('sim-c3-cre').value = 0;
+      }
+      verifierEcritureP1Intelligente();
+    }
+
     function verifierEcritureP1Intelligente() {
       const journal = document.getElementById('sim-ecr-journal').value;
       const libelle = document.getElementById('sim-ecr-libelle').value.toLowerCase().trim();
       const resBox = document.getElementById('sim-ecr-resultat-box');
 
-      // Lecture des lignes
       const lignes = [
-        { num: document.getElementById('sim-c1-num').value.trim(), deb: parseFloat(document.getElementById('sim-c1-deb').value) || 0, cre: parseFloat(document.getElementById('sim-c1-cre').value) || 0 },
-        { num: document.getElementById('sim-c2-num').value.trim(), deb: parseFloat(document.getElementById('sim-c2-deb').value) || 0, cre: parseFloat(document.getElementById('sim-c2-cre').value) || 0 },
-        { num: document.getElementById('sim-c3-num').value.trim(), deb: parseFloat(document.getElementById('sim-c3-deb').value) || 0, cre: parseFloat(document.getElementById('sim-c3-cre').value) || 0 }
-      ].filter(l => l.num !== '');
+        { idx: 1, num: document.getElementById('sim-c1-num').value.trim(), deb: parseFloat(document.getElementById('sim-c1-deb').value) || 0, cre: parseFloat(document.getElementById('sim-c1-cre').value) || 0 },
+        { idx: 2, num: document.getElementById('sim-c2-num').value.trim(), deb: parseFloat(document.getElementById('sim-c2-deb').value) || 0, cre: parseFloat(document.getElementById('sim-c2-cre').value) || 0 },
+        { idx: 3, num: document.getElementById('sim-c3-num').value.trim(), deb: parseFloat(document.getElementById('sim-c3-deb').value) || 0, cre: parseFloat(document.getElementById('sim-c3-cre').value) || 0 }
+      ].filter(l => l.num !== '' || l.deb > 0 || l.cre > 0);
 
       const totalDeb = lignes.reduce((acc, l) => acc + l.deb, 0);
       const totalCre = lignes.reduce((acc, l) => acc + l.cre, 0);
 
-      // 1. Contrôle de l'équilibre Débit = Crédit
-      if (Math.abs(totalDeb - totalCre) > 0.01 || totalDeb === 0) {
-        resBox.innerHTML = `<div class="p-3 bg-rose-950/60 border border-rose-500 rounded-xl text-xs text-rose-300 font-bold"><i class="fa-solid fa-xmark mr-1"></i> Écriture déséquilibrée : Total Débit (${totalDeb} €) ≠ Total Crédit (${totalCre} €).</div>`;
-        return;
-      }
-
-      // 2. Contrôles intelligents sur la logique comptable (Numéros de comptes et sens)
       let erreurs = [];
-      let validations = [];
 
-      // A) Achat de voiture / véhicule / matériel de transport
+      if (lignes.length < 2) {
+        erreurs.push("Une écriture comptable doit comporter au minimum deux lignes (un compte débité et un compte crédité).");
+      }
+
+      if (Math.abs(totalDeb - totalCre) > 0.01 || totalDeb === 0) {
+        erreurs.push(`Partie double non respectée : Total Débit (${totalDeb.toFixed(2)} €) ≠ Total Crédit (${totalCre.toFixed(2)} €).`);
+      }
+
+      // Vérification de l'ordre : les comptes au Débit doivent toujours être placés AVANT les comptes au Crédit
+      let vuCredit = false;
+      lignes.forEach(l => {
+        if (l.deb > 0 && l.cre > 0) {
+          erreurs.push(`Ligne ${l.idx} (compte ${l.num}) : un compte ne peut pas être débité et crédité sur la même ligne.`);
+        }
+        if (l.cre > 0) vuCredit = true;
+        if (l.deb > 0 && vuCredit) {
+          erreurs.push(`Mauvais ordre des lignes : au journal, on inscrit toujours tous les comptes DÉBITÉS en haut, puis les comptes CRÉDITÉS en dessous (la ligne ${l.idx} au débit est placée après un crédit).`);
+        }
+        if (!/^[1-7][0-9]{2,7}$/.test(l.num)) {
+          erreurs.push(`Ligne ${l.idx} : le numéro de compte "${l.num}" n'est pas un numéro PCG valide (doit commencer par une classe de 1 à 7 et contenir au moins 3 chiffres).`);
+        }
+      });
+
+      // Vérification des comptes selon le libellé
       if (libelle.includes('voiture') || libelle.includes('véhicule') || libelle.includes('camion')) {
-        const has2182 = lignes.some(l => l.num.startsWith('2182') && l.deb > 0);
-        if (!has2182) erreurs.push("Une voiture est une immobilisation durable : elle doit obligatoirement être débitée au compte <b>2182</b> (Matériel de transport) et non en compte de charges 607 !");
-        else validations.push("Compte 2182 (Matériel de transport) correctement débité.");
-
-        const hasDetteImmo = lignes.some(l => (l.num.startsWith('404') || l.num.startsWith('512')) && l.cre > 0);
-        if (!hasDetteImmo) erreurs.push("Pour une immobilisation, le crédit doit être le compte <b>404</b> (Fournisseurs d'immo) ou <b>512</b> (Banque), et non 401 !");
-        else validations.push("Contrepartie au crédit (404 ou 512) validée.");
-      }
-
-      // B) Achat de marchandises ou matières premières
-      else if (libelle.includes('achat') && (libelle.includes('marchandise') || libelle.includes('matière') || libelle.includes('fourniture'))) {
-        const has60 = lignes.some(l => (l.num.startsWith('601') || l.num.startsWith('607') || l.num.startsWith('606')) && l.deb > 0);
-        if (!has60) erreurs.push("Pour un achat d'exploitation, vous devez débiter un compte de charge de classe 6 (<b>607</b> pour marchandises ou <b>601</b> pour matières premières).");
-        else validations.push("Compte d'achat classe 6 débité avec succès.");
-
-        const has401 = lignes.some(l => (l.num.startsWith('401') || l.num.startsWith('512')) && l.cre > 0);
-        if (!has401) erreurs.push("La dette d'achat courant doit être créditée au compte <b>401</b> (Fournisseurs) ou <b>512</b> (Banque).");
-      }
-
-      // C) Vente de marchandises ou services
-      else if (libelle.includes('vente')) {
-        const has70 = lignes.some(l => (l.num.startsWith('707') || l.num.startsWith('706') || l.num.startsWith('701')) && l.cre > 0);
-        if (!has70) erreurs.push("Une vente est un produit : elle doit être <b>créditée en compte 707</b> (marchandises) ou <b>706</b> (prestations) !");
-        else validations.push("Compte de vente classe 7 crédité correctement.");
-
-        const has411 = lignes.some(l => (l.num.startsWith('411') || l.num.startsWith('512') || l.num.startsWith('530')) && l.deb > 0);
-        if (!has411) erreurs.push("Le client ou le règlement doit être débité en compte <b>411</b> (Client), <b>512</b> (Banque) ou <b>530</b> (Caisse).");
-      }
-
-      // D) Contrôle TVA
-      if (libelle.includes('tva')) {
-        const isAchat = libelle.includes('achat') || libelle.includes('voiture');
-        if (isAchat) {
-          const hasTvaDed = lignes.some(l => (l.num.startsWith('4456') || l.num.startsWith('44562') || l.num.startsWith('44566')) && l.deb > 0);
-          if (!hasTvaDed) erreurs.push("Sur un achat, la TVA est déductible : elle doit être au <b>Débit</b> du compte <b>44566</b> ou <b>44562</b> !");
-        } else if (libelle.includes('vente')) {
-          const hasTvaCol = lignes.some(l => l.num.startsWith('4457') && l.cre > 0);
-          if (!hasTvaCol) erreurs.push("Sur une vente, la TVA est collectée : elle doit être au <b>Crédit</b> du compte <b>44571</b> !");
+        if (!lignes.some(l => l.num.startsWith('2182') && l.deb > 0)) {
+          erreurs.push("Erreur de compte : l'achat d'une voiture est une immobilisation corporelle qui s'enregistre au DÉBIT du compte <b>2182</b> (Matériel de transport) et non en classe 6.");
+        }
+        if (!lignes.some(l => (l.num.startsWith('404') || l.num.startsWith('512')) && l.cre > 0)) {
+          erreurs.push("Erreur de contrepartie : le crédit pour l'achat d'une immobilisation doit être <b>404</b> (Fournisseur d'immobilisations) ou <b>512</b> (Banque).");
+        }
+      } else if (libelle.includes('machine') || libelle.includes('matériel industriel')) {
+        if (!lignes.some(l => l.num.startsWith('215') && l.deb > 0)) {
+          erreurs.push("Erreur de compte : une machine industrielle s'enregistre au DÉBIT du compte <b>2154</b> (Matériel industriel).");
+        }
+        if (!lignes.some(l => (l.num.startsWith('404') || l.num.startsWith('512')) && l.cre > 0)) {
+          erreurs.push("Erreur de contrepartie : utilisez le compte <b>404</b> (Fournisseur d'immobilisations) ou <b>512</b> au CRÉDIT.");
+        }
+      } else if (libelle.includes('mobilier') || libelle.includes('ordinateur') || libelle.includes('informatique')) {
+        if (!lignes.some(l => (l.num.startsWith('2183') || l.num.startsWith('2184')) && l.deb > 0)) {
+          erreurs.push("Erreur de compte : le mobilier (<b>2184</b>) ou matériel informatique (<b>2183</b>) doit être DÉBITÉ en classe 2.");
+        }
+      } else if (libelle.includes('achat') || libelle.includes('facture') && !libelle.includes('vente') && !libelle.includes('client')) {
+        if (!lignes.some(l => l.num.startsWith('6') && l.deb > 0)) {
+          erreurs.push("Erreur de compte : un achat courant (marchandises <b>607</b>, matières <b>601</b>, fournitures/énergie <b>606</b>, télécom <b>626</b>) doit être DÉBITÉ en classe 6.");
+        }
+        if (!lignes.some(l => (l.num.startsWith('401') || l.num.startsWith('512') || l.num.startsWith('530')) && l.cre > 0)) {
+          erreurs.push("Erreur de contrepartie : le fournisseur (<b>401</b>), la banque (<b>512</b>) ou la caisse (<b>530</b>) doit être CRÉDITÉ.");
+        }
+      } else if (libelle.includes('vente')) {
+        if (!lignes.some(l => l.num.startsWith('70') && l.cre > 0)) {
+          erreurs.push("Erreur de compte : une vente doit obligatoirement être CRÉDITÉE en compte de produits classe 7 (<b>707</b> marchandises ou <b>706</b> prestations).");
+        }
+        if (!lignes.some(l => (l.num.startsWith('411') || l.num.startsWith('512') || l.num.startsWith('530')) && l.deb > 0)) {
+          erreurs.push("Erreur de compte : le client (<b>411</b>), la banque (<b>512</b>) ou la caisse (<b>530</b>) doit être DÉBITÉ en premier.");
+        }
+      } else if ((libelle.includes('règlement') || libelle.includes('paiement') || libelle.includes('chèque') || libelle.includes('prélèvement')) && libelle.includes('fournisseur')) {
+        if (!lignes.some(l => l.num.startsWith('401') && l.deb > 0)) {
+          erreurs.push("Erreur de compte : lors du règlement d'un fournisseur, sa dette diminue, il faut donc DÉBITER le compte <b>401</b> en premier.");
+        }
+        if (!lignes.some(l => (l.num.startsWith('512') || l.num.startsWith('530')) && l.cre > 0)) {
+          erreurs.push("Erreur de compte : l'argent sort de l'entreprise, il faut CRÉDITER la banque (<b>512</b>) ou la caisse (<b>530</b>).");
+        }
+      } else if ((libelle.includes('règlement') || libelle.includes('virement') || libelle.includes('encaissement') || libelle.includes('espèces')) && libelle.includes('client')) {
+        if (!lignes.some(l => (l.num.startsWith('512') || l.num.startsWith('530')) && l.deb > 0)) {
+          erreurs.push("Erreur de compte : l'argent rentre en trésorerie, il faut DÉBITER la banque (<b>512</b>) ou la caisse (<b>530</b>) en premier.");
+        }
+        if (!lignes.some(l => l.num.startsWith('411') && l.cre > 0)) {
+          erreurs.push("Erreur de compte : la créance client diminue, il faut CRÉDITER le compte <b>411</b>.");
+        }
+      } else if (libelle.includes('emprunt')) {
+        if (!lignes.some(l => l.num.startsWith('164') && l.deb > 0)) {
+          erreurs.push("Erreur de compte : le remboursement d'emprunt nécessite de DÉBITER le compte <b>164</b> (Emprunts) et <b>661</b> s'il y a des intérêts.");
+        }
+      } else if (libelle.includes('exploitant') || libelle.includes('besoins personnels')) {
+        if (!lignes.some(l => l.num.startsWith('108') && l.deb > 0)) {
+          erreurs.push("Erreur de compte : le prélèvement personnel de l'exploitant se DÉBITE au compte <b>108</b> (Compte de l'exploitant).");
         }
       }
 
-      // E) Contrôle de cohérence Journal
-      if (journal === 'ACH' && lignes.some(l => l.num.startsWith('70'))) {
-        erreurs.push("Erreur de journal : Le journal ACH (Achats) ne peut jamais comporter de compte de ventes 70 !");
-      }
-      if (journal === 'VTE' && lignes.some(l => l.num.startsWith('60'))) {
-        erreurs.push("Erreur de journal : Le journal VTE (Ventes) ne peut jamais comporter de compte d'achat 60 !");
+      if (libelle.includes('tva')) {
+        if (libelle.includes('vente')) {
+          if (!lignes.some(l => l.num.startsWith('44571') && l.cre > 0)) {
+            erreurs.push("Erreur TVA : sur une vente, il faut CRÉDITER le compte <b>44571</b> (TVA collectée).");
+          }
+        } else {
+          if (!lignes.some(l => l.num.startsWith('4456') && l.deb > 0)) {
+            erreurs.push("Erreur TVA : sur un achat, il faut DÉBITER le compte <b>44566</b> (TVA déductible sur ABS) ou <b>44562</b> (sur immo).");
+          }
+        }
       }
 
-      // Affichage du diagnostic
+      if (journal === 'ACH' && lignes.some(l => l.num.startsWith('70') || l.num.startsWith('512'))) {
+        erreurs.push("Incohérence de journal : le journal des Achats (ACH) enregistre les factures fournisseurs (401/404), pas les ventes (70) ni les paiements bancaires (512).");
+      }
+      if (journal === 'VTE' && lignes.some(l => l.num.startsWith('60') || l.num.startsWith('401'))) {
+        erreurs.push("Incohérence de journal : le journal des Ventes (VTE) ne peut pas contenir de comptes d'achats (60) ou fournisseurs (401).");
+      }
+      if (journal === 'BQ' && !lignes.some(l => l.num.startsWith('512'))) {
+        erreurs.push("Incohérence de journal : toute écriture au journal de Banque (BQ) doit obligatoirement mouvementer le compte <b>512</b> (Banque).");
+      }
+      if (journal === 'CA' && !lignes.some(l => l.num.startsWith('530') || l.num.startsWith('53'))) {
+        erreurs.push("Incohérence de journal : toute écriture au journal de Caisse (CA) doit obligatoirement mouvementer le compte <b>530</b> (Caisse).");
+      }
+
       if (erreurs.length > 0) {
         resBox.innerHTML = `
-          <div class="p-3.5 bg-rose-950/70 border border-rose-500 rounded-2xl text-xs space-y-1.5 text-rose-200">
-            <span class="font-bold flex items-center gap-1.5 text-rose-300"><i class="fa-solid fa-triangle-exclamation"></i> Partie double équilibrée, mais ERREUR sur les comptes :</span>
+          <div class="p-4 bg-rose-950/70 border border-rose-500 rounded-2xl text-xs space-y-1.5 text-rose-200">
+            <span class="font-bold flex items-center gap-1.5 text-rose-300"><i class="fa-solid fa-triangle-exclamation"></i> Écriture incorrecte (${erreurs.length} anomalie${erreurs.length > 1 ? 's' : ''}) :</span>
             <ul class="list-disc list-inside space-y-1">${erreurs.map(e => `<li>${e}</li>`).join('')}</ul>
           </div>
         `;
       } else {
         resBox.innerHTML = `
-          <div class="p-3.5 bg-emerald-950/70 border border-emerald-500 rounded-2xl text-xs space-y-1 text-emerald-200">
-            <span class="font-bold flex items-center gap-1.5 text-emerald-300"><i class="fa-solid fa-circle-check"></i> Écriture Parfaite et 100% Conforme au Référentiel BTS !</span>
-            <p>• Partie double : Total Débit (${totalDeb} €) = Total Crédit (${totalCre} €).</p>
-            <p>• Numéros de compte et sens (Débit/Crédit) conformes au libellé et au journal.</p>
+          <div class="p-4 bg-emerald-950/70 border border-emerald-500 rounded-2xl text-xs space-y-1 text-emerald-200">
+            <span class="font-bold flex items-center gap-1.5 text-emerald-300"><i class="fa-solid fa-circle-check"></i> Écriture 100 % Juste !</span>
+            <p>• <b>Partie double :</b> Total Débit (${totalDeb.toFixed(2)} €) = Total Crédit (${totalCre.toFixed(2)} €).</p>
+            <p>• <b>Ordre & Comptes PCG :</b> Les comptes débités sont bien placés en premier, les numéros de compte et le journal (${journal}) sont exacts.</p>
           </div>
         `;
       }
     }
 
-    // P3 Sim
     function runSimP3() {
       const ca = parseFloat(document.getElementById('sim-p3-ca').value) || 0;
       const ch = parseFloat(document.getElementById('sim-p3-charges').value) || 0;
