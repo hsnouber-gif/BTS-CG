@@ -16,6 +16,11 @@
       darkMode: 'class',
       theme: {
         extend: {
+          colors: {
+            slate: {
+              850: '#0f172a'
+            }
+          },
           fontFamily: {
             sans: ['"Plus Jakarta Sans"', 'sans-serif'],
             mono: ['"JetBrains Mono"', 'monospace'],
@@ -36,6 +41,29 @@
     ::-webkit-scrollbar-thumb:hover { background: rgba(99, 102, 241, 0.8); }
     code { font-family: 'JetBrains Mono', monospace; }
     .card-glow:hover { box-shadow: 0 0 25px -5px rgba(99, 102, 241, 0.35); }
+    /* Force le fond sombre et le texte clair sur tous les champs du simulateur */
+    .sim-input {
+      background-color: #020617 !important;
+      color: #f8fafc !important;
+      border: 1px solid #334155 !important;
+    }
+    .sim-input::placeholder {
+      color: #64748b !important;
+    }
+    .sim-input-deb {
+      background-color: #020617 !important;
+      color: #34d399 !important;
+      border: 1px solid #334155 !important;
+    }
+    .sim-input-cre {
+      background-color: #020617 !important;
+      color: #fbbf24 !important;
+      border: 1px solid #334155 !important;
+    }
+    select.sim-input option {
+      background-color: #0f172a !important;
+      color: #f8fafc !important;
+    }
   </style>
 </head>
 
@@ -57,7 +85,7 @@
       </button>
 
       <div class="flex items-center gap-2 sm:gap-3">
-        <div class="flex items-center bg-slate-850 p-1 rounded-xl border border-slate-800 text-xs font-bold">
+        <div class="flex items-center bg-slate-900 p-1 rounded-xl border border-slate-800 text-xs font-bold">
           <button onclick="setYear('CG1')" id="header-btn-cg1" class="px-2.5 py-1 rounded-lg transition bg-indigo-600 text-white shadow">CG1</button>
           <button onclick="setYear('CG2')" id="header-btn-cg2" class="px-2.5 py-1 rounded-lg transition text-slate-400 hover:text-white">CG2</button>
         </div>
@@ -169,7 +197,7 @@
           <p class="text-xs sm:text-sm text-slate-400 mt-1 max-w-3xl" id="ws-chapter-desc"></p>
         </div>
         <div class="flex items-center gap-3">
-          <div class="bg-slate-850 px-4 py-2.5 rounded-xl border border-slate-700/80 text-xs flex items-center gap-3">
+          <div class="bg-slate-900 px-4 py-2.5 rounded-xl border border-slate-700/80 text-xs flex items-center gap-3">
             <i class="fa-solid fa-award text-amber-400 text-lg"></i>
             <div>
               <div class="text-slate-400 text-[10px] uppercase font-bold">Score Quiz</div>
@@ -253,17 +281,18 @@
         </div>
       </div>
 
+      <!-- TAB 3: SIMULATEUR -->
       <div id="subtab-simulator" class="tab-pane hidden space-y-6">
         
         <div id="p1-simulator-container" class="space-y-5 bg-slate-900/90 border border-slate-800 rounded-3xl p-6 sm:p-8 shadow-xl">
           <div class="border-b border-slate-800 pb-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
             <div>
               <h3 class="font-extrabold text-base text-white flex items-center gap-2">
-                <i class="fa-solid fa-gamepad text-indigo-400"></i> Simulateur d'Écritures Comptables (P1)
+                <i class="fa-solid fa-gamepad text-indigo-400"></i> Simulateur d'Écritures Comptables Intelligent (P1)
               </h3>
-              <p class="text-xs text-slate-400 mt-0.5">Vérifie le journal, les numéros de compte, l'ordre (Débit avant Crédit) et l'équilibre de la partie double.</p>
+              <p class="text-xs text-slate-400 mt-0.5">Vérifie le journal, la cohérence des numéros de compte (TVA collectée vs déductible, etc.), le sens (Débit/Crédit), l'ordre et les montants. Indulgent sur l'orthographe des libellés.</p>
             </div>
-            <span class="text-xs px-2.5 py-1 rounded bg-indigo-500/20 text-indigo-300 font-mono font-bold self-start">Audit PCG Complet</span>
+            <span class="text-xs px-2.5 py-1 rounded bg-indigo-500/20 text-indigo-300 font-mono font-bold self-start">Audit PCG Strict</span>
           </div>
 
           <div class="flex flex-wrap gap-2 items-center text-xs">
@@ -277,7 +306,7 @@
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div>
               <label class="block text-[11px] font-bold text-slate-400 uppercase mb-1">1. Journal Auxiliaire</label>
-              <select id="sim-ecr-journal" class="w-full bg-slate-850 border border-slate-700 rounded-xl p-2.5 text-xs text-white font-bold">
+              <select id="sim-ecr-journal" class="sim-input w-full rounded-xl p-2.5 text-xs font-bold">
                 <option value="ACH">ACH (HA) - Journal des Achats</option>
                 <option value="VTE">VTE (VT) - Journal des Ventes</option>
                 <option value="BQ">BQ - Journal de Banque</option>
@@ -286,41 +315,44 @@
               </select>
             </div>
             <div class="sm:col-span-2">
-              <label class="block text-[11px] font-bold text-slate-400 uppercase mb-1">2. Phrase / Libellé de l'opération</label>
-              <input type="text" id="sim-ecr-libelle" placeholder="Ex: Achat d'une voiture pour 1000 euros" value="Achat d'une voiture pour 1000 euros" class="w-full bg-slate-850 border border-slate-700 rounded-xl p-2.5 text-xs text-white">
+              <label class="block text-[11px] font-bold text-slate-400 uppercase mb-1">2. Phrase / Libellé de l'opération (libre)</label>
+              <input type="text" id="sim-ecr-libelle" placeholder="Ex: Vente de marchandises ou Achat voiture..." value="Achat d'une voiture pour 1000 euros" class="sim-input w-full rounded-xl p-2.5 text-xs">
             </div>
           </div>
 
-          <div class="space-y-2 text-xs font-mono">
+          <div class="space-y-2.5 text-xs font-mono">
             <div class="grid grid-cols-12 gap-2 text-slate-400 font-bold px-1">
               <span class="col-span-3">N° Compte PCG</span>
-              <span class="col-span-5">Intitulé du compte</span>
+              <span class="col-span-5">Intitulé du compte (tolérant)</span>
               <span class="col-span-2 text-right">Débit (€)</span>
               <span class="col-span-2 text-right">Crédit (€)</span>
             </div>
+            <!-- Ligne 1 -->
             <div class="grid grid-cols-12 gap-2 items-center">
-              <input type="text" id="sim-c1-num" value="218200" placeholder="Ex: 2182" class="col-span-3 bg-slate-850 border border-slate-700 rounded-xl p-2.5 text-white font-bold">
-              <input type="text" id="sim-c1-lib" value="Matériel de transport" placeholder="Intitulé" class="col-span-5 bg-slate-850 border border-slate-700 rounded-xl p-2.5 text-slate-300">
-              <input type="number" id="sim-c1-deb" value="1000" placeholder="0" class="col-span-2 bg-slate-850 border border-slate-700 rounded-xl p-2.5 text-right text-emerald-400 font-bold">
-              <input type="number" id="sim-c1-cre" value="0" placeholder="0" class="col-span-2 bg-slate-850 border border-slate-700 rounded-xl p-2.5 text-right text-amber-400 font-bold">
+              <input type="text" id="sim-c1-num" value="218200" placeholder="Ex: 2182" class="sim-input col-span-3 rounded-xl p-2.5 font-bold">
+              <input type="text" id="sim-c1-lib" value="Matériel de transport" placeholder="Intitulé libre" class="sim-input col-span-5 rounded-xl p-2.5">
+              <input type="number" id="sim-c1-deb" value="1000" placeholder="0" class="sim-input-deb col-span-2 rounded-xl p-2.5 text-right font-bold">
+              <input type="number" id="sim-c1-cre" value="0" placeholder="0" class="sim-input-cre col-span-2 rounded-xl p-2.5 text-right font-bold">
             </div>
+            <!-- Ligne 2 -->
             <div class="grid grid-cols-12 gap-2 items-center">
-              <input type="text" id="sim-c2-num" value="404000" placeholder="Ex: 404" class="col-span-3 bg-slate-850 border border-slate-700 rounded-xl p-2.5 text-white font-bold">
-              <input type="text" id="sim-c2-lib" value="Fournisseur d'immobilisations" placeholder="Intitulé" class="col-span-5 bg-slate-850 border border-slate-700 rounded-xl p-2.5 text-slate-300">
-              <input type="number" id="sim-c2-deb" value="0" placeholder="0" class="col-span-2 bg-slate-850 border border-slate-700 rounded-xl p-2.5 text-right text-emerald-400 font-bold">
-              <input type="number" id="sim-c2-cre" value="1000" placeholder="0" class="col-span-2 bg-slate-850 border border-slate-700 rounded-xl p-2.5 text-right text-amber-400 font-bold">
+              <input type="text" id="sim-c2-num" value="404000" placeholder="Ex: 404" class="sim-input col-span-3 rounded-xl p-2.5 font-bold">
+              <input type="text" id="sim-c2-lib" value="Fournisseur d'immobilisations" placeholder="Intitulé libre" class="sim-input col-span-5 rounded-xl p-2.5">
+              <input type="number" id="sim-c2-deb" value="0" placeholder="0" class="sim-input-deb col-span-2 rounded-xl p-2.5 text-right font-bold">
+              <input type="number" id="sim-c2-cre" value="1000" placeholder="0" class="sim-input-cre col-span-2 rounded-xl p-2.5 text-right font-bold">
             </div>
+            <!-- Ligne 3 -->
             <div class="grid grid-cols-12 gap-2 items-center">
-              <input type="text" id="sim-c3-num" value="" placeholder="(Optionnel)" class="col-span-3 bg-slate-850 border border-slate-700 rounded-xl p-2.5 text-white font-bold">
-              <input type="text" id="sim-c3-lib" value="" placeholder="Intitulé" class="col-span-5 bg-slate-850 border border-slate-700 rounded-xl p-2.5 text-slate-300">
-              <input type="number" id="sim-c3-deb" value="0" placeholder="0" class="col-span-2 bg-slate-850 border border-slate-700 rounded-xl p-2.5 text-right text-emerald-400 font-bold">
-              <input type="number" id="sim-c3-cre" value="0" placeholder="0" class="col-span-2 bg-slate-850 border border-slate-700 rounded-xl p-2.5 text-right text-amber-400 font-bold">
+              <input type="text" id="sim-c3-num" value="" placeholder="(Optionnel)" class="sim-input col-span-3 rounded-xl p-2.5 font-bold">
+              <input type="text" id="sim-c3-lib" value="" placeholder="Intitulé libre" class="sim-input col-span-5 rounded-xl p-2.5">
+              <input type="number" id="sim-c3-deb" value="0" placeholder="0" class="sim-input-deb col-span-2 rounded-xl p-2.5 text-right font-bold">
+              <input type="number" id="sim-c3-cre" value="0" placeholder="0" class="sim-input-cre col-span-2 rounded-xl p-2.5 text-right font-bold">
             </div>
           </div>
 
           <div class="pt-3 border-t border-slate-800 flex flex-col gap-3">
             <button type="button" onclick="verifierEcritureP1Intelligente()" class="self-start px-5 py-3 rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs transition flex items-center gap-2 shadow-lg shadow-indigo-600/30">
-              <i class="fa-solid fa-check-double"></i> Vérifier mon écriture (Comptes, Ordre & Partie Double)
+              <i class="fa-solid fa-check-double"></i> Vérifier mon écriture (Comptes, TVA, Sens & Partie Double)
             </button>
             <div id="sim-ecr-resultat-box" class="w-full"></div>
           </div>
@@ -331,18 +363,18 @@
             <h3 class="font-bold text-sm text-white">Paramètres P3 (IR vs IS & Micro)</h3>
             <div>
               <label class="block text-xs text-slate-300 mb-1">Chiffre d'affaires HT (€)</label>
-              <input type="number" id="sim-p3-ca" value="88000" oninput="runSimP3()" class="w-full bg-slate-850 border border-slate-700 rounded-xl p-2 text-xs font-mono text-white">
+              <input type="number" id="sim-p3-ca" value="88000" oninput="runSimP3()" class="sim-input w-full rounded-xl p-2 text-xs font-mono">
             </div>
             <div>
               <label class="block text-xs text-slate-300 mb-1">Charges réelles (€)</label>
-              <input type="number" id="sim-p3-charges" value="22000" oninput="runSimP3()" class="w-full bg-slate-850 border border-slate-700 rounded-xl p-2 text-xs font-mono text-white">
+              <input type="number" id="sim-p3-charges" value="22000" oninput="runSimP3()" class="sim-input w-full rounded-xl p-2 text-xs font-mono">
             </div>
           </div>
           <div class="lg:col-span-7 bg-slate-900/90 border border-slate-800 rounded-3xl p-6 space-y-4">
             <h3 class="font-bold text-sm text-indigo-300">Résultat Fiscal P3</h3>
             <div class="grid grid-cols-2 gap-3 text-xs">
-              <div class="p-3 bg-slate-850 rounded-xl"><span class="text-slate-400 block">Bénéfice Micro-BIC (71%)</span><b id="sim-p3-res-micro" class="text-base text-indigo-400 font-mono">25 520 €</b></div>
-              <div class="p-3 bg-slate-850 rounded-xl"><span class="text-slate-400 block">Résultat Réel Comptable</span><b id="sim-p3-res-reel" class="text-base text-amber-400 font-mono">66 000 €</b></div>
+              <div class="p-3 bg-slate-950 border border-slate-800 rounded-xl"><span class="text-slate-400 block">Bénéfice Micro-BIC (71%)</span><b id="sim-p3-res-micro" class="text-base text-indigo-400 font-mono">25 520 €</b></div>
+              <div class="p-3 bg-slate-950 border border-slate-800 rounded-xl"><span class="text-slate-400 block">Résultat Réel Comptable</span><b id="sim-p3-res-reel" class="text-base text-amber-400 font-mono">66 000 €</b></div>
             </div>
           </div>
         </div>
@@ -582,7 +614,7 @@
       container.innerHTML = '';
       q.options.forEach((opt, idx) => {
         const btn = document.createElement('button');
-        btn.className = "w-full text-left p-3.5 rounded-2xl border border-slate-800 bg-slate-850 hover:bg-slate-800 transition text-xs sm:text-sm";
+        btn.className = "w-full text-left p-3.5 rounded-2xl border border-slate-800 bg-slate-950 hover:bg-slate-800 transition text-xs sm:text-sm";
         btn.innerHTML = `<span class="font-bold text-indigo-400 mr-2">${String.fromCharCode(65 + idx)}.</span> ${opt.text}`;
         btn.onclick = () => handleAnswer(idx, opt, btn, q.options);
         container.appendChild(btn);
@@ -629,7 +661,7 @@
         renderQuestion();
       } else {
         document.getElementById('quiz-options-container').innerHTML = `
-          <div class="col-span-2 text-center p-6 bg-slate-850 rounded-2xl border border-slate-700">
+          <div class="col-span-2 text-center p-6 bg-slate-950 rounded-2xl border border-slate-700">
             <h3 class="text-lg font-bold text-white">Série terminée !</h3>
             <p class="text-xs text-slate-300 mt-1">Score : ${quizScore} / ${activeQuestions.length}</p>
             <button onclick="restartQuiz()" class="mt-4 px-4 py-2 bg-indigo-600 text-white rounded-xl text-xs font-bold">Recommencer</button>
@@ -688,10 +720,10 @@
         document.getElementById('sim-c3-num').value = '401000'; document.getElementById('sim-c3-lib').value = 'Fournisseur'; document.getElementById('sim-c3-deb').value = 0; document.getElementById('sim-c3-cre').value = 1200;
       } else if (type === 'vente') {
         document.getElementById('sim-ecr-journal').value = 'VTE';
-        document.getElementById('sim-ecr-libelle').value = "Vente de marchandises 600 € HT avec TVA 20%";
-        document.getElementById('sim-c1-num').value = '411000'; document.getElementById('sim-c1-lib').value = 'Client'; document.getElementById('sim-c1-deb').value = 720; document.getElementById('sim-c1-cre').value = 0;
-        document.getElementById('sim-c2-num').value = '707000'; document.getElementById('sim-c2-lib').value = 'Ventes de marchandises'; document.getElementById('sim-c2-deb').value = 0; document.getElementById('sim-c2-cre').value = 600;
-        document.getElementById('sim-c3-num').value = '445710'; document.getElementById('sim-c3-lib').value = 'TVA collectée'; document.getElementById('sim-c3-deb').value = 0; document.getElementById('sim-c3-cre').value = 120;
+        document.getElementById('sim-ecr-libelle').value = "Vente de marchandises 1000 € HT avec TVA 20%";
+        document.getElementById('sim-c1-num').value = '411000'; document.getElementById('sim-c1-lib').value = 'Client'; document.getElementById('sim-c1-deb').value = 1200; document.getElementById('sim-c1-cre').value = 0;
+        document.getElementById('sim-c2-num').value = '707000'; document.getElementById('sim-c2-lib').value = 'Ventes de marchandises'; document.getElementById('sim-c2-deb').value = 0; document.getElementById('sim-c2-cre').value = 1000;
+        document.getElementById('sim-c3-num').value = '445710'; document.getElementById('sim-c3-lib').value = 'TVA collectée'; document.getElementById('sim-c3-deb').value = 0; document.getElementById('sim-c3-cre').value = 200;
       } else if (type === 'reglement') {
         document.getElementById('sim-ecr-journal').value = 'BQ';
         document.getElementById('sim-ecr-libelle').value = "Règlement fournisseur par chèque bancaire 475,20 €";
@@ -702,140 +734,175 @@
       verifierEcritureP1Intelligente();
     }
 
+    // Fonction de normalisation tolérante (enlève accents, majuscules, espaces superflus)
+    function normTxt(str) {
+      return (str || '').toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
+    }
+
     function verifierEcritureP1Intelligente() {
       const journal = document.getElementById('sim-ecr-journal').value;
-      const libelle = document.getElementById('sim-ecr-libelle').value.toLowerCase().trim();
+      const libelleGlobal = normTxt(document.getElementById('sim-ecr-libelle').value);
       const resBox = document.getElementById('sim-ecr-resultat-box');
 
       const lignes = [
-        { idx: 1, num: document.getElementById('sim-c1-num').value.trim(), deb: parseFloat(document.getElementById('sim-c1-deb').value) || 0, cre: parseFloat(document.getElementById('sim-c1-cre').value) || 0 },
-        { idx: 2, num: document.getElementById('sim-c2-num').value.trim(), deb: parseFloat(document.getElementById('sim-c2-deb').value) || 0, cre: parseFloat(document.getElementById('sim-c2-cre').value) || 0 },
-        { idx: 3, num: document.getElementById('sim-c3-num').value.trim(), deb: parseFloat(document.getElementById('sim-c3-deb').value) || 0, cre: parseFloat(document.getElementById('sim-c3-cre').value) || 0 }
-      ].filter(l => l.num !== '' || l.deb > 0 || l.cre > 0);
+        { idx: 1, num: document.getElementById('sim-c1-num').value.trim(), lib: normTxt(document.getElementById('sim-c1-lib').value), deb: parseFloat(document.getElementById('sim-c1-deb').value) || 0, cre: parseFloat(document.getElementById('sim-c1-cre').value) || 0 },
+        { idx: 2, num: document.getElementById('sim-c2-num').value.trim(), lib: normTxt(document.getElementById('sim-c2-lib').value), deb: parseFloat(document.getElementById('sim-c2-deb').value) || 0, cre: parseFloat(document.getElementById('sim-c2-cre').value) || 0 },
+        { idx: 3, num: document.getElementById('sim-c3-num').value.trim(), lib: normTxt(document.getElementById('sim-c3-lib').value), deb: parseFloat(document.getElementById('sim-c3-deb').value) || 0, cre: parseFloat(document.getElementById('sim-c3-cre').value) || 0 }
+      ].filter(l => l.num !== '' || l.deb > 0 || l.cre > 0 || l.lib !== '');
 
       const totalDeb = lignes.reduce((acc, l) => acc + l.deb, 0);
       const totalCre = lignes.reduce((acc, l) => acc + l.cre, 0);
 
       let erreurs = [];
 
+      // 1. Nombre de lignes et équilibre Débit = Crédit
       if (lignes.length < 2) {
-        erreurs.push("Une écriture comptable doit comporter au minimum deux lignes (un compte débité et un compte crédité).");
+        erreurs.push("Une écriture comptable doit comporter au minimum 2 lignes (un compte débité et un compte crédité).");
       }
-
       if (Math.abs(totalDeb - totalCre) > 0.01 || totalDeb === 0) {
         erreurs.push(`Partie double non respectée : Total Débit (${totalDeb.toFixed(2)} €) ≠ Total Crédit (${totalCre.toFixed(2)} €).`);
       }
 
-      // Vérification de l'ordre : les comptes au Débit doivent toujours être placés AVANT les comptes au Crédit
+      // Détection du contexte global de l'opération (est-ce une Vente, un Achat, une Immo, un Règlement ?)
+      const hasCompteVente = lignes.some(l => l.num.startsWith('70')) || lignes.some(l => l.lib.includes('vente'));
+      const hasCompteAchat = lignes.some(l => l.num.startsWith('60') || l.num.startsWith('61') || l.num.startsWith('62')) || lignes.some(l => l.lib.includes('achat'));
+      const isContexteVente = (journal === 'VTE') || libelleGlobal.includes('vente') || hasCompteVente;
+      const isContexteAchat = (journal === 'ACH') || libelleGlobal.includes('achat') || hasCompteAchat;
+
+      // 2. Inspection stricte LIGNE PAR LIGNE (Numéro PCG, Ordre Débit avant Crédit, Sens normal des comptes et TVA)
       let vuCredit = false;
+
       lignes.forEach(l => {
-        if (l.deb > 0 && l.cre > 0) {
-          erreurs.push(`Ligne ${l.idx} (compte ${l.num}) : un compte ne peut pas être débité et crédité sur la même ligne.`);
-        }
-        if (l.cre > 0) vuCredit = true;
-        if (l.deb > 0 && vuCredit) {
-          erreurs.push(`Mauvais ordre des lignes : au journal, on inscrit toujours tous les comptes DÉBITÉS en haut, puis les comptes CRÉDITÉS en dessous (la ligne ${l.idx} au débit est placée après un crédit).`);
+        // Numéro de compte manquant ou invalide
+        if (l.num === '') {
+          erreurs.push(`Ligne ${l.idx} : vous avez oublié de saisir le <b>numéro de compte PCG</b>.`);
+          return;
         }
         if (!/^[1-7][0-9]{2,7}$/.test(l.num)) {
-          erreurs.push(`Ligne ${l.idx} : le numéro de compte "${l.num}" n'est pas un numéro PCG valide (doit commencer par une classe de 1 à 7 et contenir au moins 3 chiffres).`);
+          erreurs.push(`Ligne ${l.idx} : le numéro de compte <b>"${l.num}"</b> est invalide (il doit commencer par une classe de 1 à 7 et comporter au moins 3 chiffres, ex: 411, 607000, 44571).`);
+        }
+
+        // Débit et crédit sur la même ligne ou montant à 0
+        if (l.deb > 0 && l.cre > 0) {
+          erreurs.push(`Ligne ${l.idx} (compte ${l.num}) : impossible de mettre un montant au Débit ET au Crédit sur la même ligne.`);
+        }
+        if (l.deb === 0 && l.cre === 0) {
+          erreurs.push(`Ligne ${l.idx} (compte ${l.num}) : veuillez saisir un montant au Débit ou au Crédit.`);
+        }
+
+        // Vérification de l'ordre : Débit toujours AVANT Crédit
+        if (l.cre > 0) vuCredit = true;
+        if (l.deb > 0 && vuCredit) {
+          erreurs.push(`Ligne ${l.idx} (compte ${l.num}) : <b>Mauvais ordre</b> ! Tous les comptes au Débit doivent être inscrits sur les premières lignes, et les comptes au Crédit en bas.`);
+        }
+
+        // --- CONTRÔLE INTELLIGENT DE LA TVA (4456 vs 4457) ---
+        const parleDeTvaDed = l.num.startsWith('4456') || l.lib.includes('deduct');
+        const parleDeTvaCol = l.num.startsWith('4457') || l.lib.includes('collect');
+
+        if (parleDeTvaDed) {
+          if (isContexteVente) {
+            erreurs.push(`Ligne ${l.idx} : <b>Erreur majeure de TVA !</b> Sur une VENTE, vous ne pouvez jamais utiliser de la TVA déductible (44566). Il faut utiliser la <b>TVA collectée (compte 44571) au CRÉDIT</b> !`);
+          } else if (l.cre > 0) {
+            erreurs.push(`Ligne ${l.idx} (compte ${l.num}) : la TVA déductible (44566 / 44562) est une créance sur l'État, elle s'enregistre au <b>DÉBIT</b> (sauf avoir).`);
+          }
+          if (!l.num.startsWith('4456')) {
+            erreurs.push(`Ligne ${l.idx} : votre intitulé mentionne une TVA déductible mais le numéro <b>${l.num}</b> ne commence pas par <b>4456</b> (utilisez 44566 pour biens/services ou 44562 pour immobilisations).`);
+          }
+        }
+
+        if (parleDeTvaCol) {
+          if (isContexteAchat && !isContexteVente) {
+            erreurs.push(`Ligne ${l.idx} : <b>Erreur majeure de TVA !</b> Sur un ACHAT, on ne collecte pas la TVA (44571). Il faut utiliser la <b>TVA déductible (compte 44566 ou 44562) au DÉBIT</b> !`);
+          } else if (l.deb > 0) {
+            erreurs.push(`Ligne ${l.idx} (compte ${l.num}) : la TVA collectée (44571) est une dette envers l'État, elle doit obligatoirement être placée au <b>CRÉDIT</b> !`);
+          }
+          if (!l.num.startsWith('4457')) {
+            erreurs.push(`Ligne ${l.idx} : votre intitulé parle de TVA collectée mais le numéro <b>${l.num}</b> est faux (utilisez le compte <b>44571</b>).`);
+          }
+        }
+
+        // --- CONTRÔLE DU SENS DES COMPTES DE CHARGES (6) ET PRODUITS (7) ---
+        if (l.num.startsWith('6') && l.cre > 0) {
+          erreurs.push(`Ligne ${l.idx} (compte ${l.num}) : un compte de <b>Charge (classe 6)</b> augmente toujours au <b>DÉBIT</b>, il ne doit pas être mis au crédit.`);
+        }
+        if (l.num.startsWith('7') && l.deb > 0) {
+          erreurs.push(`Ligne ${l.idx} (compte ${l.num}) : un compte de <b>Produit / Vente (classe 7)</b> s'enregistre toujours au <b>CRÉDIT</b>, pas au débit.`);
+        }
+        if (l.num.startsWith('2') && l.cre > 0) {
+          erreurs.push(`Ligne ${l.idx} (compte ${l.num}) : l'acquisition d'une <b>Immobilisation (classe 2)</b> est un emploi durable qui s'enregistre au <b>DÉBIT</b>.`);
         }
       });
 
-      // Vérification des comptes selon le libellé
-      if (libelle.includes('voiture') || libelle.includes('véhicule') || libelle.includes('camion')) {
+      // 3. CONTRÔLE DE COHÉRENCE DES MONTANTS TTC / HT / TVA SUR VENTE ET ACHAT
+      if (isContexteVente && (journal === 'VTE' || hasCompteVente)) {
+        const ligneClient = lignes.find(l => l.num.startsWith('411') || l.num.startsWith('512') || l.num.startsWith('530'));
+        const ligneVente = lignes.find(l => l.num.startsWith('70'));
+        const ligneTva = lignes.find(l => l.num.startsWith('445'));
+
+        if (!ligneClient || ligneClient.deb === 0) {
+          erreurs.push("Schéma de vente : le compte <b>Client (411)</b> (ou 512/530 au comptant) doit être <b>DÉBITÉ en 1ère ligne</b> pour le montant TTC.");
+        }
+        if (!ligneVente || ligneVente.cre === 0) {
+          erreurs.push("Schéma de vente : le compte de <b>Vente (707 ou 706)</b> doit être <b>CRÉDITÉ</b> pour le montant HT.");
+        }
+        if (ligneClient && ligneVente && ligneTva) {
+          if (ligneClient.deb < ligneVente.cre) {
+            erreurs.push(`Erreur de montants sur la vente : le Client au Débit (${ligneClient.deb} €) doit payer le <b>TTC (HT + TVA)</b>, il doit donc être supérieur au montant HT de la vente (${ligneVente.cre} €) ! Sur une vente : Débit 411 (TTC) = Crédit 707 (HT) + Crédit 44571 (TVA).`);
+          }
+        }
+      }
+
+      if (isContexteAchat && !isContexteVente && (journal === 'ACH' || hasCompteAchat)) {
+        const ligneFourn = lignes.find(l => l.num.startsWith('401') || l.num.startsWith('404') || l.num.startsWith('512') || l.num.startsWith('530'));
+        const ligneCharge = lignes.find(l => l.num.startsWith('6') || l.num.startsWith('2'));
+
+        if (!ligneCharge || ligneCharge.deb === 0) {
+          erreurs.push("Schéma d'achat : le compte d'achat (<b>classe 6</b>) ou d'immobilisation (<b>classe 2</b>) doit être <b>DÉBITÉ en 1ère ligne</b> pour le montant HT.");
+        }
+        if (!ligneFourn || ligneFourn.cre === 0) {
+          erreurs.push("Schéma d'achat : le compte <b>Fournisseur (401 ou 404)</b> doit être <b>CRÉDITÉ en dernière ligne</b> pour le montant TTC.");
+        }
+      }
+
+      // 4. Règles spécifiques selon les mots-clés de l'énoncé
+      if (libelleGlobal.includes('voiture') || libelleGlobal.includes('vehicule') || libelleGlobal.includes('camion')) {
         if (!lignes.some(l => l.num.startsWith('2182') && l.deb > 0)) {
-          erreurs.push("Erreur de compte : l'achat d'une voiture est une immobilisation corporelle qui s'enregistre au DÉBIT du compte <b>2182</b> (Matériel de transport) et non en classe 6.");
+          erreurs.push("Règle PCG : une voiture est une immobilisation corporelle, il faut débiter le compte <b>2182 (Matériel de transport)</b> et non un compte d'achat 607.");
         }
-        if (!lignes.some(l => (l.num.startsWith('404') || l.num.startsWith('512')) && l.cre > 0)) {
-          erreurs.push("Erreur de contrepartie : le crédit pour l'achat d'une immobilisation doit être <b>404</b> (Fournisseur d'immobilisations) ou <b>512</b> (Banque).");
-        }
-      } else if (libelle.includes('machine') || libelle.includes('matériel industriel')) {
-        if (!lignes.some(l => l.num.startsWith('215') && l.deb > 0)) {
-          erreurs.push("Erreur de compte : une machine industrielle s'enregistre au DÉBIT du compte <b>2154</b> (Matériel industriel).");
-        }
-        if (!lignes.some(l => (l.num.startsWith('404') || l.num.startsWith('512')) && l.cre > 0)) {
-          erreurs.push("Erreur de contrepartie : utilisez le compte <b>404</b> (Fournisseur d'immobilisations) ou <b>512</b> au CRÉDIT.");
-        }
-      } else if (libelle.includes('mobilier') || libelle.includes('ordinateur') || libelle.includes('informatique')) {
-        if (!lignes.some(l => (l.num.startsWith('2183') || l.num.startsWith('2184')) && l.deb > 0)) {
-          erreurs.push("Erreur de compte : le mobilier (<b>2184</b>) ou matériel informatique (<b>2183</b>) doit être DÉBITÉ en classe 2.");
-        }
-      } else if (libelle.includes('achat') || libelle.includes('facture') && !libelle.includes('vente') && !libelle.includes('client')) {
-        if (!lignes.some(l => l.num.startsWith('6') && l.deb > 0)) {
-          erreurs.push("Erreur de compte : un achat courant (marchandises <b>607</b>, matières <b>601</b>, fournitures/énergie <b>606</b>, télécom <b>626</b>) doit être DÉBITÉ en classe 6.");
-        }
-        if (!lignes.some(l => (l.num.startsWith('401') || l.num.startsWith('512') || l.num.startsWith('530')) && l.cre > 0)) {
-          erreurs.push("Erreur de contrepartie : le fournisseur (<b>401</b>), la banque (<b>512</b>) ou la caisse (<b>530</b>) doit être CRÉDITÉ.");
-        }
-      } else if (libelle.includes('vente')) {
-        if (!lignes.some(l => l.num.startsWith('70') && l.cre > 0)) {
-          erreurs.push("Erreur de compte : une vente doit obligatoirement être CRÉDITÉE en compte de produits classe 7 (<b>707</b> marchandises ou <b>706</b> prestations).");
-        }
-        if (!lignes.some(l => (l.num.startsWith('411') || l.num.startsWith('512') || l.num.startsWith('530')) && l.deb > 0)) {
-          erreurs.push("Erreur de compte : le client (<b>411</b>), la banque (<b>512</b>) ou la caisse (<b>530</b>) doit être DÉBITÉ en premier.");
-        }
-      } else if ((libelle.includes('règlement') || libelle.includes('paiement') || libelle.includes('chèque') || libelle.includes('prélèvement')) && libelle.includes('fournisseur')) {
-        if (!lignes.some(l => l.num.startsWith('401') && l.deb > 0)) {
-          erreurs.push("Erreur de compte : lors du règlement d'un fournisseur, sa dette diminue, il faut donc DÉBITER le compte <b>401</b> en premier.");
-        }
-        if (!lignes.some(l => (l.num.startsWith('512') || l.num.startsWith('530')) && l.cre > 0)) {
-          erreurs.push("Erreur de compte : l'argent sort de l'entreprise, il faut CRÉDITER la banque (<b>512</b>) ou la caisse (<b>530</b>).");
-        }
-      } else if ((libelle.includes('règlement') || libelle.includes('virement') || libelle.includes('encaissement') || libelle.includes('espèces')) && libelle.includes('client')) {
-        if (!lignes.some(l => (l.num.startsWith('512') || l.num.startsWith('530')) && l.deb > 0)) {
-          erreurs.push("Erreur de compte : l'argent rentre en trésorerie, il faut DÉBITER la banque (<b>512</b>) ou la caisse (<b>530</b>) en premier.");
-        }
-        if (!lignes.some(l => l.num.startsWith('411') && l.cre > 0)) {
-          erreurs.push("Erreur de compte : la créance client diminue, il faut CRÉDITER le compte <b>411</b>.");
-        }
-      } else if (libelle.includes('emprunt')) {
-        if (!lignes.some(l => l.num.startsWith('164') && l.deb > 0)) {
-          erreurs.push("Erreur de compte : le remboursement d'emprunt nécessite de DÉBITER le compte <b>164</b> (Emprunts) et <b>661</b> s'il y a des intérêts.");
-        }
-      } else if (libelle.includes('exploitant') || libelle.includes('besoins personnels')) {
-        if (!lignes.some(l => l.num.startsWith('108') && l.deb > 0)) {
-          erreurs.push("Erreur de compte : le prélèvement personnel de l'exploitant se DÉBITE au compte <b>108</b> (Compte de l'exploitant).");
+        if (lignes.some(l => l.num.startsWith('401'))) {
+          erreurs.push("Attention : pour l'achat d'une immobilisation, on utilise le compte <b>404 (Fournisseur d'immobilisations)</b> au crédit et non 401.");
         }
       }
 
-      if (libelle.includes('tva')) {
-        if (libelle.includes('vente')) {
-          if (!lignes.some(l => l.num.startsWith('44571') && l.cre > 0)) {
-            erreurs.push("Erreur TVA : sur une vente, il faut CRÉDITER le compte <b>44571</b> (TVA collectée).");
-          }
-        } else {
-          if (!lignes.some(l => l.num.startsWith('4456') && l.deb > 0)) {
-            erreurs.push("Erreur TVA : sur un achat, il faut DÉBITER le compte <b>44566</b> (TVA déductible sur ABS) ou <b>44562</b> (sur immo).");
-          }
-        }
+      // 5. Cohérence du Journal choisi
+      if (journal === 'ACH' && hasCompteVente) {
+        erreurs.push("Erreur de journal : vous avez sélectionné le journal des <b>Achats (ACH)</b> alors que votre écriture contient une vente (compte 70) !");
       }
-
-      if (journal === 'ACH' && lignes.some(l => l.num.startsWith('70') || l.num.startsWith('512'))) {
-        erreurs.push("Incohérence de journal : le journal des Achats (ACH) enregistre les factures fournisseurs (401/404), pas les ventes (70) ni les paiements bancaires (512).");
-      }
-      if (journal === 'VTE' && lignes.some(l => l.num.startsWith('60') || l.num.startsWith('401'))) {
-        erreurs.push("Incohérence de journal : le journal des Ventes (VTE) ne peut pas contenir de comptes d'achats (60) ou fournisseurs (401).");
+      if (journal === 'VTE' && hasCompteAchat) {
+        erreurs.push("Erreur de journal : vous avez sélectionné le journal des <b>Ventes (VTE)</b> alors que votre écriture contient un achat (classe 6) !");
       }
       if (journal === 'BQ' && !lignes.some(l => l.num.startsWith('512'))) {
-        erreurs.push("Incohérence de journal : toute écriture au journal de Banque (BQ) doit obligatoirement mouvementer le compte <b>512</b> (Banque).");
+        erreurs.push("Erreur de journal : dans le journal de <b>Banque (BQ)</b>, le compte <b>512 (Banque)</b> doit obligatoirement être utilisé.");
       }
-      if (journal === 'CA' && !lignes.some(l => l.num.startsWith('530') || l.num.startsWith('53'))) {
-        erreurs.push("Incohérence de journal : toute écriture au journal de Caisse (CA) doit obligatoirement mouvementer le compte <b>530</b> (Caisse).");
+      if (journal === 'CA' && !lignes.some(l => l.num.startsWith('53'))) {
+        erreurs.push("Erreur de journal : dans le journal de <b>Caisse (CA)</b>, le compte <b>530 (Caisse)</b> doit obligatoirement être utilisé.");
       }
 
+      // Affichage du résultat final
       if (erreurs.length > 0) {
         resBox.innerHTML = `
-          <div class="p-4 bg-rose-950/70 border border-rose-500 rounded-2xl text-xs space-y-1.5 text-rose-200">
-            <span class="font-bold flex items-center gap-1.5 text-rose-300"><i class="fa-solid fa-triangle-exclamation"></i> Écriture incorrecte (${erreurs.length} anomalie${erreurs.length > 1 ? 's' : ''}) :</span>
-            <ul class="list-disc list-inside space-y-1">${erreurs.map(e => `<li>${e}</li>`).join('')}</ul>
+          <div class="p-4 bg-rose-950/80 border border-rose-500 rounded-2xl text-xs space-y-2 text-rose-100 shadow-lg">
+            <span class="font-bold text-sm flex items-center gap-2 text-rose-300"><i class="fa-solid fa-circle-xmark text-base"></i> Écriture Fausse (${erreurs.length} erreur${erreurs.length > 1 ? 's' : ''} détectée${erreurs.length > 1 ? 's' : ''}) :</span>
+            <ul class="list-disc list-inside space-y-1.5 leading-relaxed">${erreurs.map(e => `<li>${e}</li>`).join('')}</ul>
           </div>
         `;
       } else {
         resBox.innerHTML = `
-          <div class="p-4 bg-emerald-950/70 border border-emerald-500 rounded-2xl text-xs space-y-1 text-emerald-200">
-            <span class="font-bold flex items-center gap-1.5 text-emerald-300"><i class="fa-solid fa-circle-check"></i> Écriture 100 % Juste !</span>
+          <div class="p-4 bg-emerald-950/80 border border-emerald-500 rounded-2xl text-xs space-y-1.5 text-emerald-100 shadow-lg">
+            <span class="font-bold text-sm flex items-center gap-2 text-emerald-300"><i class="fa-solid fa-circle-check text-base"></i> Écriture 100 % Juste et Validée !</span>
             <p>• <b>Partie double :</b> Total Débit (${totalDeb.toFixed(2)} €) = Total Crédit (${totalCre.toFixed(2)} €).</p>
-            <p>• <b>Ordre & Comptes PCG :</b> Les comptes débités sont bien placés en premier, les numéros de compte et le journal (${journal}) sont exacts.</p>
+            <p>• <b>Contrôle PCG :</b> Les numéros de compte, le traitement de la TVA, le sens Débit/Crédit, l'ordre des lignes et le journal (<b>${journal}</b>) sont parfaitement exacts.</p>
           </div>
         `;
       }
