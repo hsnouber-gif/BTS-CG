@@ -92,12 +92,15 @@
     </div>
 
     <div class="bg-slate-900/60 border-t border-slate-800/60 py-2 px-4 sm:px-6 text-xs text-slate-400">
-      <div class="max-w-7xl mx-auto flex items-center gap-2 overflow-x-auto whitespace-nowrap" id="breadcrumb-container"></div>
+      <div class="max-w-7xl mx-auto flex items-center gap-2 overflow-x-auto whitespace-nowrap" id="breadcrumb-container">
+        <span>Accueil</span>
+      </div>
     </div>
   </header>
 
   <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-6 sm:py-8">
 
+    <!-- VIEW 0: SELECTION ANNEE -->
     <div id="view-years" class="space-y-8">
       <div class="relative overflow-hidden rounded-3xl p-6 sm:p-10 border border-indigo-500/20 bg-gradient-to-br from-indigo-950/60 via-slate-900 to-slate-900 shadow-2xl text-center sm:text-left">
         <div class="max-w-3xl relative z-10 space-y-3">
@@ -150,14 +153,16 @@
       </div>
     </div>
 
+    <!-- VIEW CG2: BIENTOT -->
     <div id="view-cg2-unavailable" class="hidden space-y-8">
       <div class="relative overflow-hidden rounded-3xl p-8 sm:p-14 border border-purple-500/40 bg-gradient-to-b from-purple-950/40 via-slate-900 to-slate-950 text-center shadow-2xl max-w-4xl mx-auto">
         <h1 class="text-3xl font-black text-white">BIENTÔT DISPONIBLE !</h1>
         <p class="text-sm text-slate-300 mt-2">L'espace CG2 est en cours de création.</p>
-        <button onclick="setYear('CG1'); goToSubjectHub();" class="mt-5 px-6 py-3 rounded-2xl bg-indigo-600 text-white font-bold text-xs">Basculer sur CG1</button>
+        <button onclick="setYear('CG1')" class="mt-5 px-6 py-3 rounded-2xl bg-indigo-600 text-white font-bold text-xs">Basculer sur CG1</button>
       </div>
     </div>
 
+    <!-- VIEW 1: HUB MATIERES -->
     <div id="view-hub" class="hidden space-y-8">
       <div class="p-6 rounded-2xl border border-slate-800 bg-slate-900/80 shadow-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
@@ -169,6 +174,7 @@
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5" id="modules-grid"></div>
     </div>
 
+    <!-- VIEW 2: CHAPITRES -->
     <div id="view-chapters" class="hidden space-y-6">
       <div class="p-6 rounded-2xl border border-slate-800 bg-slate-900/80 shadow-xl flex items-center justify-between">
         <div class="flex items-center gap-4">
@@ -184,6 +190,7 @@
       <div class="grid grid-cols-1 gap-4" id="chapters-list-container"></div>
     </div>
 
+    <!-- VIEW 3: WORKSPACE -->
     <div id="view-workspace" class="hidden space-y-6">
       <div class="bg-gradient-to-r from-slate-900 via-indigo-950/40 to-slate-900 border border-indigo-500/30 rounded-2xl p-5 shadow-xl flex flex-col lg:flex-row lg:items-center justify-between gap-4">
         <div>
@@ -203,6 +210,7 @@
         </div>
       </div>
 
+      <!-- Onglets du Chapitre -->
       <div class="flex items-center gap-2 p-1.5 bg-slate-900 border border-slate-800 rounded-2xl overflow-x-auto text-xs sm:text-sm font-semibold">
         <button onclick="switchChapterTab('quiz')" id="tab-btn-quiz" class="px-4 py-2 rounded-xl transition flex items-center gap-2 bg-indigo-600 text-white shadow shrink-0">
           <i class="fa-solid fa-circle-question"></i> <span id="tab-label-quiz">Entraînement Quiz</span>
@@ -278,10 +286,10 @@
         </div>
       </div>
 
-      <!-- TAB 3: SIMULATEUR UNIVERSEL (P1, P3 ET TOUT FUTUR SIMULATEUR AJOUTÉ DANS COURS-DATA.JS) -->
+      <!-- TAB 3: SIMULATEURS (P1, P3, ET FUTURS SIMULATEURS MODULAIRES) -->
       <div id="subtab-simulator" class="tab-pane hidden space-y-6">
         
-        <!-- CONTENEUR MODULAIRE AUTOMATIQUE POUR LES FUTURS SIMULATEURS (P7, P2, P4, P6...) -->
+        <!-- CONTENEUR MODULAIRE AUTOMATIQUE POUR TOUT FUTUR SIMULATEUR AJOUTÉ DANS COURS-DATA.JS -->
         <div id="custom-simulator-container" class="hidden space-y-6"></div>
 
         <!-- SIMULATEUR P1 : BORDEREAU MULTI-OPÉRATIONS & PCG 2026 -->
@@ -381,7 +389,7 @@
           </div>
         </div>
 
-        <!-- SIMULATEUR P3 PAR DÉFAUT -->
+        <!-- SIMULATEUR P3 -->
         <div id="p3-simulator-container" class="hidden grid grid-cols-1 lg:grid-cols-12 gap-6">
           <div class="lg:col-span-5 bg-slate-900/90 border border-slate-800 rounded-3xl p-6 space-y-4">
             <h3 class="font-bold text-sm text-white">Paramètres P3 (IR vs IS & Micro)</h3>
@@ -665,6 +673,10 @@
 
     let activePcgClass = 4;
 
+    function normTxt(str) {
+      return (str || '').toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
+    }
+
     function trouverComptePCG(numeroSaisi) {
       let clean = (numeroSaisi || '').trim();
       if (!clean) return null;
@@ -684,7 +696,7 @@
     function initPcgSystem() {
       const dl = document.getElementById('pcg-accounts-datalist');
       if (dl) {
-        dl.innerHTML = PCG_DATABASE.map(c => `<option value="${c.num}">${c.num} —${c.label}</option>`).join('');
+        dl.innerHTML = PCG_DATABASE.map(c => `<option value="${c.num}">${c.num} — ${c.label}</option>`).join('');
       }
       renderPcgClassTabs();
       renderPcgOfficialView();
@@ -749,7 +761,11 @@
           (c.keywords || []).some(k => normTxt(k).includes(query))
         );
         banner.className = "px-5 py-2.5 bg-indigo-900 text-white font-black text-xs sm:text-sm uppercase flex items-center justify-between";
-        banner.innerHTML = `<span><i class="fa-solid fa-magnifying-glass mr-2"></i>Résultats dans tout le PCG 2026 pour "${query}"</span><span class="font-mono text-xs bg-slate-950/50 px-2.5 py-0.5 rounded-full">${comptes.length} compte(s)</span>`; } else { const meta = PCG_CLASSES_META[activePcgClass]; comptes = PCG_DATABASE.filter(c => c.num.startsWith(String(activePcgClass))); banner.className = `px-5 py-3 ${meta.bgHeader} text-white font-black text-xs sm:text-sm tracking-wide uppercase flex items-center justify-between shadow-md`;
+        banner.innerHTML = `<span><i class="fa-solid fa-magnifying-glass mr-2"></i>Résultats dans tout le PCG 2026 pour "${query}"</span><span class="font-mono text-xs bg-slate-950/50 px-2.5 py-0.5 rounded-full">${comptes.length} compte(s)</span>`;
+      } else {
+        const meta = PCG_CLASSES_META[activePcgClass];
+        comptes = PCG_DATABASE.filter(c => c.num.startsWith(String(activePcgClass)));
+        banner.className = `px-5 py-3 ${meta.bgHeader} text-white font-black text-xs sm:text-sm tracking-wide uppercase flex items-center justify-between shadow-md`;
         banner.innerHTML = `<span>${meta.title}</span><span class="font-mono text-xs bg-black/25 px-2.5 py-0.5 rounded-full">PCG 2026 • ${comptes.length} comptes</span>`;
       }
 
@@ -846,7 +862,8 @@
     function synchroniserDOMVersStateP1() {
       p1OperationsState.forEach((op, opIdx) => {
         const jEl = document.getElementById(`op-${opIdx}-journal`);
-        const dEl = document.getElementById(`op-${opIdx}-date`); const lEl = document.getElementById(`op-${opIdx}-libelle`);
+        const dEl = document.getElementById(`op-${opIdx}-date`);
+        const lEl = document.getElementById(`op-${opIdx}-libelle`);
         if (jEl) op.journal = jEl.value;
         if (dEl) op.date = dEl.value;
         if (lEl) op.libelle = lEl.value;
@@ -878,7 +895,7 @@
           libEl.value = compte.label;
         }
         if (badgeEl) {
-          badgeEl.innerHTML = `<span class="text-[10px] text-emerald-400 font-mono"><i class="fa-solid fa-check"></i> Compte officiel PCG 2026 : <b>${compte.num} —${compte.label}</b></span>`;
+          badgeEl.innerHTML = `<span class="text-[10px] text-emerald-400 font-mono"><i class="fa-solid fa-check"></i> Compte officiel PCG 2026 : <b>${compte.num} — ${compte.label}</b></span>`;
         }
       } else if (numEl.value.trim().length >= 3) {
         if (badgeEl) {
@@ -896,12 +913,12 @@
       container.innerHTML = p1OperationsState.map((op, opIdx) => {
         const lignesHtml = op.lignes.map((lig, ligIdx) => {
           const compteInfo = trouverComptePCG(lig.num);
-          const badgeText = compteInfo ? `<span class="text-[10px] text-emerald-400 font-mono"><i class="fa-solid fa-check"></i> Compte officiel PCG 2026 : <b>${compteInfo.num} —${compteInfo.label}</b></span>` : '';
+          const badgeText = compteInfo ? `<span class="text-[10px] text-emerald-400 font-mono"><i class="fa-solid fa-check"></i> Compte officiel PCG 2026 : <b>${compteInfo.num} — ${compteInfo.label}</b></span>` : '';
           return `
             <div class="space-y-1">
               <div class="grid grid-cols-12 gap-2 items-center">
                 <div class="col-span-3 sm:col-span-2">
-                  <input type="text" list="pcg-accounts-datalist" id="op-${opIdx}-l-${ligIdx}-num" value="${lig.num}" oninput="autoRemplirIntitulePCG(${opIdx},${ligIdx})" placeholder="N° (ex: 411)" class="sim-input w-full rounded-xl p-2 text-xs font-mono font-bold">
+                  <input type="text" list="pcg-accounts-datalist" id="op-${opIdx}-l-${ligIdx}-num" value="${lig.num}" oninput="autoRemplirIntitulePCG(${opIdx}, ${ligIdx})" placeholder="N° (ex: 411)" class="sim-input w-full rounded-xl p-2 text-xs font-mono font-bold">
                 </div>
                 <div class="col-span-2 sm:col-span-2">
                   <input type="text" id="op-${opIdx}-l-${ligIdx}-tiers" value="${lig.tiers || ''}" placeholder="Tiers (opt.)" class="sim-input w-full rounded-xl p-2 text-xs font-mono">
@@ -916,7 +933,7 @@
                   <input type="number" step="0.01" id="op-${opIdx}-l-${ligIdx}-cre" value="${lig.cre}" placeholder="Crédit €" class="sim-input-cre w-full rounded-xl p-2 text-right text-xs font-mono font-bold">
                 </div>
                 <div class="col-span-2 sm:col-span-1 flex justify-end">
-                  <button type="button" onclick="supprimerLigneP1(${opIdx},${ligIdx})" title="Supprimer cette ligne" class="w-8 h-8 rounded-lg bg-slate-900 hover:bg-rose-950 text-slate-400 hover:text-rose-400 border border-slate-800 flex items-center justify-center transition">
+                  <button type="button" onclick="supprimerLigneP1(${opIdx}, ${ligIdx})" title="Supprimer cette ligne" class="w-8 h-8 rounded-lg bg-slate-900 hover:bg-rose-950 text-slate-400 hover:text-rose-400 border border-slate-800 flex items-center justify-center transition">
                     <i class="fa-solid fa-trash-can text-xs"></i>
                   </button>
                 </div>
@@ -946,4 +963,715 @@
                 <input type="text" id="op-${opIdx}-date" value="${op.date}" placeholder="23/01/20N" class="sim-input w-full rounded-xl p-2 text-xs font-mono">
               </div>
               <div class="sm:col-span-3">
-                <label class="block
+                <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Journal Auxiliaire</label>
+                <select id="op-${opIdx}-journal" class="sim-input w-full rounded-xl p-2 text-xs font-bold">
+                  <option value="ACH" ${op.journal === 'ACH' ? 'selected' : ''}>ACH (HA) - Achats</option>
+                  <option value="VTE" ${op.journal === 'VTE' ? 'selected' : ''}>VTE (VT) - Ventes</option>
+                  <option value="BQ" ${op.journal === 'BQ' ? 'selected' : ''}>BQ (BQ1) - Banque</option>
+                  <option value="CA" ${op.journal === 'CA' ? 'selected' : ''}>CA (CAI) - Caisse</option>
+                  <option value="OD" ${op.journal === 'OD' ? 'selected' : ''}>OD - Opérations Diverses</option>
+                </select>
+              </div>
+              <div class="sm:col-span-7">
+                <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Libellé de l'opération (écriture souple)</label>
+                <input type="text" id="op-${opIdx}-libelle" value="${op.libelle}" placeholder="Ex: Vente de marchandises 1000 € HT TVA 20% ou Règlement CB..." class="sim-input w-full rounded-xl p-2 text-xs">
+              </div>
+            </div>
+
+            <div class="hidden sm:grid grid-cols-12 gap-2 text-[11px] text-slate-400 font-bold px-1 pt-1">
+              <span class="col-span-2">N° Compte PCG</span>
+              <span class="col-span-2">Code Tiers (opt.)</span>
+              <span class="col-span-4">Intitulé saisi (souple)</span>
+              <span class="col-span-2 text-right text-emerald-400">Débit (€)</span>
+              <span class="col-span-1 text-right text-amber-400">Crédit (€)</span>
+              <span class="col-span-1 text-right">Action</span>
+            </div>
+
+            <div class="space-y-2.5">
+              ${lignesHtml}
+            </div>
+
+            <div class="pt-2 flex items-center justify-between">
+              <button type="button" onclick="ajouterLigneP1(${opIdx})" class="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-indigo-300 border border-slate-700 text-xs font-bold transition flex items-center gap-1.5">
+                <i class="fa-solid fa-plus"></i> Ajouter une ligne de compte
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function ajouterLigneP1(opIdx) {
+      synchroniserDOMVersStateP1();
+      p1OperationsState[opIdx].lignes.push({ num: '', tiers: '', lib: '', deb: '', cre: '' });
+      renderBordereauP1();
+    }
+
+    function supprimerLigneP1(opIdx, ligIdx) {
+      synchroniserDOMVersStateP1();
+      if (p1OperationsState[opIdx].lignes.length <= 2) {
+        p1OperationsState[opIdx].lignes[ligIdx] = { num: '', tiers: '', lib: '', deb: '', cre: '' };
+      } else {
+        p1OperationsState[opIdx].lignes.splice(ligIdx, 1);
+      }
+      renderBordereauP1();
+    }
+
+    function ajouterOperationP1() {
+      synchroniserDOMVersStateP1();
+      p1OperationsState.push(creerOperationVide('BQ', '23/01/20N', ''));
+      renderBordereauP1();
+    }
+
+    function supprimerOperationP1(opIdx) {
+      synchroniserDOMVersStateP1();
+      if (p1OperationsState.length > 1) {
+        p1OperationsState.splice(opIdx, 1);
+        renderBordereauP1();
+      }
+    }
+
+    function resetBordereauP1() {
+      p1OperationsState = [creerOperationVide('ACH', '01/01/20N', '')];
+      renderBordereauP1();
+      document.getElementById('sim-ecr-resultat-box').innerHTML = '';
+    }
+
+    function chargerScenarioP1(nom) {
+      if (nom === 'vente_mixte') {
+        p1OperationsState = [
+          {
+            id: 'op_1',
+            date: '23/01/20N',
+            journal: 'VTE',
+            libelle: "Facture de vente de marchandises 1000 € HT avec TVA 20% (1200 € TTC)",
+            lignes: [
+              { num: '411', tiers: '0CLIE', lib: 'Clients', deb: '1200', cre: '0' },
+              { num: '707', tiers: '', lib: 'Ventes de marchandises', deb: '0', cre: '1000' },
+              { num: '44571', tiers: '', lib: 'TVA collectée', deb: '0', cre: '200' }
+            ]
+          },
+          {
+            id: 'op_2',
+            date: '23/01/20N',
+            journal: 'BQ',
+            libelle: "Règlement du client de la moitié par Carte Bancaire (600 €)",
+            lignes: [
+              { num: '512', tiers: '', lib: 'Banques', deb: '600', cre: '0' },
+              { num: '411', tiers: '0CLIE', lib: 'Clients', deb: '0', cre: '600' }
+            ]
+          },
+          {
+            id: 'op_3',
+            date: '23/01/20N',
+            journal: 'CA',
+            libelle: "Règlement du client de l'autre moitié en espèces (600 €)",
+            lignes: [
+              { num: '530', tiers: '', lib: 'Caisse', deb: '600', cre: '0' },
+              { num: '411', tiers: '0CLIE', lib: 'Clients', deb: '0', cre: '600' }
+            ]
+          }
+        ];
+      } else if (nom === 'achat_immo') {
+        p1OperationsState = [
+          {
+            id: 'op_1',
+            date: '10/01/20N',
+            journal: 'ACH',
+            libelle: "Facture d'achat d'une voiture utilitaire 1000 € HT avec TVA 20%",
+            lignes: [
+              { num: '2182', tiers: '', lib: 'Matériel de transport', deb: '1000', cre: '0' },
+              { num: '44562', tiers: '', lib: 'TVA sur immobilisations', deb: '200', cre: '0' },
+              { num: '404', tiers: '9AUTO', lib: "Fournisseurs d'immobilisations", deb: '0', cre: '1200' }
+            ]
+          },
+          {
+            id: 'op_2',
+            date: '10/01/20N',
+            journal: 'BQ',
+            libelle: "Règlement par chèque du fournisseur d'immobilisations",
+            lignes: [
+              { num: '404', tiers: '9AUTO', lib: "Fournisseurs d'immobilisations", deb: '1200', cre: '0' },
+              { num: '512', tiers: '', lib: 'Banques', deb: '0', cre: '1200' }
+            ]
+          }
+        ];
+      } else if (nom === 'emprunt') {
+        p1OperationsState = [
+          {
+            id: 'op_1',
+            date: '16/09/20N',
+            journal: 'BQ',
+            libelle: "Prélèvement annuité d'emprunt (Capital 10 000 € et Intérêts 3 600 €)",
+            lignes: [
+              { num: '164', tiers: '', lib: 'Emprunts auprès des établissements de crédit', deb: '10000', cre: '0' },
+              { num: '661', tiers: '', lib: "Charges d'intérêts", deb: '3600', cre: '0' },
+              { num: '512', tiers: '', lib: 'Banques', deb: '0', cre: '13600' }
+            ]
+          }
+        ];
+      } else if (nom === 'affacturage_salaires') {
+        p1OperationsState = [
+          {
+            id: 'op_1',
+            date: '28/01/20N',
+            journal: 'ACH',
+            libelle: "Facture F20N-099 : Achat poudre teint (200€), kit sérum (300€), kit ongulaire (350€) + TVA 20%",
+            lignes: [
+              { num: '607', tiers: '', lib: 'Achat poudre teint', deb: '200', cre: '0' },
+              { num: '607', tiers: '', lib: 'Achat kit sérum', deb: '300', cre: '0' },
+              { num: '607', tiers: '', lib: 'Achat kit ongulaire', deb: '350', cre: '0' },
+              { num: '44566', tiers: '', lib: 'TVA sur autres biens et services', deb: '170', cre: '0' },
+              { num: '401', tiers: '9TOUT', lib: "Fournisseur Tout pour l'esthétisme", deb: '0', cre: '1020' }
+            ]
+          }
+        ];
+      }
+      renderBordereauP1();
+      verifierToutLeBordereauP1();
+    }
+
+    // ============================================================================
+    // MOTEUR D'AUDIT COMPTABLE INTELLIGENT (STRICT SUR LES COMPTES, SOUPLE SUR TES LIBELLÉS)
+    // ============================================================================
+    function verifierToutLeBordereauP1() {
+      synchroniserDOMVersStateP1();
+      const resBox = document.getElementById('sim-ecr-resultat-box');
+      let erreursGlobales = [];
+      let resumeOperations = [];
+      let grandTotalDeb = 0;
+      let grandTotalCre = 0;
+
+      p1OperationsState.forEach((op, opIdx) => {
+        const numOp = opIdx + 1;
+        const journal = op.journal;
+        const libGlobal = normTxt(op.libelle);
+
+        const lignesActives = op.lignes.map((l, i) => ({
+          idx: i + 1,
+          num: (l.num || '').trim(),
+          tiers: (l.tiers || '').trim(),
+          lib: normTxt(l.lib),
+          deb: parseFloat(l.deb) || 0,
+          cre: parseFloat(l.cre) || 0
+        })).filter(l => l.num !== '' || l.deb > 0 || l.cre > 0 || l.lib !== '');
+
+        const totDeb = lignesActives.reduce((s, l) => s + l.deb, 0);
+        const totCre = lignesActives.reduce((s, l) => s + l.cre, 0);
+        grandTotalDeb += totDeb;
+        grandTotalCre += totCre;
+
+        if (lignesActives.length < 2) {
+          erreursGlobales.push(`<b>Opération #${numOp} (${journal})</b> : Il faut au moins 2 lignes (un débit et un crédit).`);
+          return;
+        }
+
+        if (Math.abs(totDeb - totCre) > 0.01 || totDeb === 0) {
+          erreursGlobales.push(`<b>Opération #${numOp} (${journal})</b> : Partie double non équilibrée ! Total Débit (<b>${totDeb.toFixed(2)} €</b>) ≠ Total Crédit (<b>${totCre.toFixed(2)} €</b>). Écart de ${Math.abs(totDeb - totCre).toFixed(2)} €.`);
+        }
+
+        const has70 = lignesActives.some(l => l.num.startsWith('70')) || lignesActives.some(l => l.lib.includes('vente'));
+        const has60_62 = lignesActives.some(l => /^6[012]/.test(l.num)) || lignesActives.some(l => l.lib.includes('achat'));
+        const hasImmo2 = lignesActives.some(l => /^2[01]/.test(l.num));
+        const isVente = (journal === 'VTE') || libGlobal.includes('vente') || has70;
+        const isAchat = (journal === 'ACH') || libGlobal.includes('achat') || has60_62 || hasImmo2;
+        const isAvoir = libGlobal.includes('avoir') || libGlobal.includes('retour');
+
+        let vuCredit = false;
+
+        lignesActives.forEach(l => {
+          if (!l.num) {
+            erreursGlobales.push(`<b>Opération #${numOp}, Ligne ${l.idx}</b> : Numéro de compte PCG manquant.`);
+            return;
+          }
+          if (!/^[1-7][0-9]{1,7}$/.test(l.num)) {
+            erreursGlobales.push(`<b>Opération #${numOp}, Ligne ${l.idx}</b> : Le numéro <b>"${l.num}"</b> n'est pas un compte PCG valide (doit commencer par une classe de 1 à 7).`);
+          }
+
+          if (l.deb > 0 && l.cre > 0) {
+            erreursGlobales.push(`<b>Opération #${numOp}, Ligne ${l.idx} (compte ${l.num})</b> : Un compte ne peut pas avoir un Débit et un Crédit sur la même ligne.`);
+          }
+          if (l.deb === 0 && l.cre === 0) {
+            erreursGlobales.push(`<b>Opération #${numOp}, Ligne ${l.idx} (compte ${l.num})</b> : Montant à zéro.`);
+          }
+
+          if (l.cre > 0) vuCredit = true;
+          if (l.deb > 0 && vuCredit) {
+            erreursGlobales.push(`<b>Opération #${numOp}, Ligne ${l.idx} (compte ${l.num})</b> : <b>Ordre incorrect</b>. Au journal, tous les comptes débités doivent être placés en haut avant les comptes crédités.`);
+          }
+
+          const estTvaDed = l.num.startsWith('4456') || l.lib.includes('deduct');
+          const estTvaCol = l.num.startsWith('4457') || l.lib.includes('collect');
+
+          if (estTvaDed) {
+            if (isVente && !isAchat) {
+              erreursGlobales.push(`<b>Opération #${numOp}, Ligne ${l.idx}</b> : <b>Erreur de TVA !</b> Pour une Vente, il est interdit d'utiliser la TVA déductible (4456). Utilisez le compte <b>44571 (TVA collectée) au CRÉDIT</b>.`);
+            }
+            if (l.cre > 0 && !isAvoir) {
+              erreursGlobales.push(`<b>Opération #${numOp}, Ligne ${l.idx} (${l.num})</b> : La TVA déductible est une créance sur l'État, elle s'enregistre au <b>DÉBIT</b>.`);
+            }
+            if (!l.num.startsWith('4456')) {
+              erreursGlobales.push(`<b>Opération #${numOp}, Ligne ${l.idx}</b> : Vous avez écrit TVA déductible mais le numéro <b>${l.num}</b> ne correspond pas (utilisez <b>44566</b> sur autres biens et services ou <b>44562</b> sur immobilisations).`);
+            }
+            if (hasImmo2 && l.num.startsWith('44566')) {
+              erreursGlobales.push(`<b>Opération #${numOp}, Ligne ${l.idx}</b> : Sur l'achat d'une immobilisation (classe 2), utilisez le compte <b>44562 (TVA sur immobilisations)</b> plutôt que 44566.`);
+            }
+          }
+
+          if (estTvaCol) {
+            if (isAchat && !isVente) {
+              erreursGlobales.push(`<b>Opération #${numOp}, Ligne ${l.idx}</b> : <b>Erreur de TVA !</b> Sur un Achat, on utilise la <b>TVA déductible (44566 ou 44562) au DÉBIT</b>, jamais la TVA collectée (44571).`);
+            }
+            if (l.deb > 0 && !isAvoir) {
+              erreursGlobales.push(`<b>Opération #${numOp}, Ligne ${l.idx} (${l.num})</b> : La TVA collectée (44571) est une dette envers l'État, elle s'enregistre obligatoirement au <b>CRÉDIT</b>.`);
+            }
+            if (!l.num.startsWith('4457')) {
+              erreursGlobales.push(`<b>Opération #${numOp}, Ligne ${l.idx}</b> : Vous mentionnez la TVA collectée mais le numéro <b>${l.num}</b> est faux (utilisez <b>44571</b>).`);
+            }
+          }
+
+          if (l.num.startsWith('6') && !l.num.startsWith('609') && !l.num.startsWith('603') && l.cre > 0 && !isAvoir) {
+            erreursGlobales.push(`<b>Opération #${numOp}, Ligne ${l.idx} (compte ${l.num})</b> : Les comptes de <b>Charges (classe 6)</b> augmentent toujours au <b>DÉBIT</b>.`);
+          }
+          if (l.num.startsWith('7') && !l.num.startsWith('709') && !l.num.startsWith('713') && l.deb > 0 && !isAvoir) {
+            erreursGlobales.push(`<b>Opération #${numOp}, Ligne ${l.idx} (compte ${l.num})</b> : Les comptes de <b>Produits / Ventes (classe 7)</b> augmentent toujours au <b>CRÉDIT</b>.`);
+          }
+          if (/^2[01]/.test(l.num) && l.cre > 0 && !isAvoir && !libGlobal.includes('cession')) {
+            erreursGlobales.push(`<b>Opération #${numOp}, Ligne ${l.idx} (compte ${l.num})</b> : L'entrée d'une <b>Immobilisation (classe 2)</b> dans le patrimoine s'enregistre au <b>DÉBIT</b>.`);
+          }
+        });
+
+        if (isVente && has70 && !isAvoir) {
+          const sumVentesHT = lignesActives.filter(l => l.num.startsWith('70')).reduce((s, l) => s + l.cre, 0);
+          const sumTvaCol = lignesActives.filter(l => l.num.startsWith('4457')).reduce((s, l) => s + l.cre, 0);
+          const sumClientOuTresoDeb = lignesActives.filter(l => l.num.startsWith('411') || l.num.startsWith('512') || l.num.startsWith('53')).reduce((s, l) => s + l.deb, 0);
+
+          if (sumClientOuTresoDeb === 0) {
+            erreursGlobales.push(`<b>Opération #${numOp} (Vente)</b> : Vous devez débiter le compte <b>411 (Clients)</b> (ou 512/530 si paiement immédiat) en première ligne pour le montant TTC.`);
+          } else if (Math.abs(sumClientOuTresoDeb - (sumVentesHT + sumTvaCol)) > 0.05) {
+            erreursGlobales.push(`<b>Opération #${numOp} (Vente)</b> : Incohérence des montants ! Le Débit Client/Trésorerie TTC (<b>${sumClientOuTresoDeb.toFixed(2)} €</b>) doit être égal au total Ventes HT (<b>${sumVentesHT.toFixed(2)} €</b>) + TVA collectée (<b>${sumTvaCol.toFixed(2)} €</b>).`);
+          }
+        }
+
+        if (isAchat && (has60_62 || hasImmo2) && !isVente && !isAvoir) {
+          const sumAchatsHT = lignesActives.filter(l => l.num.startsWith('6') || l.num.startsWith('2')).reduce((s, l) => s + l.deb, 0);
+          const sumTvaDed = lignesActives.filter(l => l.num.startsWith('4456')).reduce((s, l) => s + l.deb, 0);
+          const sumFournOuTresoCre = lignesActives.filter(l => l.num.startsWith('401') || l.num.startsWith('404') || l.num.startsWith('512') || l.num.startsWith('53')).reduce((s, l) => s + l.cre, 0);
+
+          if (sumFournOuTresoCre === 0) {
+            erreursGlobales.push(`<b>Opération #${numOp} (Achat)</b> : Vous devez créditer le compte <b>401 (Fournisseurs)</b>, <b>404 (Fournisseurs d'immobilisations)</b> ou la trésorerie (512/530) pour le montant TTC.`);
+          } else if (Math.abs(sumFournOuTresoCre - (sumAchatsHT + sumTvaDed)) > 0.05) {
+            erreursGlobales.push(`<b>Opération #${numOp} (Achat)</b> : Le Crédit Fournisseur/Trésorerie TTC (<b>${sumFournOuTresoCre.toFixed(2)} €</b>) doit être égal au total HT (<b>${sumAchatsHT.toFixed(2)} €</b>) + TVA déductible (<b>${sumTvaDed.toFixed(2)} €</b>).`);
+          }
+
+          if (hasImmo2 && lignesActives.some(l => l.num.startsWith('401'))) {
+            erreursGlobales.push(`<b>Opération #${numOp}</b> : Pour l'achat d'une immobilisation (classe 2), utilisez le compte <b>404 (Fournisseurs d'immobilisations)</b> au lieu de 401.`);
+          }
+        }
+
+        if (journal === 'BQ' && !lignesActives.some(l => l.num.startsWith('512') || l.num.startsWith('511'))) {
+          erreursGlobales.push(`<b>Opération #${numOp} (Journal BQ)</b> : Une écriture dans le journal de Banque (BQ) doit obligatoirement mouvementer le compte <b>512 (Banques)</b>.`);
+        }
+        if (journal === 'CA' && !lignesActives.some(l => l.num.startsWith('53'))) {
+          erreursGlobales.push(`<b>Opération #${numOp} (Journal CA)</b> : Une écriture dans le journal de Caisse (CA) doit obligatoirement mouvementer le compte <b>530 (Caisse)</b>.`);
+        }
+        if (journal === 'ACH' && lignesActives.some(l => l.num.startsWith('512') || l.num.startsWith('53'))) {
+          erreursGlobales.push(`<b>Opération #${numOp} (Journal ACH)</b> : Le journal des Achats (ACH) enregistre uniquement la facture avec le compte fournisseur (401/404). Le paiement (512 ou 530) doit être enregistré dans une autre opération avec le journal <b>BQ</b> ou <b>CA</b> !`);
+        }
+        if (journal === 'VTE' && lignesActives.some(l => l.num.startsWith('512') || l.num.startsWith('53'))) {
+          erreursGlobales.push(`<b>Opération #${numOp} (Journal VTE)</b> : Le journal des Ventes (VTE) enregistre la facture client (411). Pour enregistrer le règlement par carte (BQ) et/ou espèces (CA), cliquez sur <b>"+ Ajouter une opération"</b> avec les journaux BQ et CA !`);
+        }
+
+        resumeOperations.push(`Opération #${numOp} (${journal}) : ${totDeb.toFixed(2)} €`);
+      });
+
+      if (erreursGlobales.length > 0) {
+        resBox.innerHTML = `
+          <div class="p-5 bg-rose-950/80 border border-rose-500 rounded-2xl text-xs space-y-2.5 text-rose-100 shadow-xl">
+            <div class="font-extrabold text-sm flex items-center gap-2 text-rose-300">
+              <i class="fa-solid fa-circle-xmark text-lg"></i> ${erreursGlobales.length} anomalie${erreursGlobales.length > 1 ? 's' : ''} détectée${erreursGlobales.length > 1 ? 's' : ''} sur votre bordereau :
+            </div>
+            <ul class="list-disc list-inside space-y-1.5 leading-relaxed">${erreursGlobales.map(e => `<li>${e}</li>`).join('')}</ul>
+          </div>
+        `;
+      } else {
+        resBox.innerHTML = `
+          <div class="p-5 bg-emerald-950/80 border border-emerald-500 rounded-2xl text-xs space-y-2 text-emerald-100 shadow-xl">
+            <div class="font-extrabold text-sm flex items-center gap-2 text-emerald-300">
+              <i class="fa-solid fa-circle-check text-lg"></i> Bordereau 100 % Conforme au Plan Comptable Général 2026 !
+            </div>
+            <p>• <b>Total Général du Bordereau :</b> Débit = <b>${grandTotalDeb.toFixed(2)} €</b> | Crédit = <b>${grandTotalCre.toFixed(2)} €</b> (Partie double respectée sur les ${p1OperationsState.length} opération${p1OperationsState.length > 1 ? 's' : ''}).</p>
+            <p>• <b>Détail validé :</b> ${resumeOperations.join(' • ')}</p>
+          </div>
+        `;
+      }
+    }
+
+    // ============================================================================
+    // NAVIGATION GÉNÉRALE & ARCHITECTURE MODULAIRE POUR FUTURS SIMULATEURS
+    // ============================================================================
+    const defaultSubjectCatalog = [
+      { id: 'p1', code: 'P1', title: 'Gestion des opérations commerciales et comptables', desc: 'Découverte de la comptabilité, classes 1 à 7, Bilan, Résultat, Balance et écritures.', category: 'process', icon: 'fa-cart-shopping' },
+      { id: 'p2', code: 'P2', title: 'Gestion des relations avec les salariés & organismes sociaux', desc: 'Bulletins de paie, déclarations DSN, droit du travail et cotisations.', category: 'process', icon: 'fa-users-gear' },
+      { id: 'p3', code: 'P3', title: 'Gestion fiscale (Processus 3)', desc: 'TVA, régimes d\'imposition, Micro-BIC, déclaration CA12/CA3, IS et résultat fiscal.', category: 'process', icon: 'fa-landmark' },
+      { id: 'p4', code: 'P4', title: 'Production et analyse de l\'information financière', desc: 'Travaux d\'inventaire, amortissements, dépréciations et clôture.', category: 'process', icon: 'fa-file-invoice-dollar' },
+      { id: 'p5', code: 'P5', title: 'Analyse et prévision de l\'activité (Contrôle de Gestion)', desc: 'Objets de coûts, charges directes/indirectes, coûts complets, seuil de rentabilité.', category: 'process', icon: 'fa-cubes' },
+      { id: 'p6', code: 'P6', title: 'Analyse financière et gestion de la trésorerie', desc: 'SIG, CAF, bilan fonctionnel, FRNG, BFR et ratios financiers.', category: 'process', icon: 'fa-chart-line' },
+      { id: 'p7', code: 'P7', title: 'Fiabilisation du système d\'information comptable', desc: 'Bases de données relationnelles, requêtes SQL, PGI et sécurité.', category: 'process', icon: 'fa-network-wired' },
+      { id: 'cejma', code: 'CEJMA', title: 'Culture Économique, Juridique et Managériale Appliquée', desc: 'Régulation économique, droit des contrats et des affaires.', category: 'general', icon: 'fa-scale-balanced' },
+      { id: 'maths', code: 'MATHS', title: 'Mathématiques appliquées', desc: 'Fonctions affines et du second degré, tableur et calculs financiers.', category: 'general', icon: 'fa-calculator' },
+      { id: 'anglais', code: 'ANGLAIS', title: 'Anglais appliqué aux affaires', desc: 'Vocabulaire financier anglophone et correspondance commerciale.', category: 'general', icon: 'fa-language' },
+      { id: 'ap', code: 'AP', title: 'Atelier professionnel (AP)', desc: 'Mises en situation professionnelles transversales E4/E5.', category: 'general', icon: 'fa-briefcase' }
+    ];
+
+    let selectedYear = 'CG1';
+    let currentView = 'years';
+    let currentSubject = null;
+    let currentChapter = null;
+
+    function getDatabase() { return window.COURS_DATABASE || []; }
+
+    function setYear(y) {
+      selectedYear = y;
+      document.getElementById('active-year-badge').innerText = y;
+      document.getElementById('current-year-display').innerText = `Niveau : ${y}`;
+      const b1 = document.getElementById('header-btn-cg1');
+      const b2 = document.getElementById('header-btn-cg2');
+      if (b1 && b2) {
+        b1.className = (y === 'CG1') ? "px-2.5 py-1 rounded-lg transition bg-indigo-600 text-white shadow" : "px-2.5 py-1 rounded-lg transition text-slate-400 hover:text-white";
+        b2.className = (y === 'CG2') ? "px-2.5 py-1 rounded-lg transition bg-indigo-600 text-white shadow" : "px-2.5 py-1 rounded-lg transition text-slate-400 hover:text-white";
+      }
+      if (y === 'CG1') goToSubjectHub();
+      else showCg2Unavailable();
+    }
+
+    function selectYearAndOpen(y) { setYear(y); }
+
+    function showCg2Unavailable() {
+      currentView = 'cg2-unavailable';
+      hideAllViews();
+      document.getElementById('view-cg2-unavailable').classList.remove('hidden');
+    }
+
+    function goToYearSelect() {
+      currentView = 'years';
+      hideAllViews();
+      document.getElementById('view-years').classList.remove('hidden');
+    }
+
+    function goToSubjectHub() {
+      currentView = 'hub';
+      hideAllViews();
+      document.getElementById('view-hub').classList.remove('hidden');
+      renderModulesGrid();
+    }
+
+    function goToChaptersList() {
+      currentView = 'chapters';
+      hideAllViews();
+      document.getElementById('view-chapters').classList.remove('hidden');
+    }
+
+    function hideAllViews() {
+      ['view-years', 'view-cg2-unavailable', 'view-hub', 'view-chapters', 'view-workspace'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.add('hidden');
+      });
+    }
+
+    function renderModulesGrid() {
+      const container = document.getElementById('modules-grid');
+      const db = getDatabase();
+      container.innerHTML = defaultSubjectCatalog.map(m => {
+        const hasData = db.some(c => c.subjectId === m.id);
+        if (hasData) {
+          return `
+            <div onclick="selectSubject('${m.id}')" class="cursor-pointer group p-6 rounded-3xl bg-slate-900/90 border border-indigo-500/30 hover:border-indigo-400 transition card-glow flex flex-col justify-between shadow-xl">
+              <div>
+                <span class="text-xs font-mono font-black px-3 py-1 rounded-xl bg-indigo-600/30 text-indigo-300 border border-indigo-500/40">${m.code}</span>
+                <div class="w-12 h-12 rounded-2xl bg-indigo-600/20 text-indigo-400 flex items-center justify-center text-xl my-4"><i class="fa-solid ${m.icon}"></i></div>
+                <h3 class="font-extrabold text-lg text-white group-hover:text-indigo-300 transition">${m.title}</h3>
+                <p class="text-xs text-slate-400 mt-2">${m.desc}</p>
+              </div>
+              <div class="pt-5 mt-4 border-t border-slate-800 flex justify-between text-xs font-bold text-indigo-400">
+                <span>Accéder aux chapitres</span> <i class="fa-solid fa-arrow-right"></i>
+              </div>
+            </div>
+          `;
+        } else {
+          return `
+            <div class="p-6 rounded-3xl bg-slate-900/40 border border-slate-800 opacity-60 flex flex-col justify-between">
+              <div>
+                <span class="text-xs font-mono font-bold px-3 py-1 rounded-xl bg-slate-800 text-slate-400">${m.code}</span>
+                <div class="w-12 h-12 rounded-2xl bg-slate-800 text-slate-500 flex items-center justify-center text-xl my-4"><i class="fa-solid ${m.icon}"></i></div>
+                <h3 class="font-bold text-lg text-slate-300">${m.title}</h3>
+                <p class="text-xs text-slate-500 mt-2">${m.desc}</p>
+              </div>
+              <div class="pt-5 mt-4 border-t border-slate-800 text-xs text-slate-500 flex justify-between">
+                <span>Bientôt débloqué</span> <i class="fa-solid fa-lock"></i>
+              </div>
+            </div>
+          `;
+        }
+      }).join('');
+    }
+
+    function selectSubject(id) {
+      const sub = defaultSubjectCatalog.find(s => s.id === id);
+      if (!sub) return;
+      currentSubject = sub;
+      document.getElementById('module-code-badge').innerText = sub.code;
+      document.getElementById('module-title-display').innerText = sub.title;
+      document.getElementById('module-desc-display').innerText = sub.desc;
+      document.getElementById('module-icon-container').innerHTML = `<i class="fa-solid ${sub.icon}"></i>`;
+      renderChaptersList();
+      goToChaptersList();
+    }
+
+    function renderChaptersList() {
+      const db = getDatabase();
+      const chapters = db.filter(c => c.subjectId === currentSubject.id);
+      document.getElementById('chapters-list-container').innerHTML = chapters.map(c => `
+        <div onclick="openChapter('${c.chapterId}')" class="cursor-pointer group p-5 rounded-2xl bg-slate-900/90 border border-indigo-500/40 hover:border-indigo-400 transition card-glow flex items-center justify-between shadow-xl">
+          <div class="flex items-center gap-4">
+            <div class="w-12 h-12 rounded-xl bg-indigo-600 text-white font-black flex items-center justify-center text-lg">${c.chapterNum}</div>
+            <div>
+              <div class="text-xs text-indigo-300 font-mono">${(c.quizQuestions || []).length} Questions • ${(c.flashcards || []).length} Flashcards</div>
+              <h4 class="font-bold text-white text-base mt-0.5">${c.chapterTitle}</h4>
+              <p class="text-xs text-slate-400 mt-0.5">${c.chapterDesc}</p>
+            </div>
+          </div>
+          <button class="px-4 py-2 rounded-xl bg-indigo-600 text-white text-xs font-bold">Ouvrir</button>
+        </div>
+      `).join('');
+    }
+
+    function openChapter(chapterId) {
+      const db = getDatabase();
+      const chap = db.find(c => c.chapterId === chapterId);
+      if (!chap) return;
+      currentChapter = chap;
+
+      document.getElementById('ws-chapter-code').innerText = `${selectedYear} • ${chap.subjectCode} • Chapitre ${chap.chapterNum}`;
+      document.getElementById('ws-chapter-title').innerText = chap.chapterTitle;
+      document.getElementById('ws-chapter-desc').innerText = chap.chapterDesc;
+
+      // Moteur modulaire de détection de simulateur :
+      // 1. Si le chapitre dans cours-data.js possède sa propre propriété "simulatorHtml", on l'injecte automatiquement !
+      // 2. Sinon, on affiche le simulateur P1 ou P3 intégré.
+      const simBtn = document.getElementById('tab-btn-simulator');
+      const simTitle = document.getElementById('sim-tab-title');
+      const customSimContainer = document.getElementById('custom-simulator-container');
+      const p1SimContainer = document.getElementById('p1-simulator-container');
+      const p3SimContainer = document.getElementById('p3-simulator-container');
+
+      customSimContainer.classList.add('hidden');
+      p1SimContainer.classList.add('hidden');
+      p3SimContainer.classList.add('hidden');
+
+      if (chap.simulatorHtml) {
+        simBtn.classList.remove('hidden');
+        simTitle.innerText = chap.simulatorTitle || `Simulateur (${chap.subjectCode})`;
+        customSimContainer.innerHTML = chap.simulatorHtml;
+        customSimContainer.classList.remove('hidden');
+        if (typeof chap.simulatorInit === 'function') {
+          setTimeout(() => chap.simulatorInit(), 50);
+        }
+      } else if (chap.subjectId === 'p1') {
+        simBtn.classList.remove('hidden');
+        simTitle.innerText = "Simulateur d'écriture (P1)";
+        p1SimContainer.classList.remove('hidden');
+        if (p1OperationsState.length === 0) {
+          chargerScenarioP1('vente_mixte');
+        }
+      } else if (chap.subjectId === 'p3') {
+        simBtn.classList.remove('hidden');
+        simTitle.innerText = "Simulateur IR/IS & TVA (P3)";
+        p3SimContainer.classList.remove('hidden');
+      } else {
+        simBtn.classList.add('hidden');
+      }
+
+      activeQuestions = [...(chap.quizQuestions || [])];
+      currentQuizIndex = 0;
+      quizScore = 0;
+      answeredCount = 0;
+      document.getElementById('global-score').innerText = `0 / 0 (0%)`;
+      renderFilters(chap);
+      renderQuestion();
+
+      currentActiveCardsList = [...(chap.flashcards || [])];
+      currentCardIndex = 0;
+      renderCard();
+
+      document.getElementById('subtab-synthese').innerHTML = chap.syntheseHtml || '';
+
+      currentView = 'workspace';
+      hideAllViews();
+      document.getElementById('view-workspace').classList.remove('hidden');
+      switchChapterTab('quiz');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function switchChapterTab(tab) {
+      document.querySelectorAll('.tab-pane').forEach(el => el.classList.add('hidden'));
+      const activeEl = document.getElementById('subtab-' + tab);
+      if (activeEl) activeEl.classList.remove('hidden');
+
+      ['quiz', 'flashcards', 'simulator', 'synthese'].forEach(t => {
+        const btn = document.getElementById('tab-btn-' + t);
+        if (btn && !btn.classList.contains('hidden')) {
+          btn.className = (t === tab) ? "px-4 py-2 rounded-xl transition flex items-center gap-2 bg-indigo-600 text-white shadow shrink-0" : "px-4 py-2 rounded-xl transition flex items-center gap-2 text-slate-300 hover:text-white shrink-0";
+        }
+      });
+    }
+
+    let activeQuestions = [];
+    let currentQuizIndex = 0;
+    let selectedOption = null;
+    let quizScore = 0;
+    let answeredCount = 0;
+
+    function renderFilters(chap) {
+      const c = document.getElementById('quiz-filters');
+      if (!chap.categories) { c.innerHTML = ''; return; }
+      let html = '';
+      for (const [k, v] of Object.entries(chap.categories)) {
+        html += `<button onclick="filterQuiz('${k}')" class="px-2 py-0.5 text-[10px] font-bold rounded bg-slate-800 text-slate-300 hover:text-white">${v}</button> `;
+      }
+      c.innerHTML = html;
+    }
+
+    function filterQuiz(cat) {
+      const base = currentChapter.quizQuestions || [];
+      activeQuestions = (cat === 'all') ? [...base] : base.filter(q => q.cat === cat);
+      restartQuiz();
+    }
+
+    function renderQuestion() {
+      const q = activeQuestions[currentQuizIndex];
+      if (!q) return;
+      document.getElementById('quiz-question-counter').innerText = `${currentQuizIndex + 1} / ${activeQuestions.length}`;
+      document.getElementById('quiz-badge-cat').innerText = q.catLabel;
+      document.getElementById('quiz-theme-text').innerText = q.theme;
+      document.getElementById('quiz-question-title').innerText = q.title;
+      document.getElementById('quiz-progress-bar').style.width = `${Math.round(((currentQuizIndex + 1) / activeQuestions.length) * 100)}%`;
+      document.getElementById('quiz-feedback-box').className = "hidden p-4 rounded-xl border my-3";
+      selectedOption = null;
+
+      const nextBtn = document.getElementById('quiz-next-btn');
+      nextBtn.disabled = true;
+      nextBtn.className = "px-5 py-2 rounded-xl font-bold text-xs bg-indigo-600/40 text-indigo-300 cursor-not-allowed";
+
+      const container = document.getElementById('quiz-options-container');
+      container.innerHTML = '';
+      q.options.forEach((opt, idx) => {
+        const btn = document.createElement('button');
+        btn.className = "w-full text-left p-3.5 rounded-2xl border border-slate-800 bg-slate-950 hover:bg-slate-800 transition text-xs sm:text-sm";
+        btn.innerHTML = `<span class="font-bold text-indigo-400 mr-2">${String.fromCharCode(65 + idx)}.</span> ${opt.text}`;
+        btn.onclick = () => handleAnswer(idx, opt, btn, q.options);
+        container.appendChild(btn);
+      });
+    }
+
+    function handleAnswer(choiceIdx, opt, btnElem, options) {
+      if (selectedOption !== null) return;
+      selectedOption = choiceIdx;
+      answeredCount++;
+      const q = activeQuestions[currentQuizIndex];
+      const allButtons = document.getElementById('quiz-options-container').querySelectorAll('button');
+
+      if (opt.correct) {
+        quizScore++;
+        btnElem.className = "w-full text-left p-3.5 rounded-2xl border border-emerald-500 bg-emerald-950/40 text-white text-xs sm:text-sm";
+        showFeedback(true, q.explanation, q.article);
+      } else {
+        btnElem.className = "w-full text-left p-3.5 rounded-2xl border border-rose-500 bg-rose-950/40 text-white text-xs sm:text-sm";
+        options.forEach((o, i) => {
+          if (o.correct) allButtons[i].className = "w-full text-left p-3.5 rounded-2xl border border-emerald-500/60 bg-emerald-950/20 text-emerald-200 text-xs sm:text-sm";
+        });
+        showFeedback(false, q.explanation, q.article);
+      }
+
+      document.getElementById('global-score').innerText = `${quizScore} / ${answeredCount} (${Math.round((quizScore / answeredCount) * 100)}%)`;
+      const nextBtn = document.getElementById('quiz-next-btn');
+      nextBtn.disabled = false;
+      nextBtn.className = "px-5 py-2 rounded-xl font-bold text-xs bg-indigo-600 hover:bg-indigo-500 text-white cursor-pointer shadow";
+    }
+
+    function showFeedback(isCorrect, text, article) {
+      const fbBox = document.getElementById('quiz-feedback-box');
+      fbBox.classList.remove('hidden');
+      fbBox.className = isCorrect ? "p-4 rounded-2xl border border-emerald-500/30 bg-emerald-950/25 my-3" : "p-4 rounded-2xl border border-rose-500/30 bg-rose-950/25 my-3";
+      document.getElementById('quiz-feedback-title').innerText = isCorrect ? "Excellente réponse !" : "Erreur - Règle officielle :";
+      document.getElementById('quiz-feedback-text').innerText = text || '';
+      document.getElementById('quiz-feedback-article').innerText = `Réf : ${article || 'BTS CG'}`;
+    }
+
+    function nextQuestion() {
+      if (currentQuizIndex < activeQuestions.length - 1) {
+        currentQuizIndex++;
+        renderQuestion();
+      } else {
+        document.getElementById('quiz-options-container').innerHTML = `
+          <div class="col-span-2 text-center p-6 bg-slate-950 rounded-2xl border border-slate-700">
+            <h3 class="text-lg font-bold text-white">Série terminée !</h3>
+            <p class="text-xs text-slate-300 mt-1">Score : ${quizScore} / ${activeQuestions.length}</p>
+            <button onclick="restartQuiz()" class="mt-4 px-4 py-2 bg-indigo-600 text-white rounded-xl text-xs font-bold">Recommencer</button>
+          </div>
+        `;
+        document.getElementById('quiz-next-btn').disabled = true;
+      }
+    }
+
+    function restartQuiz() {
+      currentQuizIndex = 0; quizScore = 0; answeredCount = 0;
+      document.getElementById('global-score').innerText = `0 / 0 (0%)`;
+      renderQuestion();
+    }
+
+    let currentActiveCardsList = [];
+    let currentCardIndex = 0;
+    let isFlipped = false;
+
+    function renderCard() {
+      const card = currentActiveCardsList[currentCardIndex];
+      if (!card) return;
+      document.getElementById('fc-cat').innerText = card.cat;
+      document.getElementById('fc-front-text').innerText = card.front;
+      document.getElementById('fc-back-text').innerHTML = card.back;
+      isFlipped = false;
+      document.getElementById('fc-inner').style.transform = 'rotateY(0deg)';
+    }
+
+    function flipCard() {
+      isFlipped = !isFlipped;
+      document.getElementById('fc-inner').style.transform = isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)';
+    }
+
+    function nextCard() {
+      if (!currentActiveCardsList.length) return;
+      currentCardIndex = (currentCardIndex + 1) % currentActiveCardsList.length;
+      renderCard();
+    }
+
+    function prevCard() {
+      if (!currentActiveCardsList.length) return;
+      currentCardIndex = (currentCardIndex - 1 + currentActiveCardsList.length) % currentActiveCardsList.length;
+      renderCard();
+    }
+
+    function runSimP3() {
+      const ca = parseFloat(document.getElementById('sim-p3-ca').value) || 0;
+      const ch = parseFloat(document.getElementById('sim-p3-charges').value) || 0;
+      document.getElementById('sim-p3-res-micro').innerText = `${Math.round(ca * 0.29).toLocaleString('fr-FR')} €`;
+      document.getElementById('sim-p3-res-reel').innerText = `${Math.round(ca - ch).toLocaleString('fr-FR')} €`;
+    }
+
+    window.onload = function() {
+      initPcgSystem();
+      goToYearSelect();
+    };
+  </script>
+</body>
+</html>
