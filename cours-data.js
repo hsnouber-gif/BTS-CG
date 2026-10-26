@@ -1345,3 +1345,724 @@ window.COURS_DATABASE.push({
     { cat: "Sommet", front: "Coordonnées du sommet d'une parabole", back: "<code>α = −b / (2a)</code> et <code>β = f(α)</code>.<br>Le sommet est S(α ; β)." }
   ]
 });
+
+// ==============================================================
+// 4. PROCESSUS 1 (P1) : FONDAMENTAUX, BILAN, RÉSULTAT, BALANCE & SIMULATEUR
+// ==============================================================
+window.COURS_DATABASE.push({
+  subjectId: "p1",
+  subjectCode: "P1",
+  subjectTitle: "Gestion des opérations commerciales et comptables",
+  subjectCategory: "process",
+  subjectIcon: "fa-cart-shopping",
+  subjectDesc: "Découverte de la comptabilité, classes du PCG (1 à 7), Bilan, Compte de résultat, Balance, bordereaux d'imputation et journaux auxiliaires.",
+
+  chapterId: "p1-c1",
+  chapterNum: 1,
+  chapterTitle: "Découverte de la comptabilité : Classes PCG, Bilan, Résultat, Balance & Écritures",
+  chapterDesc: "Maîtrise des classes 1 à 7, Bilan (Actif/Passif), Compte de résultat (Exploitation/Financier/Exceptionnel), Balance générale, bordereaux d'imputation et journaux (ACH/HA, VTE/VT, BQ, CA, OD).",
+  active: true,
+
+  categories: {
+    all: "Tout (30 Q)",
+    classes: "Classes PCG (1 à 7)",
+    bilan: "Bilan & Structure",
+    resultat: "Compte de résultat",
+    balance: "Balance & Grands livres",
+    ecritures: "Écritures & Journaux"
+  },
+
+  quizQuestions: [
+    {
+      id: 401,
+      cat: "classes",
+      catLabel: "Classes PCG",
+      theme: "Classes de Bilan",
+      title: "Quelles classes du Plan Comptable Général (PCG) composent exclusivement le Bilan ?",
+      options: [
+        { text: "Les classes 1 à 5 (Comptes de bilan)", correct: true },
+        { text: "Les classes 6 et 7 uniquement", correct: false },
+        { text: "Les classes 2, 6 et 7", correct: false },
+        { text: "Toutes les classes de 1 à 8", correct: false }
+      ],
+      explanation: "Les comptes de Bilan vont de la classe 1 à la classe 5. Les classes 6 et 7 forment le Compte de résultat.",
+      article: "PCG • Chapitre 1 BTS CG"
+    },
+    {
+      id: 402,
+      cat: "classes",
+      catLabel: "Classes PCG",
+      theme: "Comptes de capitaux",
+      title: "À quelle classe du PCG appartient le compte de Capital social (compte 101) ou d'Emprunt (compte 164) ?",
+      options: [
+        { text: "Classe 1 : Comptes de capitaux", correct: true },
+        { text: "Classe 2 : Comptes d'immobilisations", correct: false },
+        { text: "Classe 4 : Comptes de tiers", correct: false },
+        { text: "Classe 5 : Comptes financiers", correct: false }
+      ],
+      explanation: "La classe 1 regroupe les capitaux propres, les emprunts à long terme et les dettes financières stables.",
+      article: "Plan Comptable Général • Classe 1"
+    },
+    {
+      id: 403,
+      cat: "classes",
+      catLabel: "Classes PCG",
+      theme: "Comptes d'immobilisations",
+      title: "À quelle classe appartiennent le matériel industriel (2154) et le mobilier (2184) ?",
+      options: [
+        { text: "Classe 2 : Comptes d'immobilisations", correct: true },
+        { text: "Classe 3 : Comptes de stocks", correct: false },
+        { text: "Classe 6 : Comptes de charges", correct: false },
+        { text: "Classe 1 : Comptes de capitaux", correct: false }
+      ],
+      explanation: "La classe 2 réunit tous les biens durables (incorporels, corporels et financiers) destinés à servir plus d'un an.",
+      article: "Plan Comptable Général • Classe 2"
+    },
+    {
+      id: 404,
+      cat: "classes",
+      catLabel: "Classes PCG",
+      theme: "Comptes de stocks",
+      title: "Dans quelle classe du PCG sont enregistrés les stocks de marchandises (compte 37) et matières premières (compte 31) ?",
+      options: [
+        { text: "Classe 3 : Comptes de stocks et en-cours", correct: true },
+        { text: "Classe 6 : Comptes d'achats", correct: false },
+        { text: "Classe 4 : Comptes de tiers", correct: false },
+        { text: "Classe 5 : Comptes de trésorerie", correct: false }
+      ],
+      explanation: "La classe 3 mesure les stocks au Bilan lors des opérations d'inventaire.",
+      article: "Plan Comptable Général • Classe 3"
+    },
+    {
+      id: 405,
+      cat: "classes",
+      catLabel: "Classes PCG",
+      theme: "Comptes de tiers",
+      title: "À quelle classe appartiennent les comptes Fournisseurs (401), Clients (411) et État / TVA (445) ?",
+      options: [
+        { text: "Classe 4 : Comptes de tiers", correct: true },
+        { text: "Classe 5 : Comptes financiers", correct: false },
+        { text: "Classe 1 : Comptes de capitaux", correct: false },
+        { text: "Classe 7 : Comptes de ventes", correct: false }
+      ],
+      explanation: "La classe 4 enregistre l'ensemble des créances et dettes nées avec les tiers (clients, fournisseurs, État, salariés).",
+      article: "Plan Comptable Général • Classe 4"
+    },
+    {
+      id: 406,
+      cat: "classes",
+      catLabel: "Classes PCG",
+      theme: "Comptes financiers",
+      title: "Quelle classe regroupe la Banque (512) et la Caisse (530) ?",
+      options: [
+        { text: "Classe 5 : Comptes financiers (Disponibilités)", correct: true },
+        { text: "Classe 4 : Comptes de tiers", correct: false },
+        { text: "Classe 1 : Capitaux propres", correct: false },
+        { text: "Classe 2 : Immobilisations", correct: false }
+      ],
+      explanation: "La classe 5 contient les disponibilités immédiates : banque, caisse et valeurs mobilières de placement.",
+      article: "Plan Comptable Général • Classe 5"
+    },
+    {
+      id: 407,
+      cat: "classes",
+      catLabel: "Classes PCG",
+      theme: "Charges vs Produits",
+      title: "Quelles sont les deux classes qui forment le Compte de résultat ?",
+      options: [
+        { text: "Classe 6 (Charges) et Classe 7 (Produits)", correct: true },
+        { text: "Classe 1 (Capitaux) et Classe 2 (Immobilisations)", correct: false },
+        { text: "Classe 4 (Tiers) et Classe 5 (Banque)", correct: false },
+        { text: "Classe 3 (Stocks) et Classe 7 (Ventes)", correct: false }
+      ],
+      explanation: "Le résultat est la différence entre les Produits (classe 7) et les Charges (classe 6).",
+      article: "Plan Comptable Général • Classes 6 et 7"
+    },
+    {
+      id: 408,
+      cat: "bilan",
+      catLabel: "Bilan & Structure",
+      theme: "Structure Actif / Passif",
+      title: "Comment se répartit fondamentalement le Bilan comptable ?",
+      options: [
+        { text: "Actif à gauche (Emplois / ce que possède l'entreprise) et Passif à droite (Ressources / ce qu'elle doit)", correct: true },
+        { text: "Charges à gauche et Produits à droite", correct: false },
+        { text: "Passif à gauche et Actif à droite", correct: false },
+        { text: "Dépenses à gauche et Recettes à droite", correct: false }
+      ],
+      explanation: "Le Bilan présente le patrimoine à une date donnée : Actif (gauche) = Passif (droite).",
+      article: "Cours Bilan • HUET & FÉRIN"
+    },
+    {
+      id: 409,
+      cat: "bilan",
+      catLabel: "Bilan & Structure",
+      theme: "Composantes de l'Actif",
+      title: "Quelles rubriques composent l'Actif du Bilan de haut en bas ?",
+      options: [
+        { text: "Actif immobilisé (classe 2) puis Actif circulant (stocks classe 3, créances clients classe 4, disponibilités classe 5)", correct: true },
+        { text: "Capitaux propres puis Dettes financières", correct: false },
+        { text: "Charges d'exploitation puis charges financières", correct: false },
+        { text: "Banque puis Capital social", correct: false }
+      ],
+      explanation: "L'Actif classe les éléments par ordre de liquidité croissante : d'abord l'actif immobilisé, puis l'actif circulant.",
+      article: "Schéma Bilan • Cahier de cours"
+    },
+    {
+      id: 410,
+      cat: "bilan",
+      catLabel: "Bilan & Structure",
+      theme: "Composantes du Passif",
+      title: "Quelles rubriques composent le Passif du Bilan de haut en bas ?",
+      options: [
+        { text: "Capitaux propres (capital 101, résultat 120/129) puis Dettes (emprunts 164, fournisseurs 401, découverts 519)", correct: true },
+        { text: "Actif immobilisé puis stocks de marchandises", correct: false },
+        { text: "Ventes de kits puis TVA collectée", correct: false },
+        { text: "Caisse puis Fournisseurs d'immobilisations", correct: false }
+      ],
+      explanation: "Le Passif classe les ressources par exigibilité croissante : capitaux propres (stables) puis dettes.",
+      article: "Schéma Bilan • Cahier de cours"
+    },
+    {
+      id: 411,
+      cat: "resultat",
+      catLabel: "Compte de résultat",
+      theme: "Les 3 niveaux de résultat",
+      title: "Quels sont les trois niveaux de résultat qui composent le Compte de résultat ?",
+      options: [
+        { text: "Résultat d'exploitation, Résultat financier et Résultat exceptionnel", correct: true },
+        { text: "Résultat brut, Résultat semi-net et Résultat final", correct: false },
+        { text: "Résultat d'Actif, Résultat de Passif et Résultat de Bilan", correct: false },
+        { text: "Résultat de caisse, Résultat de banque et Résultat fiscal", correct: false }
+      ],
+      explanation: "Résultat net = Résultat d'exploitation + Résultat financier + Résultat exceptionnel (après IS).",
+      article: "Cours Compte de résultat"
+    },
+    {
+      id: 412,
+      cat: "resultat",
+      catLabel: "Compte de résultat",
+      theme: "Comptes d'exploitation",
+      title: "Quels numéros de comptes correspondent au niveau d'Exploitation ?",
+      options: [
+        { text: "Charges 60 à 65 et Produits 70 à 75", correct: true },
+        { text: "Charges 66 et Produits 76", correct: false },
+        { text: "Charges 67 et Produits 77", correct: false },
+        { text: "Comptes 10 à 59", correct: false }
+      ],
+      explanation: "L'activité courante d'exploitation est portée par les comptes 60 à 65 (achats, loyers, salaires) et 70 à 75 (ventes).",
+      article: "Schéma Compte de résultat"
+    },
+    {
+      id: 413,
+      cat: "resultat",
+      catLabel: "Compte de résultat",
+      theme: "Comptes financiers",
+      title: "Quels comptes enregistrent les opérations Financières (ex: intérêts d'emprunt compte 661) ?",
+      options: [
+        { text: "Charges financières 66 et Produits financiers 76", correct: true },
+        { text: "Charges 60 et Produits 70", correct: false },
+        { text: "Charges 67 et Produits 77", correct: false },
+        { text: "Comptes 512 et 530", correct: false }
+      ],
+      explanation: "Le résultat financier s'obtient par : Produits financiers (76) - Charges financières (66).",
+      article: "Schéma Compte de résultat"
+    },
+    {
+      id: 414,
+      cat: "resultat",
+      catLabel: "Compte de résultat",
+      theme: "Comptes exceptionnels",
+      title: "Dans quels comptes enregistre-t-on les opérations Exceptionnelles (pénalités, cessions d'actifs) ?",
+      options: [
+        { text: "Charges exceptionnelles 67 et Produits exceptionnels 77", correct: true },
+        { text: "Charges 66 et Produits 76", correct: false },
+        { text: "Comptes 401 et 411", correct: false },
+        { text: "Comptes 108 et 120", correct: false }
+      ],
+      explanation: "Le résultat exceptionnel s'obtient par : Produits exceptionnels (77) - Charges exceptionnelles (67).",
+      article: "Schéma Compte de résultat"
+    },
+    {
+      id: 415,
+      cat: "balance",
+      catLabel: "Balance & Grands livres",
+      theme: "Rôle de la Balance",
+      title: "Qu'est-ce que la Balance générale des comptes ?",
+      options: [
+        { text: "Un état récapitulatif listant tous les comptes du Grand-Livre avec le total des débits, crédits et soldes", correct: true },
+        { text: "Le compte en banque vérifié chaque fin de mois", correct: false },
+        { text: "Le document transmis obligatoirement aux clients pour réclamer le paiement", correct: false },
+        { text: "Un journal uniquement dédié aux règlements par chèque", correct: false }
+      ],
+      explanation: "La Balance permet de vérifier l'égalité fondamentale : Total Débits = Total Crédits et Total Soldes Débiteurs = Total Soldes Créditeurs.",
+      article: "Cas FÉRIN • Balance des comptes"
+    },
+    {
+      id: 416,
+      cat: "balance",
+      catLabel: "Balance & Grands livres",
+      theme: "Solde d'un compte",
+      title: "Si un compte présente un total Débit de 10 000 € et un total Crédit de 4 000 €, quel est son solde ?",
+      options: [
+        { text: "Solde Débiteur de 6 000 €", correct: true },
+        { text: "Solde Créditeur de 6 000 €", correct: false },
+        { text: "Solde Nul", correct: false },
+        { text: "Solde Débiteur de 14 000 €", correct: false }
+      ],
+      explanation: "Débit (10 000) > Crédit (4 000) = Solde Débiteur de 6 000 €.",
+      article: "Règles comptables du Grand-Livre"
+    },
+    {
+      id: 417,
+      cat: "ecritures",
+      catLabel: "Écritures & Journaux",
+      theme: "Mécanisme Débit / Crédit",
+      title: "Une augmentation de compte d'Actif (ex: la banque 512 reçoit un virement) s'enregistre au :",
+      options: [
+        { text: "Débit", correct: true },
+        { text: "Crédit", correct: false },
+        { text: "Ni l'un ni l'autre", correct: false },
+        { text: "Au passif directement", correct: false }
+      ],
+      explanation: "Règle absolue : les comptes d'Actif et de Charges augmentent au DÉBIT et diminuent au CRÉDIT.",
+      article: "Tableau Augmentation / Diminution • Cours HUET"
+    },
+    {
+      id: 418,
+      cat: "ecritures",
+      catLabel: "Écritures & Journaux",
+      theme: "Mécanisme Passif / Produit",
+      title: "Une augmentation de compte de Passif (ex: dette Fournisseur 401) ou de Produit (Vente 707) s'enregistre au :",
+      options: [
+        { text: "Crédit", correct: true },
+        { text: "Débit", correct: false },
+        { text: "En annexe uniquement", correct: false },
+        { text: "En charge d'exploitation", correct: false }
+      ],
+      explanation: "Règle absolue : les comptes de Passif et de Produits augmentent au CRÉDIT et diminuent au DÉBIT.",
+      article: "Tableau Augmentation / Diminution • Cours HUET"
+    },
+    {
+      id: 419,
+      cat: "ecritures",
+      catLabel: "Écritures & Journaux",
+      theme: "Journaux auxiliaires",
+      title: "Quels sont les codes usuels des 5 journaux auxiliaires de la SARL HUET et du Cas FÉRIN ?",
+      options: [
+        { text: "ACH (ou HA), VTE (ou VT), BQ, CA, OD", correct: true },
+        { text: "J1, J2, J3, J4, J5", correct: false },
+        { text: "BIL, RES, BAL, GL, TVA", correct: false },
+        { text: "SARL, SAS, EURL, SCI, EI", correct: false }
+      ],
+      explanation: "ACH/HA = Achats, VTE/VT = Ventes, BQ = Banque, CA = Caisse, OD = Opérations Diverses.",
+      article: "Bordereau d'imputation • Cours HUET & FÉRIN"
+    },
+    {
+      id: 420,
+      cat: "ecritures",
+      catLabel: "Écritures & Journaux",
+      theme: "Facture d'achat avec TVA",
+      title: "Dans quel journal enregistre-t-on une facture d'achat de marchandises à crédit ?",
+      options: [
+        { text: "Journal des Achats (ACH / HA)", correct: true },
+        { text: "Journal de Banque (BQ)", correct: false },
+        { text: "Journal des Ventes (VTE)", correct: false },
+        { text: "Journal de Caisse (CA)", correct: false }
+      ],
+      explanation: "Toute facture d'achat reçue d'un fournisseur s'enregistre au journal des Achats (ACH/HA). Le règlement ira plus tard en BQ ou CA.",
+      article: "Bordereau d'imputation HUET"
+    },
+    {
+      id: 421,
+      cat: "ecritures",
+      catLabel: "Écritures & Journaux",
+      theme: "Schéma d'écriture Achat",
+      title: "Pour enregistrer un achat de marchandises de 1 000 € HT avec TVA 200 € à crédit, quelle est l'écriture exacte ?",
+      options: [
+        { text: "Débit 607 (1 000 €) • Débit 44566 (200 €) • Crédit 401000 (1 200 €)", correct: true },
+        { text: "Crédit 607 (1 000 €) • Crédit 44566 (200 €) • Débit 401000 (1 200 €)", correct: false },
+        { text: "Débit 707 (1 000 €) • Débit 44571 (200 €) • Crédit 411000 (1 200 €)", correct: false },
+        { text: "Débit 512 (1 200 €) • Crédit 607 (1 200 €)", correct: false }
+      ],
+      explanation: "Charge HT au Débit (607), TVA déductible au Débit (44566), dette TTC envers le fournisseur au Crédit (401).",
+      article: "Cas HUET • Facture F20N-082"
+    },
+    {
+      id: 422,
+      cat: "ecritures",
+      catLabel: "Écritures & Journaux",
+      theme: "Schéma d'écriture Vente",
+      title: "Pour enregistrer une vente de kits de 1 000 € HT avec TVA 200 € à un client à crédit, quelle est l'écriture ?",
+      options: [
+        { text: "Débit 411000 (1 200 €) • Crédit 707 (1 000 €) • Crédit 44571 (200 €)", correct: true },
+        { text: "Crédit 411000 (1 200 €) • Débit 707 (1 000 €) • Débit 44571 (200 €)", correct: false },
+        { text: "Débit 607 (1 000 €) • Crédit 512 (1 000 €)", correct: false },
+        { text: "Débit 401000 (1 200 €) • Crédit 707 (1 200 €)", correct: false }
+      ],
+      explanation: "Créance client TTC au Débit (411), Produit de vente HT au Crédit (707), TVA collectée au Crédit (44571).",
+      article: "Cas HUET • Facture 20N-1"
+    },
+    {
+      id: 423,
+      cat: "ecritures",
+      catLabel: "Écritures & Journaux",
+      theme: "Règlement fournisseur",
+      title: "Lorsqu'on règle un fournisseur par chèque bancaire (Journal BQ), quelle écriture passe-t-on ?",
+      options: [
+        { text: "Débit 401000 (Fournisseur) • Crédit 512100 (Banque)", correct: true },
+        { text: "Débit 512100 (Banque) • Crédit 401000 (Fournisseur)", correct: false },
+        { text: "Débit 607000 (Achat) • Crédit 401000 (Fournisseur)", correct: false },
+        { text: "Débit 411000 (Client) • Crédit 512100 (Banque)", correct: false }
+      ],
+      explanation: "La dette fournisseur diminue (Débit 401) et l'argent sort du compte bancaire (Crédit 512).",
+      article: "Cas HUET • Écriture chèque n°56423"
+    },
+    {
+      id: 424,
+      cat: "ecritures",
+      catLabel: "Écritures & Journaux",
+      theme: "Encaissement client",
+      title: "Lorsqu'un client règle sa facture par virement sur le compte bancaire (Journal BQ) :",
+      options: [
+        { text: "Débit 512100 (Banque) • Crédit 411000 (Client)", correct: true },
+        { text: "Débit 411000 (Client) • Crédit 512100 (Banque)", correct: false },
+        { text: "Débit 707000 (Vente) • Crédit 512100 (Banque)", correct: false },
+        { text: "Débit 530000 (Caisse) • Crédit 401000 (Fournisseur)", correct: false }
+      ],
+      explanation: "L'argent entre à la banque (Débit 512) et la créance client est soldée (Crédit 411).",
+      article: "Cas FÉRIN • Virement CHAUSSPORT"
+    },
+    {
+      id: 425,
+      cat: "ecritures",
+      catLabel: "Écritures & Journaux",
+      theme: "Achat d'immobilisation",
+      title: "L'achat d'une machine de production (matériel industriel 2154) à crédit auprès d'un fournisseur d'immobilisations s'enregistre avec :",
+      options: [
+        { text: "Débit 2154 (Immobilisation) • Crédit 404 (Fournisseurs d'immobilisations)", correct: true },
+        { text: "Débit 607 (Achat marchandise) • Crédit 401 (Fournisseur)", correct: false },
+        { text: "Débit 401 • Crédit 512", correct: false },
+        { text: "Débit 2154 • Crédit 101", correct: false }
+      ],
+      explanation: "Un bien d'équipement durable s'enregistre en compte 21 (Actif) et non en compte 607. La dette envers le vendeur d'immo va en compte 404.",
+      article: "Cas FÉRIN • Facture machine à gonfler OMBRU"
+    },
+    {
+      id: 426,
+      cat: "ecritures",
+      catLabel: "Écritures & Journaux",
+      theme: "Remboursement d'emprunt",
+      title: "Dans le cas FÉRIN, l'annuité d'emprunt payée par banque comprend 10 000 € de capital et 3 600 € d'intérêts. Quelle est l'écriture ?",
+      options: [
+        { text: "Débit 164 (10 000 €) • Débit 661 (3 600 €) • Crédit 512 (13 600 €)", correct: true },
+        { text: "Débit 164 (13 600 €) • Crédit 512 (13 600 €)", correct: false },
+        { text: "Débit 661 (13 600 €) • Crédit 512 (13 600 €)", correct: false },
+        { text: "Débit 512 (13 600 €) • Crédit 164 (10 000 €) • Crédit 761 (3 600 €)", correct: false }
+      ],
+      explanation: "La dette bancaire diminue du capital remboursé (Débit 164), le coût du prêt est une charge financière (Débit 661) et le compte bancaire est crédité de 13 600 €.",
+      article: "Cas FÉRIN • Prélèvement emprunt 16-sept"
+    },
+    {
+      id: 427,
+      cat: "ecritures",
+      catLabel: "Écritures & Journaux",
+      theme: "Prélèvement de l'exploitant",
+      title: "M. Férin effectue un prélèvement personnel de 500 € en espèces dans la caisse. Quelle est l'écriture (Journal CA) ?",
+      options: [
+        { text: "Débit 108000 (Compte de l'exploitant) • Crédit 530000 (Caisse)", correct: true },
+        { text: "Débit 641000 (Rémunération) • Crédit 530000 (Caisse)", correct: false },
+        { text: "Débit 530000 (Caisse) • Crédit 108000 (Compte de l'exploitant)", correct: false },
+        { text: "Débit 411000 (Client) • Crédit 530000 (Caisse)", correct: false }
+      ],
+      explanation: "Dans une entreprise individuelle, les retraits personnels de l'exploitant s'enregistrent au compte 108 (Compte de l'exploitant).",
+      article: "Cas FÉRIN • Opération du 30-septembre"
+    },
+    {
+      id: 428,
+      cat: "ecritures",
+      catLabel: "Écritures & Journaux",
+      theme: "Alimentation de la banque par la caisse",
+      title: "On ramène 4 120 € de la caisse pour les verser sur le compte bancaire. Quelle est l'écriture de banque ?",
+      options: [
+        { text: "Débit 512 (Banque) • Crédit 580 (Virements internes) ou Crédit 530 (Caisse)", correct: true },
+        { text: "Débit 530 (Caisse) • Crédit 512 (Banque)", correct: false },
+        { text: "Débit 707 (Ventes) • Crédit 512 (Banque)", correct: false },
+        { text: "Débit 401 (Fournisseur) • Crédit 512 (Banque)", correct: false }
+      ],
+      explanation: "L'argent entre à la banque (Débit 512) et provient d'une sortie de caisse.",
+      article: "Cas FÉRIN • Remise de caisse 30-sept"
+    },
+    {
+      id: 429,
+      cat: "ecritures",
+      catLabel: "Écritures & Journaux",
+      theme: "Comptes de tiers auxiliaires",
+      title: "Selon la méthode Lefebvre du cours HUET, comment codifie-t-on un fournisseur ou un client auxiliaire ?",
+      options: [
+        { text: "Fournisseur : 9 + 4 premières lettres (ex: 9EDF, 9TOUT) • Client : 0 + 4 lettres (ex: 0GLAM, 0CARP)", correct: true },
+        { text: "En ajoutant simplement des chiffres au hasard", correct: false },
+        { text: "En écrivant le prénom du directeur commercial", correct: false },
+        { text: "En utilisant uniquement l'adresse postale", correct: false }
+      ],
+      explanation: "Cette codification divisionnaire à 6 chiffres (compte général + code tiers alphabétique) permet au PGI d'automatiser le lettrage.",
+      article: "Fiche consignes PGI • Cours HUET"
+    },
+    {
+      id: 430,
+      cat: "ecritures",
+      catLabel: "Écritures & Journaux",
+      theme: "Principe de la partie double",
+      title: "Quelle est la règle d'or intangible de la comptabilité en partie double ?",
+      options: [
+        { text: "Pour chaque écriture, la somme des montants débités doit obligatoirement être égale à la somme des montants crédités", correct: true },
+        { text: "Il faut toujours utiliser exactement deux comptes par ligne", correct: false },
+        { text: "Le compte en banque doit être égal au capital de l'entreprise", correct: false },
+        { text: "Chaque facture doit être enregistrée deux fois de suite", correct: false }
+      ],
+      explanation: "Principe universel : Total Débit = Total Crédit. C'est l'équilibre de chaque écriture au journal.",
+      article: "Principes généraux du PCG"
+    }
+  ],
+
+  flashcards: [
+    { cat: "Classes PCG", front: "Quelles sont les 7 classes du Plan Comptable Général ?", back: "<b>Comptes de Bilan (1 à 5) :</b><br>• Cl. 1 : Capitaux<br>• Cl. 2 : Immobilisations<br>• Cl. 3 : Stocks<br>• Cl. 4 : Tiers<br>• Cl. 5 : Financiers<br><br><b>Comptes de Résultat (6 & 7) :</b><br>• Cl. 6 : Charges<br>• Cl. 7 : Produits" },
+    { cat: "Bilan", front: "Où se placent les éléments à l'ACTIF du Bilan ?", back: "<b>À GAUCHE (Emplois) :</b><br>1. <b>Actif immobilisé (Cl. 2) :</b> incorporel, corporel, financier.<br>2. <b>Actif circulant :</b> Stocks (Cl. 3), Créances clients (Cl. 4), Disponibilités banque/caisse (Cl. 5)." },
+    { cat: "Bilan", front: "Où se placent les éléments au PASSIF du Bilan ?", back: "<b>À DROITE (Ressources) :</b><br>1. <b>Capitaux propres (Cl. 1) :</b> Capital (101), Résultat net (120/129).<br>2. <b>Dettes :</b> Emprunts (164, Cl. 1), Dettes fournisseurs (401, Cl. 4), Dettes fiscales/sociales (43/44, Cl. 4), Découverts bancaires (519, Cl. 5)." },
+    { cat: "Compte de résultat", front: "Comment se structure le Compte de Résultat ?", back: "<b>1. Exploitation :</b> Produits (70 à 75) - Charges (60 à 65)<br><b>2. Financier :</b> Produits (76) - Charges (66)<br><b>3. Exceptionnel :</b> Produits (77) - Charges (67)<br><code>Résultat Net = Résultat Exploitation + Financier + Exceptionnel - Impôt</code>" },
+    { cat: "Balance", front: "Qu'est-ce que la Balance générale et comment se vérifie-t-elle ?", back: "C'est l'état récapitulatif de tous les comptes du Grand-Livre.<br><b>Égalités obligatoires :</b><br>• <code>Total Débits = Total Crédits</code><br>• <code>Total Soldes Débiteurs = Total Soldes Créditeurs</code>" },
+    { cat: "Règle d'or", front: "Comment fonctionnent le Débit et le Crédit ?", back: "• <b>Actif (2, 3, 4 client, 5) & Charges (6) :</b> Augmentent au <b>DÉBIT</b> (+), diminuent au <b>CRÉDIT</b> (-).<br>• <b>Passif (1, 4 fournisseur) & Produits (7) :</b> Augmentent au <b>CRÉDIT</b> (+), diminuent au <b>DÉBIT</b> (-)." },
+    { cat: "Journaux", front: "Quels sont les 5 journaux auxiliaires classiques ?", back: "• <b>ACH / HA :</b> Achats de biens et services à crédit<br>• <b>VTE / VT :</b> Ventes de biens et prestations à crédit<br>• <b>BQ :</b> Mouvements du compte bancaire<br>• <b>CA :</b> Mouvements d'espèces de la caisse<br>• <b>OD :</b> Opérations diverses (salaires, TVA, régularisations)" },
+    { cat: "Écriture Achat", front: "Schéma comptable d'une facture d'achat avec TVA", back: "<b>Journal ACH :</b><br>• Débit <b>60...</b> (Montant HT)<br>• Débit <b>44566</b> (TVA déductible sur ABS)<br>• Crédit <b>401000</b> (Montant TTC Fournisseur)" },
+    { cat: "Écriture Vente", front: "Schéma comptable d'une facture de vente avec TVA", back: "<b>Journal VTE :</b><br>• Débit <b>411000</b> (Montant TTC Client)<br>• Crédit <b>70...</b> (Montant HT Vente)<br>• Crédit <b>44571</b> (TVA collectée)" },
+    { cat: "Règlement", front: "Schéma du paiement d'un fournisseur par chèque", back: "<b>Journal BQ :</b><br>• Débit <b>401000</b> (Fournisseur - sa dette diminue)<br>• Crédit <b>512100</b> (Banque - l'argent sort)" },
+    { cat: "Encaissement", front: "Schéma de l'encaissement d'un client par virement", back: "<b>Journal BQ :</b><br>• Débit <b>512100</b> (Banque - l'argent entre)<br>• Crédit <b>411000</b> (Client - sa créance est soldée)" },
+    { cat: "Immobilisation", front: "Quelle différence entre l'achat d'un bien en classe 2 et en classe 6 ?", back: "• <b>Classe 2 (Immo) :</b> bien durable destiné à rester > 1 an (ex: ordinateur, machine, véhicule).<br>• <b>Classe 6 (Charge) :</b> bien consommé rapidement ou service (matières premières, électricité, loyer, petit outillage < 500 € HT)." },
+    { cat: "Dettes d'immo", front: "Quel compte utiliser pour une dette sur achat de matériel ?", back: "Le compte <b>404000 (Fournisseurs d'immobilisations)</b> et NON le compte 401000 (réservé aux achats courants de biens et services d'exploitation)." },
+    { cat: "Emprunt", front: "Comment enregistrer le remboursement d'une mensualité d'emprunt ?", back: "<b>Journal BQ :</b><br>• Débit <b>164</b> (Remboursement du capital)<br>• Débit <b>661</b> (Charges d'intérêts financiers)<br>• Crédit <b>512</b> (Montant total prélevé par la banque)" },
+    { cat: "Exploitant", front: "Quel compte utiliser pour les retraits du gérant en EI ?", back: "Le compte <b>108000 (Compte de l'exploitant)</b>. Ce n'est ni un salaire (641) ni une charge d'exploitation." },
+    { cat: "Tiers PGI", front: "Quelle est la codification des comptes auxiliaires de tiers (Lefebvre) ?", back: "• <b>Fournisseurs :</b> <code>401000</code> + auxiliaire commençant par <b>9</b> (ex: 9EDF, 9ORAN).<br>• <b>Clients :</b> <code>411000</code> + auxiliaire commençant par <b>0</b> (ex: 0GLAM, 0CARP)." }
+  ],
+
+  syntheseHtml: `
+    <div class="bg-slate-900/90 border border-slate-800 rounded-3xl p-6 sm:p-10 space-y-8 shadow-xl">
+      
+      <!-- En-tête -->
+      <div class="border-b border-slate-800 pb-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="text-xs font-mono font-bold px-2.5 py-0.5 rounded-full bg-indigo-500/10 text-indigo-300 border border-indigo-500/30">BTS CG1 • Processus 1</span>
+            <span class="text-xs text-emerald-400 font-bold flex items-center gap-1"><i class="fa-solid fa-circle-check"></i> Programme Officiel</span>
+          </div>
+          <h3 class="text-2xl font-black text-white mt-1.5 flex items-center gap-2.5">
+            <i class="fa-solid fa-book-bookmark text-indigo-400"></i> Fiche Mémo : Numéros de Classe, Bilan, Résultat & Balance
+          </h3>
+          <p class="text-xs sm:text-sm text-slate-400 mt-1">Tout ce que vous devez connaître par cœur pour réussir les bordereaux et états financiers.</p>
+        </div>
+        <button onclick="window.print()" class="px-3.5 py-2 rounded-xl text-xs font-bold bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition flex items-center gap-2 border border-slate-700">
+          <i class="fa-solid fa-print"></i> Imprimer / PDF
+        </button>
+      </div>
+
+      <!-- SECTION 1 : LES 7 CLASSES DU PCG PAR CŒUR -->
+      <div class="space-y-4">
+        <h4 class="text-base font-extrabold text-indigo-300 uppercase tracking-wider flex items-center gap-2">
+          <span class="w-6 h-6 rounded-lg bg-indigo-600/30 text-indigo-400 flex items-center justify-center text-xs">1</span>
+          Les 7 Classes du Plan Comptable Général (PCG)
+        </h4>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+          <div class="p-4 bg-slate-850 rounded-2xl border border-slate-800 space-y-2">
+            <span class="font-bold text-amber-300 block text-sm">COMPTES DE BILAN (Classes 1 à 5)</span>
+            <ul class="space-y-1.5 text-slate-300">
+              <li>• <strong class="text-white">Classe 1 : Comptes de capitaux</strong> (Capital 101, Résultat 120/129, Emprunts 164, Compte exploitant 108)</li>
+              <li>• <strong class="text-white">Classe 2 : Comptes d'immobilisations</strong> (Terrains 211, Constructions 213, Matériel 215, Mobilier/Informatique 218)</li>
+              <li>• <strong class="text-white">Classe 3 : Comptes de stocks et en-cours</strong> (Matières premières 31, Marchandises 37)</li>
+              <li>• <strong class="text-white">Classe 4 : Comptes de tiers</strong> (Fournisseurs 401, Fournisseurs d'immo 404, Clients 411, Personnel 421, État/TVA 445)</li>
+              <li>• <strong class="text-white">Classe 5 : Comptes financiers</strong> (Banque 512, Caisse 530, Virements internes 580)</li>
+            </ul>
+          </div>
+          <div class="p-4 bg-slate-850 rounded-2xl border border-slate-800 space-y-2">
+            <span class="font-bold text-emerald-400 block text-sm">COMPTES DE RÉSULTAT (Classes 6 et 7)</span>
+            <ul class="space-y-1.5 text-slate-300">
+              <li>• <strong class="text-white">Classe 6 : Comptes de charges</strong> (Achats 60, Services extérieurs & loyers 61/62, Impôts 63, Salaires 64, Charges financières 66, Charges exceptionnelles 67)</li>
+              <li>• <strong class="text-white">Classe 7 : Comptes de produits</strong> (Ventes de marchandises 707, Ventes de prestations 706, Produits financiers 76, Produits exceptionnels 77)</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 2 : STRUCTURE DU BILAN -->
+      <div class="space-y-4">
+        <h4 class="text-base font-extrabold text-indigo-300 uppercase tracking-wider flex items-center gap-2">
+          <span class="w-6 h-6 rounded-lg bg-indigo-600/30 text-indigo-400 flex items-center justify-center text-xs">2</span>
+          Structure Complète du Bilan (Photographie du Patrimoine)
+        </h4>
+        <div class="overflow-x-auto rounded-2xl border border-slate-800">
+          <table class="w-full text-left text-xs">
+            <thead class="bg-slate-850 text-slate-300 font-bold border-b border-slate-800">
+              <tr>
+                <th class="p-3.5 text-indigo-300 w-1/2">ACTIF (Emplois : ce que possède l'entreprise)</th>
+                <th class="p-3.5 text-amber-300 w-1/2">PASSIF (Ressources : ce que doit l'entreprise)</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-800 text-slate-300 align-top">
+              <tr>
+                <td class="p-3.5 space-y-1">
+                  <strong class="text-white block">1. ACTIF IMMOBILISÉ (Classe 2)</strong>
+                  <p>• Incorporel : logiciels, brevets, fonds de commerce</p>
+                  <p>• Corporel : terrains, bâtiments, matériel industriel, mobilier</p>
+                  <p>• Financier : titres de participation, dépôts de garantie</p>
+                </td>
+                <td class="p-3.5 space-y-1">
+                  <strong class="text-white block">1. CAPITAUX PROPRES (Classe 1)</strong>
+                  <p>• Capital social (compte 101) ou Compte exploitant (108)</p>
+                  <p>• Réserves (légale, statutaire)</p>
+                  <p>• Résultat net de l'exercice (Bénéfice + ou Perte -)</p>
+                </td>
+              </tr>
+              <tr>
+                <td class="p-3.5 space-y-1">
+                  <strong class="text-white block">2. ACTIF CIRCULANT (Classes 3, 4, 5)</strong>
+                  <p>• Stocks : marchandises (37), matières premières (31)</p>
+                  <p>• Créances : Clients (compte 411), État crédit de TVA (44567)</p>
+                  <p>• Disponibilités : Banque (compte 512), Caisse (compte 530)</p>
+                </td>
+                <td class="p-3.5 space-y-1">
+                  <strong class="text-white block">2. DETTES (Classes 1, 4, 5)</strong>
+                  <p>• Emprunts bancaires et dettes financières (compte 164)</p>
+                  <p>• Fournisseurs d'exploitation (401) et d'immobilisations (404)</p>
+                  <p>• Dettes fiscales et sociales (TVA due 44551, Salaires 421, URSSAF 431)</p>
+                  <p>• Découverts et concours bancaires (compte 519)</p>
+                </td>
+              </tr>
+              <tr class="bg-slate-850 font-bold text-white">
+                <td class="p-3.5">TOTAL ACTIF</td>
+                <td class="p-3.5">= TOTAL PASSIF (Égalité obligatoire)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- SECTION 3 : COMPTE DE RÉSULTAT ET BALANCE -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5 text-xs">
+        <div class="p-4 bg-slate-850 rounded-2xl border border-slate-800 space-y-2">
+          <span class="font-bold text-indigo-300 block text-sm">3. Le Compte de Résultat (3 Niveaux)</span>
+          <p>• <strong class="text-white">Résultat d'Exploitation :</strong> Produits d'exploitation (70 à 75) - Charges d'exploitation (60 à 65)</p>
+          <p>• <strong class="text-white">Résultat Financier :</strong> Produits financiers (76) - Charges financières (66, intérêts d'emprunts)</p>
+          <p>• <strong class="text-white">Résultat Exceptionnel :</strong> Produits exceptionnels (77) - Charges exceptionnelles (67, pénalités, sinistres)</p>
+          <div class="p-2.5 rounded-xl bg-slate-900 border border-slate-700 font-mono text-emerald-400">
+            Résultat Net = R. Exploitation + R. Financier + R. Exceptionnel - Impôt sur les bénéfices
+          </div>
+        </div>
+        <div class="p-4 bg-slate-850 rounded-2xl border border-slate-800 space-y-2">
+          <span class="font-bold text-emerald-400 block text-sm">4. La Balance Générale des Comptes</span>
+          <p>La Balance reprend l'ensemble des comptes du Grand-Livre classés de 1 à 7.</p>
+          <p><strong class="text-white">Les 2 équilibres fondamentaux à contrôler :</strong></p>
+          <ul class="list-disc list-inside space-y-1 text-slate-300">
+            <li><code>Total Débits = Total Crédits</code> (égal au total du Journal)</li>
+            <li><code>Total Soldes Débiteurs = Total Soldes Créditeurs</code></li>
+          </ul>
+          <p class="text-[11px] text-slate-400 mt-1">À partir de la Balance, les classes 1 à 5 sont reportées au Bilan et les classes 6 et 7 au Compte de résultat.</p>
+        </div>
+      </div>
+
+      <!-- SECTION 4 : LE SIMULATEUR D'ÉCRITURES INTERACTIF -->
+      <div class="space-y-4 pt-2">
+        <h4 class="text-base font-extrabold text-amber-400 uppercase tracking-wider flex items-center gap-2">
+          <i class="fa-solid fa-gamepad"></i>
+          Simulateur Interactif d'Écritures Comptables
+        </h4>
+        <div class="p-6 bg-slate-950 rounded-3xl border border-indigo-500/30 space-y-5">
+          <p class="text-xs text-slate-300">
+            Choisis ton journal, écris ton libellé d'opération, saisis tes numéros de compte et tes montants au Débit et au Crédit, puis teste ton écriture pour vérifier si elle est conforme !
+          </p>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div>
+              <label class="block text-[11px] font-bold text-slate-400 uppercase mb-1">1. Journal Auxiliaire</label>
+              <select id="sim-ecr-journal" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-xs text-white">
+                <option value="ACH">ACH (HA) - Achats de biens & services</option>
+                <option value="VTE">VTE (VT) - Ventes de marchandises & prestations</option>
+                <option value="BQ">BQ - Banque (règlements & encaissements)</option>
+                <option value="CA">CA - Caisse (espèces)</option>
+                <option value="OD">OD - Opérations diverses</option>
+              </select>
+            </div>
+            <div class="sm:col-span-2">
+              <label class="block text-[11px] font-bold text-slate-400 uppercase mb-1">2. Libellé de l'opération</label>
+              <input type="text" id="sim-ecr-libelle" placeholder="Ex: Achat d'une voiture pour 1000 euros HT au comptant" value="Achat de marchandises 1000 € HT TVA 20% à crédit" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-xs text-white">
+            </div>
+          </div>
+
+          <!-- Lignes d'écriture -->
+          <div class="space-y-2 text-xs font-mono">
+            <div class="grid grid-cols-12 gap-2 text-slate-400 font-bold px-1">
+              <span class="col-span-3">N° Compte</span>
+              <span class="col-span-5">Intitulé</span>
+              <span class="col-span-2 text-right">Débit (€)</span>
+              <span class="col-span-2 text-right">Crédit (€)</span>
+            </div>
+            
+            <!-- Ligne 1 -->
+            <div class="grid grid-cols-12 gap-2 items-center">
+              <input type="text" id="sim-c1-num" value="607000" placeholder="607" class="col-span-3 bg-slate-900 border border-slate-700 rounded-lg p-2 text-white">
+              <input type="text" id="sim-c1-lib" value="Achats de marchandises" placeholder="Intitulé" class="col-span-5 bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-300">
+              <input type="number" id="sim-c1-deb" value="1000" placeholder="0" class="col-span-2 bg-slate-900 border border-slate-700 rounded-lg p-2 text-right text-emerald-400 font-bold">
+              <input type="number" id="sim-c1-cre" value="0" placeholder="0" class="col-span-2 bg-slate-900 border border-slate-700 rounded-lg p-2 text-right text-amber-400 font-bold">
+            </div>
+
+            <!-- Ligne 2 -->
+            <div class="grid grid-cols-12 gap-2 items-center">
+              <input type="text" id="sim-c2-num" value="445660" placeholder="44566" class="col-span-3 bg-slate-900 border border-slate-700 rounded-lg p-2 text-white">
+              <input type="text" id="sim-c2-lib" value="TVA déductible sur biens et services" placeholder="Intitulé" class="col-span-5 bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-300">
+              <input type="number" id="sim-c2-deb" value="200" placeholder="0" class="col-span-2 bg-slate-900 border border-slate-700 rounded-lg p-2 text-right text-emerald-400 font-bold">
+              <input type="number" id="sim-c2-cre" value="0" placeholder="0" class="col-span-2 bg-slate-900 border border-slate-700 rounded-lg p-2 text-right text-amber-400 font-bold">
+            </div>
+
+            <!-- Ligne 3 -->
+            <div class="grid grid-cols-12 gap-2 items-center">
+              <input type="text" id="sim-c3-num" value="401000" placeholder="401" class="col-span-3 bg-slate-900 border border-slate-700 rounded-lg p-2 text-white">
+              <input type="text" id="sim-c3-lib" value="Fournisseur d'exploitation" placeholder="Intitulé" class="col-span-5 bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-300">
+              <input type="number" id="sim-c3-deb" value="0" placeholder="0" class="col-span-2 bg-slate-900 border border-slate-700 rounded-lg p-2 text-right text-emerald-400 font-bold">
+              <input type="number" id="sim-c3-cre" value="1200" placeholder="0" class="col-span-2 bg-slate-900 border border-slate-700 rounded-lg p-2 text-right text-amber-400 font-bold">
+            </div>
+          </div>
+
+          <div class="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-slate-800">
+            <button type="button" onclick="window.verifierEcritureSimulateur()" class="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs transition flex items-center gap-2">
+              <i class="fa-solid fa-check-double"></i> Vérifier mon écriture
+            </button>
+            <div id="sim-ecr-resultat" class="text-xs font-bold text-slate-300"></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  `
+});
+
+// Logique de validation du simulateur P1
+window.verifierEcritureSimulateur = function() {
+  const d1 = parseFloat(document.getElementById('sim-c1-deb').value) || 0;
+  const c1 = parseFloat(document.getElementById('sim-c1-cre').value) || 0;
+  const d2 = parseFloat(document.getElementById('sim-c2-deb').value) || 0;
+  const c2 = parseFloat(document.getElementById('sim-c2-cre').value) || 0;
+  const d3 = parseFloat(document.getElementById('sim-c3-deb').value) || 0;
+  const c3 = parseFloat(document.getElementById('sim-c3-cre').value) || 0;
+
+  const totalDeb = d1 + d2 + d3;
+  const totalCre = c1 + c2 + c3;
+  const res = document.getElementById('sim-ecr-resultat');
+
+  if (totalDeb === 0 && totalCre === 0) {
+    res.innerHTML = "<span class='text-amber-400'><i class='fa-solid fa-triangle-exclamation mr-1'></i>Veuillez saisir des montants au Débit et au Crédit.</span>";
+    return;
+  }
+
+  if (Math.abs(totalDeb - totalCre) > 0.01) {
+    res.innerHTML = `<span class='text-rose-400'><i class='fa-solid fa-xmark mr-1'></i>Écriture déséquilibrée ! Total Débit (${totalDeb} €) ≠ Total Crédit (${totalCre} €). Écart : ${Math.abs(totalDeb - totalCre).toFixed(2)} €</span>`;
+  } else {
+    res.innerHTML = `<span class='text-emerald-400'><i class='fa-solid fa-circle-check mr-1'></i>Parfait ! Écriture équilibrée : Total Débit (${totalDeb} €) = Total Crédit (${totalCre} €). Principe de la partie double respecté.</span>`;
+  }
+};
