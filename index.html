@@ -281,7 +281,7 @@
       <!-- TAB 3: SIMULATEUR -->
       <div id="subtab-simulator" class="tab-pane hidden space-y-6">
         
-        <!-- SIMULATEUR P1 : BORDEREAU MULTI-OPÉRATIONS & BANQUE PCG INTÉGRALE -->
+        <!-- SIMULATEUR P1 : BORDEREAU MULTI-OPÉRATIONS & PCG 2026 -->
         <div id="p1-simulator-container" class="space-y-6 bg-slate-900/90 border border-slate-800 rounded-3xl p-5 sm:p-8 shadow-xl">
           
           <div class="border-b border-slate-800 pb-4 flex flex-col lg:flex-row lg:items-center justify-between gap-3">
@@ -290,14 +290,14 @@
                 <i class="fa-solid fa-table-list text-indigo-400"></i> Bordereau d'Imputation Comptable Multi-Journaux (P1)
               </h3>
               <p class="text-xs text-slate-400 mt-1">
-                Banque officielle de <b>+130 comptes PCG</b> intégrée • Nombre de lignes illimité • Multi-opérations (ex: Vente en VTE puis Règlement moitié CB en BQ et moitié espèces en CA).
+                <b>PCG 2026 officiel (ANC)</b> intégré • Lignes illimitées • Multi-opérations • Souple sur tes libellés personnels mais strict sur les numéros PCG, la TVA et le sens Débit/Crédit.
               </p>
             </div>
             <div class="flex flex-wrap items-center gap-2">
-              <button type="button" onclick="togglePcgModal()" class="px-3.5 py-2 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 text-xs font-bold transition flex items-center gap-1.5">
-                <i class="fa-solid fa-book"></i> Plan Comptable (PCG)
+              <button type="button" onclick="togglePcgModal()" class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-black text-xs transition flex items-center gap-2 shadow-lg shadow-amber-500/20">
+                <i class="fa-solid fa-book-open"></i> Ouvrir le Plan Comptable 2026
               </button>
-              <button type="button" onclick="resetBordereauP1()" class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 text-xs font-bold transition">
+              <button type="button" onclick="resetBordereauP1()" class="px-3 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 text-xs font-bold transition">
                 <i class="fa-solid fa-rotate-left"></i> Vider
               </button>
             </div>
@@ -320,13 +320,10 @@
             </button>
           </div>
 
-          <!-- Datalist automatique pour l'autocomplétion des numéros de compte -->
           <datalist id="pcg-accounts-datalist"></datalist>
 
-          <!-- Conteneur dynamique de toutes les opérations du bordereau -->
           <div id="p1-operations-list" class="space-y-6"></div>
 
-          <!-- Boutons d'action du bordereau -->
           <div class="pt-4 border-t border-slate-800 flex flex-wrap items-center justify-between gap-3">
             <button type="button" onclick="ajouterOperationP1()" class="px-4 py-2.5 rounded-2xl bg-slate-800 hover:bg-slate-700 text-indigo-300 border border-indigo-500/40 font-bold text-xs transition flex items-center gap-2">
               <i class="fa-solid fa-plus-circle"></i> Ajouter une opération (autre journal / autre date)
@@ -337,29 +334,58 @@
             </button>
           </div>
 
-          <!-- Zone de résultat global et détaillé -->
           <div id="sim-ecr-resultat-box" class="w-full"></div>
 
         </div>
 
-        <!-- MODAL / TIROIR PLAN COMPTABLE GÉNÉRAL (PCG) -->
-        <div id="pcg-modal" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
-          <div class="bg-slate-900 border border-slate-700 rounded-3xl max-w-4xl w-full max-h-[85vh] flex flex-col shadow-2xl overflow-hidden">
-            <div class="p-4 sm:p-5 border-b border-slate-800 flex items-center justify-between">
-              <div>
-                <h4 class="font-black text-white text-base flex items-center gap-2">
-                  <i class="fa-solid fa-book-open text-amber-400"></i> Plan Comptable Général Officiel (Classes 1 à 7)
-                </h4>
-                <p class="text-xs text-slate-400">Cherche par numéro ou par mot-clé (ex: voiture, tva, client, emprunt, loyer, caisse...)</p>
+        <!-- ========================================================================= -->
+        <!-- MODALE PLAN COMPTABLE GÉNÉRAL 2026 (STYLE OFFICIEL HIÉRARCHIQUE PAR CLASSE) -->
+        <!-- ========================================================================= -->
+        <div id="pcg-modal" class="hidden fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-2 sm:p-6">
+          <div class="bg-slate-900 border border-slate-700 rounded-3xl max-w-5xl w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
+            
+            <!-- En-tête de la modale -->
+            <div class="p-4 sm:p-5 bg-slate-950 border-b border-slate-800 flex items-center justify-between gap-4">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-500/40 text-amber-400 flex items-center justify-center font-black text-lg">
+                  <i class="fa-solid fa-book-bookmark"></i>
+                </div>
+                <div>
+                  <div class="flex items-center gap-2">
+                    <h4 class="font-black text-white text-base sm:text-lg">Plan Comptable Général Officiel 2026</h4>
+                    <span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">Norme ANC 2026</span>
+                  </div>
+                  <p class="text-xs text-slate-400">Navigue par classe (1 seule classe affichée à la fois) ou tape un numéro / mot-clé ci-dessous. Clique sur un compte pour le copier.</p>
+                </div>
               </div>
-              <button onclick="togglePcgModal()" class="w-9 h-9 rounded-xl bg-slate-800 text-slate-300 hover:text-white flex items-center justify-center">
-                <i class="fa-solid fa-xmark"></i>
+              <button onclick="togglePcgModal()" class="w-9 h-9 rounded-xl bg-slate-800 hover:bg-rose-600 text-slate-300 hover:text-white flex items-center justify-center transition">
+                <i class="fa-solid fa-xmark text-base"></i>
               </button>
             </div>
-            <div class="p-4 bg-slate-950 border-b border-slate-800">
-              <input type="text" id="pcg-search-input" oninput="filtrerPcgModal()" placeholder="Rechercher un compte (ex: 445, transport, électricité, 607, exploitant...)" class="sim-input w-full rounded-xl p-3 text-xs">
+
+            <!-- Barre de recherche instantanée + Onglets des 7 Classes colorés comme le vrai PCG -->
+            <div class="p-3 sm:p-4 bg-slate-900 border-b border-slate-800 space-y-3">
+              <div class="relative">
+                <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-slate-400 text-xs"></i>
+                <input type="text" id="pcg-search-input" oninput="renderPcgOfficialView()" placeholder="Rechercher par numéro (ex: 44566, 2182, 607) ou par intitulé (ex: voiture, tva, client, loyer, caisse, emprunt...)" class="sim-input w-full rounded-xl pl-9 pr-24 py-2.5 text-xs font-medium">
+                <button onclick="clearPcgSearch()" id="pcg-clear-btn" class="hidden absolute right-2.5 top-2 px-2 py-1 rounded-lg bg-slate-800 text-[10px] text-slate-300 hover:text-white">Effacer</button>
+              </div>
+
+              <!-- Onglets Classes 1 à 7 (1 seule classe active à la fois pour ne jamais surcharger l'écran) -->
+              <div class="grid grid-cols-4 sm:grid-cols-7 gap-1.5" id="pcg-class-tabs"></div>
             </div>
-            <div id="pcg-modal-list" class="p-4 overflow-y-auto space-y-1.5 text-xs font-mono flex-1"></div>
+
+            <!-- Bandeau de la Classe sélectionnée (style dépliant officiel) -->
+            <div id="pcg-class-banner" class="px-5 py-3 text-white font-black text-xs sm:text-sm tracking-wide uppercase flex items-center justify-between shadow-inner"></div>
+
+            <!-- Contenu hiérarchique de la classe ou des résultats de recherche -->
+            <div id="pcg-modal-list" class="p-4 sm:p-6 overflow-y-auto space-y-5 flex-1 bg-slate-950/60"></div>
+
+            <!-- Pied de modale avec notification de copie -->
+            <div class="px-5 py-2.5 bg-slate-950 border-t border-slate-800 flex items-center justify-between text-[11px] text-slate-400">
+              <span><span class="inline-block w-2.5 h-2.5 rounded-sm bg-slate-100 mr-1 align-middle"></span> <b>Gras</b> : Compte principal • <span class="text-sky-400 font-semibold">Bleu/Indenté</span> : Sous-compte détaillé</span>
+              <span id="pcg-copy-toast" class="text-emerald-400 font-mono font-bold"></span>
+            </div>
           </div>
         </div>
 
@@ -393,208 +419,443 @@
   </main>
 
   <script>
-    // ============================================================================
-    // VRAIE BANQUE DE DONNÉES OFFICIELLE DU PLAN COMPTABLE GÉNÉRAL (PCG BTS CG)
-    // ============================================================================
+    // ====================================================================================
+    // PLAN COMPTABLE GÉNÉRAL OFFICIEL 2026 (RÈGLEMENT ANC N°2022-06 APPLICABLE EN 2025/2026)
+    // Intitulés 100 % conformes, structurés par Classe et par Rubrique à 2 chiffres
+    // ====================================================================================
+    const PCG_CLASSES_META = {
+      1: { code: 1, title: "Classe 1 — Comptes de capitaux", short: "Cl. 1 • Capitaux", bgHeader: "bg-amber-700", border: "border-amber-600", badgeBg: "bg-amber-600", subText: "text-amber-300", rubBg: "bg-amber-950/70 border-amber-700/50 text-amber-200" },
+      2: { code: 2, title: "Classe 2 — Comptes d'immobilisations", short: "Cl. 2 • Immos", bgHeader: "bg-pink-700", border: "border-pink-600", badgeBg: "bg-pink-600", subText: "text-pink-300", rubBg: "bg-pink-950/70 border-pink-700/50 text-pink-200" },
+      3: { code: 3, title: "Classe 3 — Comptes de stocks et en-cours", short: "Cl. 3 • Stocks", bgHeader: "bg-purple-700", border: "border-purple-600", badgeBg: "bg-purple-600", subText: "text-purple-300", rubBg: "bg-purple-950/70 border-purple-700/50 text-purple-200" },
+      4: { code: 4, title: "Classe 4 — Comptes de tiers", short: "Cl. 4 • Tiers", bgHeader: "bg-indigo-800", border: "border-indigo-600", badgeBg: "bg-indigo-700", subText: "text-sky-300", rubBg: "bg-indigo-950/80 border-indigo-700/50 text-indigo-200" },
+      5: { code: 5, title: "Classe 5 — Comptes financiers", short: "Cl. 5 • Financiers", bgHeader: "bg-cyan-700", border: "border-cyan-600", badgeBg: "bg-cyan-600", subText: "text-cyan-300", rubBg: "bg-cyan-950/70 border-cyan-700/50 text-cyan-200" },
+      6: { code: 6, title: "Classe 6 — Comptes de charges", short: "Cl. 6 • Charges", bgHeader: "bg-emerald-800", border: "border-emerald-600", badgeBg: "bg-emerald-700", subText: "text-sky-300", rubBg: "bg-emerald-950/70 border-emerald-700/50 text-emerald-200" },
+      7: { code: 7, title: "Classe 7 — Comptes de produits", short: "Cl. 7 • Produits", bgHeader: "bg-green-700", border: "border-green-500", badgeBg: "bg-green-600", subText: "text-sky-300", rubBg: "bg-green-950/70 border-green-700/50 text-green-200" }
+    };
+
+    const PCG_RUBRIQUES_2026 = {
+      "10": "10. CAPITAL ET RÉSERVES",
+      "11": "11. REPORT À NOUVEAU",
+      "12": "12. RÉSULTAT DE L'EXERCICE",
+      "13": "13. SUBVENTIONS D'INVESTISSEMENT",
+      "15": "15. PROVISIONS",
+      "16": "16. EMPRUNTS ET DETTES ASSIMILÉES",
+      "20": "20. IMMOBILISATIONS INCORPORELLES ET FRAIS D'ÉTABLISSEMENT",
+      "21": "21. IMMOBILISATIONS CORPORELLES",
+      "23": "23. IMMOBILISATIONS EN COURS",
+      "27": "27. AUTRES IMMOBILISATIONS FINANCIÈRES",
+      "28": "28. AMORTISSEMENTS DES IMMOBILISATIONS",
+      "31": "31. MATIÈRES PREMIÈRES (ET FOURNITURES)",
+      "32": "32. AUTRES APPROVISIONNEMENTS",
+      "35": "35. STOCKS DE PRODUITS",
+      "37": "37. STOCKS DE MARCHANDISES",
+      "40": "40. FOURNISSEURS ET COMPTES RATTACHÉS",
+      "41": "41. CLIENTS ET COMPTES RATTACHÉS",
+      "42": "42. PERSONNEL ET COMPTES RATTACHÉS",
+      "43": "43. SÉCURITÉ SOCIALE ET AUTRES ORGANISMES SOCIAUX",
+      "44": "44. ÉTAT ET AUTRES COLLECTIVITÉS PUBLIQUES",
+      "45": "45. GROUPE ET ASSOCIÉS",
+      "46": "46. DÉBITEURS DIVERS ET CRÉDITEURS DIVERS",
+      "47": "47. COMPTES TRANSITOIRES OU D'ATTENTE",
+      "48": "48. COMPTES DE RÉGULARISATION",
+      "50": "50. VALEURS MOBILIÈRES DE PLACEMENT",
+      "51": "51. BANQUES, ÉTABLISSEMENTS FINANCIERS ET ASSIMILÉS",
+      "53": "53. CAISSE",
+      "58": "58. VIREMENTS INTERNES",
+      "60": "60. ACHATS",
+      "61": "61. SERVICES EXTÉRIEURS",
+      "62": "62. AUTRES SERVICES EXTÉRIEURS",
+      "63": "63. IMPÔTS, TAXES ET VERSEMENTS ASSIMILÉS",
+      "64": "64. CHARGES DE PERSONNEL",
+      "65": "65. AUTRES CHARGES DE GESTION COURANTE",
+      "66": "66. CHARGES FINANCIÈRES",
+      "67": "67. CHARGES EXCEPTIONNELLES",
+      "68": "68. DOTATIONS AUX AMORTISSEMENTS, AUX DÉPRÉCIATIONS ET AUX PROVISIONS",
+      "69": "69. PARTICIPATION DES SALARIÉS — IMPÔTS SUR LES BÉNÉFICES",
+      "70": "70. VENTES DE PRODUITS FABRIQUÉS, PRESTATIONS DE SERVICES, MARCHANDISES",
+      "71": "71. PRODUCTION STOCKÉE (OU DÉSTOCKAGE)",
+      "72": "72. PRODUCTION IMMOBILISÉE",
+      "74": "74. SUBVENTIONS D'EXPLOITATION",
+      "75": "75. AUTRES PRODUITS DE GESTION COURANTE",
+      "76": "76. PRODUITS FINANCIERS",
+      "77": "77. PRODUITS EXCEPTIONNELS",
+      "78": "78. REPRISES SUR AMORTISSEMENTS, DÉPRÉCIATIONS ET PROVISIONS"
+    };
+
+    // Base officielle PCG 2026 (sans doublons artificiels en 000)
     const PCG_DATABASE = [
-      // CLASSE 1 : COMPTES DE CAPITAUX
-      { num: "101", label: "Capital social", cat: "PASSIF", sensNormal: "CREDIT", keywords: ["capital"] },
-      { num: "101000", label: "Capital social", cat: "PASSIF", sensNormal: "CREDIT", keywords: ["capital"] },
-      { num: "106", label: "Réserves", cat: "PASSIF", sensNormal: "CREDIT", keywords: ["reserve"] },
-      { num: "108", label: "Compte de l'exploitant", cat: "CAPITAUX", sensNormal: "BOTH", keywords: ["exploitant", "prelevement personnel", "besoins personnels", "ferin"] },
-      { num: "108000", label: "Compte de l'exploitant", cat: "CAPITAUX", sensNormal: "BOTH", keywords: ["exploitant"] },
-      { num: "120", label: "Résultat de l'exercice (Bénéfice)", cat: "PASSIF", sensNormal: "CREDIT", keywords: ["benefice", "resultat"] },
-      { num: "129", label: "Résultat de l'exercice (Perte)", cat: "PASSIF", sensNormal: "DEBIT", keywords: ["perte", "deficit"] },
+      // CLASSE 1
+      { num: "101", label: "Capital", cat: "PASSIF", sensNormal: "CREDIT", keywords: ["capital social"] },
+      { num: "106", label: "Réserves", cat: "PASSIF", sensNormal: "CREDIT", keywords: ["reserves"] },
+      { num: "1061", label: "Réserve légale", cat: "PASSIF", sensNormal: "CREDIT", keywords: ["reserve legale"] },
+      { num: "108", label: "Compte de l'exploitant", cat: "CAPITAUX", sensNormal: "BOTH", keywords: ["exploitant", "prelevement personnel", "besoins personnels"] },
+      { num: "110", label: "Report à nouveau (solde créditeur)", cat: "PASSIF", sensNormal: "CREDIT", keywords: ["report a nouveau"] },
+      { num: "119", label: "Report à nouveau (solde débiteur)", cat: "PASSIF", sensNormal: "DEBIT", keywords: ["report a nouveau debiteur"] },
+      { num: "120", label: "Résultat de l'exercice (bénéfice)", cat: "PASSIF", sensNormal: "CREDIT", keywords: ["benefice", "resultat"] },
+      { num: "129", label: "Résultat de l'exercice (perte)", cat: "PASSIF", sensNormal: "DEBIT", keywords: ["perte", "deficit"] },
+      { num: "131", label: "Subventions d'investissement", cat: "PASSIF", sensNormal: "CREDIT", keywords: ["subvention d'investissement"] },
       { num: "151", label: "Provisions pour risques", cat: "PASSIF", sensNormal: "CREDIT", keywords: ["provision"] },
-      { num: "164", label: "Emprunts auprès des établissements de crédit", cat: "DETTE_FIN", sensNormal: "BOTH", keywords: ["emprunt", "annuite", "pret bancaire"] },
-      { num: "164000", label: "Emprunts auprès des établissements de crédit", cat: "DETTE_FIN", sensNormal: "BOTH", keywords: ["emprunt"] },
-      { num: "165", label: "Dépôts et cautionnements reçus", cat: "PASSIF", sensNormal: "CREDIT", keywords: ["caution"] },
+      { num: "164", label: "Emprunts auprès des établissements de crédit", cat: "DETTE_FIN", sensNormal: "BOTH", keywords: ["emprunt", "pret bancaire", "annuite"] },
+      { num: "165", label: "Dépôts et cautionnements reçus", cat: "PASSIF", sensNormal: "CREDIT", keywords: ["caution recue"] },
+      { num: "1688", label: "Intérêts courus sur emprunts", cat: "PASSIF", sensNormal: "CREDIT", keywords: ["interets courus"] },
 
-      // CLASSE 2 : COMPTES D'IMMOBILISATIONS
-      { num: "201", label: "Frais d'établissement", cat: "IMMO", sensNormal: "DEBIT", keywords: ["frais d'etablissement"] },
-      { num: "205", label: "Concessions, brevets, licences, logiciels", cat: "IMMO", sensNormal: "DEBIT", keywords: ["logiciel", "brevet", "licence", "site internet"] },
-      { num: "205000", label: "Logiciels et brevets", cat: "IMMO", sensNormal: "DEBIT", keywords: ["logiciel"] },
-      { num: "207", label: "Fonds commercial", cat: "IMMO", sensNormal: "DEBIT", keywords: ["fonds commercial"] },
+      // CLASSE 2 (Norme PCG 2026 exacte)
+      { num: "201", label: "Frais d'établissement", cat: "IMMO", sensNormal: "DEBIT", keywords: ["frais de constitution"] },
+      { num: "203", label: "Frais de développement", cat: "IMMO", sensNormal: "DEBIT", keywords: ["recherche et developpement"] },
+      { num: "205", label: "Concessions et droits similaires, brevets, licences, marques, procédés, solutions informatiques, droits et valeurs similaires", cat: "IMMO", sensNormal: "DEBIT", keywords: ["logiciel", "solution informatique", "brevet", "licence", "site internet"] },
+      { num: "206", label: "Droit au bail", cat: "IMMO", sensNormal: "DEBIT", keywords: ["droit au bail"] },
+      { num: "207", label: "Fonds commercial", cat: "IMMO", sensNormal: "DEBIT", keywords: ["fonds de commerce"] },
       { num: "211", label: "Terrains", cat: "IMMO", sensNormal: "DEBIT", keywords: ["terrain"] },
-      { num: "213", label: "Constructions / Bâtiments", cat: "IMMO", sensNormal: "DEBIT", keywords: ["construction", "batiment", "local", "immeuble"] },
-      { num: "215", label: "Installations techniques, matériel et outillage industriels", cat: "IMMO", sensNormal: "DEBIT", keywords: ["machine", "materiel industriel", "outillage"] },
-      { num: "2154", label: "Matériel industriel", cat: "IMMO", sensNormal: "DEBIT", keywords: ["machine", "gonfler", "materiel industriel", "outil"] },
-      { num: "215400", label: "Matériel industriel", cat: "IMMO", sensNormal: "DEBIT", keywords: ["machine", "materiel industriel"] },
-      { num: "2181", label: "Installations générales, agencements, aménagements", cat: "IMMO", sensNormal: "DEBIT", keywords: ["agencement", "amenagement", "travaux"] },
-      { num: "2182", label: "Matériel de transport", cat: "IMMO", sensNormal: "DEBIT", keywords: ["voiture", "vehicule", "camion", "fourgon", "utilitaire", "moto", "transport"] },
-      { num: "218200", label: "Matériel de transport", cat: "IMMO", sensNormal: "DEBIT", keywords: ["voiture", "vehicule", "camion"] },
+      { num: "213", label: "Constructions", cat: "IMMO", sensNormal: "DEBIT", keywords: ["construction", "batiment", "immeuble"] },
+      { num: "2131", label: "Bâtiments", cat: "IMMO", sensNormal: "DEBIT", keywords: ["batiment"] },
+      { num: "2135", label: "Installations générales, agencements, aménagements des constructions", cat: "IMMO", sensNormal: "DEBIT", keywords: ["agencement"] },
+      { num: "215", label: "Installations techniques, matériels et outillages industriels", cat: "IMMO", sensNormal: "DEBIT", keywords: ["machine", "materiel industriel", "outillage"] },
+      { num: "2154", label: "Matériel industriel", cat: "IMMO", sensNormal: "DEBIT", keywords: ["machine", "materiel industriel", "gonfler"] },
+      { num: "2155", label: "Outillage industriel", cat: "IMMO", sensNormal: "DEBIT", keywords: ["outillage industriel"] },
+      { num: "218", label: "Autres immobilisations corporelles", cat: "IMMO", sensNormal: "DEBIT", keywords: ["autres immobilisations"] },
+      { num: "2181", label: "Installations générales, agencements, aménagements divers", cat: "IMMO", sensNormal: "DEBIT", keywords: ["agencement", "amenagement", "travaux"] },
+      { num: "2182", label: "Matériel de transport", cat: "IMMO", sensNormal: "DEBIT", keywords: ["voiture", "vehicule", "camion", "utilitaire", "fourgon", "transport"] },
       { num: "2183", label: "Matériel de bureau et matériel informatique", cat: "IMMO", sensNormal: "DEBIT", keywords: ["ordinateur", "pc", "imprimante", "informatique", "serveur"] },
-      { num: "218300", label: "Matériel de bureau et informatique", cat: "IMMO", sensNormal: "DEBIT", keywords: ["ordinateur", "informatique"] },
-      { num: "2184", label: "Mobilier", cat: "IMMO", sensNormal: "DEBIT", keywords: ["mobilier", "bureau", "chaise", "armoire", "table", "comptoir"] },
-      { num: "218400", label: "Mobilier", cat: "IMMO", sensNormal: "DEBIT", keywords: ["mobilier"] },
+      { num: "2184", label: "Mobilier", cat: "IMMO", sensNormal: "DEBIT", keywords: ["mobilier", "bureau", "chaise", "table", "armoire"] },
+      { num: "238", label: "Avances et acomptes versés sur commandes d'immobilisations corporelles", cat: "IMMO", sensNormal: "DEBIT", keywords: ["acompte immo"] },
       { num: "274", label: "Prêts", cat: "IMMO_FIN", sensNormal: "BOTH", keywords: ["pret"] },
-      { num: "2743", label: "Prêts au personnel / salariés", cat: "IMMO_FIN", sensNormal: "BOTH", keywords: ["pret a un salarie", "pret salarie"] },
-      { num: "275", label: "Dépôts et cautionnements versés", cat: "IMMO_FIN", sensNormal: "BOTH", keywords: ["caution", "depot de garantie"] },
-      { num: "28", label: "Amortissements des immobilisations", cat: "AMORT", sensNormal: "CREDIT", keywords: ["amortissement"] },
+      { num: "2743", label: "Prêts au personnel", cat: "IMMO_FIN", sensNormal: "BOTH", keywords: ["pret a un salarie", "pret salarie"] },
+      { num: "275", label: "Dépôts et cautionnements versés", cat: "IMMO_FIN", sensNormal: "BOTH", keywords: ["caution versee", "depot de garantie"] },
+      { num: "280", label: "Amortissements des immobilisations incorporelles", cat: "AMORT", sensNormal: "CREDIT", keywords: ["amortissement"] },
+      { num: "281", label: "Amortissements des immobilisations corporelles", cat: "AMORT", sensNormal: "CREDIT", keywords: ["amortissement"] },
 
-      // CLASSE 3 : COMPTES DE STOCKS
-      { num: "31", label: "Matières premières (et fournitures)", cat: "STOCK", sensNormal: "BOTH", keywords: ["stock matiere"] },
+      // CLASSE 3
+      { num: "31", label: "Matières premières (et fournitures)", cat: "STOCK", sensNormal: "BOTH", keywords: ["stock matiere premiere"] },
       { num: "32", label: "Autres approvisionnements", cat: "STOCK", sensNormal: "BOTH", keywords: ["stock emballage"] },
-      { num: "35", label: "Stocks de produits finis", cat: "STOCK", sensNormal: "BOTH", keywords: ["stock produit"] },
+      { num: "326", label: "Emballages", cat: "STOCK", sensNormal: "BOTH", keywords: ["stock emballage"] },
+      { num: "355", label: "Produits finis", cat: "STOCK", sensNormal: "BOTH", keywords: ["stock produit fini"] },
       { num: "37", label: "Stocks de marchandises", cat: "STOCK", sensNormal: "BOTH", keywords: ["stock marchandise"] },
-      { num: "370000", label: "Stocks de marchandises", cat: "STOCK", sensNormal: "BOTH", keywords: ["stock marchandise"] },
 
-      // CLASSE 4 : COMPTES DE TIERS
-      { num: "401", label: "Fournisseurs", cat: "FOURN", sensNormal: "BOTH", keywords: ["fournisseur", "facture d'achat", "a credit"] },
-      { num: "401000", label: "Fournisseurs d'exploitation", cat: "FOURN", sensNormal: "BOTH", keywords: ["fournisseur"] },
+      // CLASSE 4 (Structure exacte PCG 2026)
+      { num: "401", label: "Fournisseurs", cat: "FOURN", sensNormal: "BOTH", keywords: ["fournisseur", "achat a credit"] },
+      { num: "4011", label: "Fournisseurs - Achats de biens et prestations de services", cat: "FOURN", sensNormal: "BOTH", keywords: ["fournisseur"] },
+      { num: "4017", label: "Fournisseurs - Retenues de garantie", cat: "FOURN", sensNormal: "BOTH", keywords: ["retenue de garantie"] },
       { num: "403", label: "Fournisseurs - Effets à payer", cat: "FOURN", sensNormal: "BOTH", keywords: ["effet a payer", "lettre de change", "traite"] },
-      { num: "404", label: "Fournisseurs d'immobilisations", cat: "FOURN_IMMO", sensNormal: "BOTH", keywords: ["fournisseur d'immobilisation", "ombru"] },
-      { num: "404000", label: "Fournisseurs d'immobilisations", cat: "FOURN_IMMO", sensNormal: "BOTH", keywords: ["fournisseur d'immobilisation"] },
-      { num: "408", label: "Fournisseurs - Factures non parvenues", cat: "FOURN", sensNormal: "BOTH", keywords: ["fnp"] },
-      { num: "4091", label: "Fournisseurs - Avances et acomptes versés sur commandes", cat: "AVANCE_FOURN", sensNormal: "BOTH", keywords: ["acompte verse", "avance fournisseur"] },
+      { num: "404", label: "Fournisseurs d'immobilisations", cat: "FOURN_IMMO", sensNormal: "BOTH", keywords: ["fournisseur d'immobilisations"] },
+      { num: "4041", label: "Fournisseurs - Achats d'immobilisations", cat: "FOURN_IMMO", sensNormal: "BOTH", keywords: ["fournisseur d'immo"] },
+      { num: "405", label: "Fournisseurs d'immobilisations - Effets à payer", cat: "FOURN_IMMO", sensNormal: "BOTH", keywords: ["effet a payer immo"] },
+      { num: "408", label: "Fournisseurs - Factures non parvenues", cat: "FOURN", sensNormal: "BOTH", keywords: ["fnp", "facture non parvenue"] },
+      { num: "409", label: "Fournisseurs débiteurs", cat: "AVANCE_FOURN", sensNormal: "BOTH", keywords: ["fournisseur debiteur"] },
+      { num: "4091", label: "Fournisseurs - Avances et acomptes versés sur commandes", cat: "AVANCE_FOURN", sensNormal: "BOTH", keywords: ["acompte fournisseur", "avance fournisseur"] },
+      { num: "4096", label: "Fournisseurs - Créances pour emballages et matériel à rendre", cat: "AVANCE_FOURN", sensNormal: "DEBIT", keywords: ["consignation fournisseur", "emballage a rendre"] },
+      { num: "4098", label: "Rabais, remises, ristournes à obtenir et autres avoirs non encore reçus", cat: "AVANCE_FOURN", sensNormal: "DEBIT", keywords: ["avoir a recevoir"] },
+
       { num: "411", label: "Clients", cat: "CLIENT", sensNormal: "BOTH", keywords: ["client", "vente a credit"] },
-      { num: "411000", label: "Clients", cat: "CLIENT", sensNormal: "BOTH", keywords: ["client"] },
-      { num: "413", label: "Clients - Effets à recevoir", cat: "CLIENT", sensNormal: "BOTH", keywords: ["effet a recevoir", "traite client"] },
+      { num: "4111", label: "Clients - Ventes de biens ou prestations de services", cat: "CLIENT", sensNormal: "BOTH", keywords: ["client"] },
+      { num: "4117", label: "Clients - Retenues de garantie", cat: "CLIENT", sensNormal: "BOTH", keywords: ["retenue de garantie client"] },
+      { num: "413", label: "Clients - Effets à recevoir", cat: "CLIENT", sensNormal: "BOTH", keywords: ["effet a recevoir", "lettre de change client"] },
       { num: "416", label: "Clients douteux ou litigieux", cat: "CLIENT", sensNormal: "BOTH", keywords: ["client douteux", "impaye"] },
-      { num: "418", label: "Clients - Produits non encore facturés", cat: "CLIENT", sensNormal: "BOTH", keywords: ["fae"] },
-      { num: "4191", label: "Clients - Avances et acomptes reçus sur commandes", cat: "AVANCE_CLI", sensNormal: "BOTH", keywords: ["acompte recu", "avance client"] },
-      { num: "421", label: "Personnel - Rémunérations dues", cat: "TIERS_SOC", sensNormal: "BOTH", keywords: ["salaire net", "remuneration due", "paie"] },
+      { num: "418", label: "Clients - Produits non encore facturés", cat: "CLIENT", sensNormal: "BOTH", keywords: ["fae", "facture a etablir"] },
+      { num: "4181", label: "Clients - Factures à établir", cat: "CLIENT", sensNormal: "BOTH", keywords: ["fae"] },
+      { num: "419", label: "Clients créditeurs", cat: "AVANCE_CLI", sensNormal: "BOTH", keywords: ["client crediteur"] },
+      { num: "4191", label: "Clients - Avances et acomptes reçus sur commandes", cat: "AVANCE_CLI", sensNormal: "BOTH", keywords: ["acompte client", "avance client"] },
+      { num: "4196", label: "Clients - Dettes sur emballages et matériels consignés", cat: "AVANCE_CLI", sensNormal: "CREDIT", keywords: ["consignation client"] },
+
+      { num: "421", label: "Personnel - Rémunérations dues", cat: "TIERS_SOC", sensNormal: "BOTH", keywords: ["salaire net", "paie", "remuneration due"] },
       { num: "425", label: "Personnel - Avances et acomptes", cat: "TIERS_SOC", sensNormal: "BOTH", keywords: ["acompte salarie"] },
-      { num: "431", label: "Sécurité sociale (URSSAF)", cat: "TIERS_SOC", sensNormal: "BOTH", keywords: ["urssaf", "securite sociale", "cotisation"] },
-      { num: "437", label: "Autres organismes sociaux (Retraite, Prévoyance)", cat: "TIERS_SOC", sensNormal: "BOTH", keywords: ["caisse de retraite", "prevoyance", "mutuelle"] },
-      { num: "444", label: "État - Impôts sur les bénéfices (IS)", cat: "ETAT", sensNormal: "BOTH", keywords: ["impot sur les societes", "acompte is"] },
+      { num: "428", label: "Personnel - Charges à payer et produits à recevoir", cat: "TIERS_SOC", sensNormal: "BOTH", keywords: ["conges payes"] },
+      { num: "431", label: "Sécurité sociale", cat: "TIERS_SOC", sensNormal: "BOTH", keywords: ["urssaf", "securite sociale", "cotisations sociales"] },
+      { num: "437", label: "Autres organismes sociaux", cat: "TIERS_SOC", sensNormal: "BOTH", keywords: ["retraite", "prevoyance", "mutuelle", "agirc-arrco"] },
+
+      { num: "4421", label: "Prélèvements à la source (Impôt sur le revenu)", cat: "ETAT", sensNormal: "BOTH", keywords: ["pas", "prelevement a la source"] },
+      { num: "444", label: "État - Impôts sur les bénéfices", cat: "ETAT", sensNormal: "BOTH", keywords: ["is", "impot sur les societes"] },
+      { num: "445", label: "État - Taxes sur le chiffre d'affaires", cat: "ETAT", sensNormal: "BOTH", keywords: ["tva"] },
+      { num: "4452", label: "TVA due intracommunautaire", cat: "TVA_COL", sensNormal: "BOTH", keywords: ["tva intracommunautaire", "autoliquidation"] },
       { num: "44551", label: "TVA à décaisser", cat: "TVA_DEC", sensNormal: "BOTH", keywords: ["tva a decaisser", "ca3", "ca12"] },
-      { num: "44562", label: "TVA déductible sur immobilisations", cat: "TVA_DED_IMMO", sensNormal: "DEBIT", keywords: ["tva sur immo", "tva immobilisation"] },
-      { num: "445620", label: "TVA déductible sur immobilisations", cat: "TVA_DED_IMMO", sensNormal: "DEBIT", keywords: ["tva sur immo"] },
-      { num: "44566", label: "TVA déductible sur autres biens et services (ABS)", cat: "TVA_DED_ABS", sensNormal: "DEBIT", keywords: ["tva deductible", "tva sur achat"] },
-      { num: "445660", label: "TVA déductible sur biens et services", cat: "TVA_DED_ABS", sensNormal: "DEBIT", keywords: ["tva deductible"] },
+      { num: "4456", label: "Taxes sur le chiffre d'affaires déductibles", cat: "TVA_DED_ABS", sensNormal: "DEBIT", keywords: ["tva deductible"] },
+      { num: "44562", label: "TVA sur immobilisations", cat: "TVA_DED_IMMO", sensNormal: "DEBIT", keywords: ["tva deductible sur immobilisations", "tva immo"] },
+      { num: "44566", label: "TVA sur autres biens et services", cat: "TVA_DED_ABS", sensNormal: "DEBIT", keywords: ["tva deductible sur biens et services", "tva abs", "tva achat"] },
       { num: "44567", label: "Crédit de TVA à reporter", cat: "ETAT", sensNormal: "DEBIT", keywords: ["credit de tva"] },
-      { num: "44571", label: "TVA collectée", cat: "TVA_COL", sensNormal: "CREDIT", keywords: ["tva collectee", "tva sur vente"] },
-      { num: "445710", label: "TVA collectée", cat: "TVA_COL", sensNormal: "CREDIT", keywords: ["tva collectee"] },
-      { num: "455", label: "Associés - Comptes courants", cat: "TIERS", sensNormal: "BOTH", keywords: ["compte courant d'associe"] },
-      { num: "467", label: "Autres comptes débiteurs ou créditeurs", cat: "TIERS", sensNormal: "BOTH", keywords: ["debiteur divers", "crediteur divers"] },
-      { num: "471", label: "Compte d'attente", cat: "TIERS", sensNormal: "BOTH", keywords: ["attente"] },
+      { num: "4457", label: "Taxes sur le chiffre d'affaires collectées par l'entreprise", cat: "TVA_COL", sensNormal: "CREDIT", keywords: ["tva collectee"] },
+      { num: "44571", label: "TVA collectée", cat: "TVA_COL", sensNormal: "CREDIT", keywords: ["tva collectee", "tva vente"] },
+      { num: "4458", label: "Taxes sur le chiffre d'affaires à régulariser ou en attente", cat: "ETAT", sensNormal: "BOTH", keywords: ["tva en attente"] },
+      { num: "447", label: "Autres impôts, taxes et versements assimilés", cat: "ETAT", sensNormal: "BOTH", keywords: ["autres impots"] },
+      { num: "455", label: "Associés - Comptes courants", cat: "TIERS", sensNormal: "BOTH", keywords: ["compte courant associe"] },
+      { num: "462", label: "Créances sur cessions d'immobilisations", cat: "TIERS", sensNormal: "BOTH", keywords: ["creance sur cession"] },
+      { num: "467", label: "Autres comptes débiteurs ou créditeurs", cat: "TIERS", sensNormal: "BOTH", keywords: ["debiteurs divers", "crediteurs divers"] },
+      { num: "471", label: "Comptes d'attente", cat: "TIERS", sensNormal: "BOTH", keywords: ["compte d'attente"] },
+      { num: "486", label: "Charges constatées d'avance", cat: "TIERS", sensNormal: "DEBIT", keywords: ["cca"] },
+      { num: "487", label: "Produits constatés d'avance", cat: "TIERS", sensNormal: "CREDIT", keywords: ["pca"] },
 
-      // CLASSE 5 : COMPTES FINANCIERS (TRÉSORERIE)
-      { num: "50", label: "Valeurs mobilières de placement (VMP)", cat: "TRESO", sensNormal: "BOTH", keywords: ["vmp", "actions", "placement"] },
-      { num: "511", label: "Valeurs à l'encaissement (Chèques / Cartes à encaisser)", cat: "TRESO", sensNormal: "BOTH", keywords: ["cheque a encaisser", "carte bancaire"] },
-      { num: "512", label: "Banque", cat: "BANQUE", sensNormal: "BOTH", keywords: ["banque", "virement", "cheque", "carte bancaire", "cb", "prelevement"] },
-      { num: "512000", label: "Banque", cat: "BANQUE", sensNormal: "BOTH", keywords: ["banque"] },
-      { num: "512100", label: "Banque CRCA / Principale", cat: "BANQUE", sensNormal: "BOTH", keywords: ["banque", "crca"] },
-      { num: "519", label: "Concours bancaires courants (Découvert)", cat: "BANQUE", sensNormal: "CREDIT", keywords: ["decouvert"] },
-      { num: "53", label: "Caisse", cat: "CAISSE", sensNormal: "BOTH", keywords: ["caisse", "especes", "liquide"] },
+      // CLASSE 5
+      { num: "503", label: "Actions", cat: "TRESO", sensNormal: "BOTH", keywords: ["vmp", "actions"] },
+      { num: "506", label: "Obligations", cat: "TRESO", sensNormal: "BOTH", keywords: ["obligations"] },
+      { num: "511", label: "Valeurs à l'encaissement", cat: "TRESO", sensNormal: "BOTH", keywords: ["valeurs a l'encaissement"] },
+      { num: "5112", label: "Chèques à encaisser", cat: "TRESO", sensNormal: "BOTH", keywords: ["cheque a encaisser"] },
+      { num: "512", label: "Banques", cat: "BANQUE", sensNormal: "BOTH", keywords: ["banque", "virement", "cheque", "cb", "carte bancaire", "prelevement"] },
+      { num: "514", label: "Chèques postaux", cat: "BANQUE", sensNormal: "BOTH", keywords: ["ccp", "banque postale"] },
+      { num: "519", label: "Concours bancaires courants", cat: "BANQUE", sensNormal: "CREDIT", keywords: ["decouvert bancaire"] },
       { num: "530", label: "Caisse", cat: "CAISSE", sensNormal: "BOTH", keywords: ["caisse", "especes", "liquide"] },
-      { num: "530000", label: "Caisse", cat: "CAISSE", sensNormal: "BOTH", keywords: ["caisse", "especes"] },
-      { num: "58", label: "Virements internes", cat: "VIREMENT_INT", sensNormal: "BOTH", keywords: ["virement interne"] },
       { num: "580", label: "Virements internes", cat: "VIREMENT_INT", sensNormal: "BOTH", keywords: ["virement interne"] },
-      { num: "580000", label: "Virements internes", cat: "VIREMENT_INT", sensNormal: "BOTH", keywords: ["virement interne"] },
 
-      // CLASSE 6 : COMPTES DE CHARGES
-      { num: "601", label: "Achats stockés - Matières premières", cat: "CHARGE", sensNormal: "DEBIT", keywords: ["matiere premiere", "farine", "cuir", "bois"] },
-      { num: "601000", label: "Achats de matières premières", cat: "CHARGE", sensNormal: "DEBIT", keywords: ["matiere premiere"] },
-      { num: "602", label: "Achats stockés - Autres approvisionnements (Emballages)", cat: "CHARGE", sensNormal: "DEBIT", keywords: ["emballage", "carton", "sachet"] },
-      { num: "604", label: "Achats d'études et prestations de services", cat: "CHARGE", sensNormal: "DEBIT", keywords: ["sous-traitance", "prestation"] },
-      { num: "606", label: "Achats non stockés de matières et fournitures", cat: "CHARGE", sensNormal: "DEBIT", keywords: ["fourniture", "eau", "electricite", "edf", "gaz", "carburant", "essence", "papeterie"] },
-      { num: "6061", label: "Fournitures non stockables (eau, énergie, électricité, gaz)", cat: "CHARGE", sensNormal: "DEBIT", keywords: ["eau", "electricite", "edf", "energie", "gaz", "essence", "carburant"] },
-      { num: "606100", label: "Fournitures non stockables (eau, énergie...)", cat: "CHARGE", sensNormal: "DEBIT", keywords: ["edf", "eau", "energie"] },
-      { num: "6063", label: "Fournitures d'entretien et de petit équipement (< 500€ HT)", cat: "CHARGE", sensNormal: "DEBIT", keywords: ["entretien", "petit outillage", "petit equipement", "ampoule", "vis"] },
-      { num: "6064", label: "Fournitures administratives (papeterie, stylos, ramettes)", cat: "CHARGE", sensNormal: "DEBIT", keywords: ["fourniture de bureau", "papeterie", "ramette", "stylo", "encre"] },
-      { num: "607", label: "Achats de marchandises", cat: "CHARGE", sensNormal: "DEBIT", keywords: ["achat de marchandise", "achat kit", "achat poudre", "ballon", "vetement"] },
-      { num: "607000", label: "Achats de marchandises", cat: "CHARGE", sensNormal: "DEBIT", keywords: ["achat de marchandise"] },
-      { num: "607001", label: "Achat poudre collagène", cat: "CHARGE", sensNormal: "DEBIT", keywords: ["collagene"] },
-      { num: "607002", label: "Achat pack / kit sérum", cat: "CHARGE", sensNormal: "DEBIT", keywords: ["serum"] },
-      { num: "607005", label: "Achat poudre teint", cat: "CHARGE", sensNormal: "DEBIT", keywords: ["poudre teint"] },
-      { num: "607010", label: "Achat kit ongulaire", cat: "CHARGE", sensNormal: "DEBIT", keywords: ["kit ongulaire"] },
-      { num: "609", label: "Rabais, remises et ristournes obtenus sur achats", cat: "RRR_ACHAT", sensNormal: "CREDIT", keywords: ["remise obtenue", "rabais obtenu", "ristourne obtenue"] },
+      // CLASSE 6 (Conforme PCG 2026)
+      { num: "601", label: "Achats stockés - Matières premières (et fournitures)", cat: "CHARGE", sensNormal: "DEBIT", keywords: ["matiere premiere"] },
+      { num: "602", label: "Achats stockés - Autres approvisionnements", cat: "CHARGE", sensNormal: "DEBIT", keywords: ["approvisionnements"] },
+      { num: "6026", label: "Emballages", cat: "CHARGE", sensNormal: "DEBIT", keywords: ["achat emballage"] },
+      { num: "603", label: "Variations des stocks (approvisionnements et marchandises)", cat: "CHARGE", sensNormal: "BOTH", keywords: ["variation de stock"] },
+      { num: "604", label: "Achats d'études et prestations de services", cat: "CHARGE", sensNormal: "DEBIT", keywords: ["achat prestation"] },
+      { num: "606", label: "Achats non stockés de matières et fournitures", cat: "CHARGE", sensNormal: "DEBIT", keywords: ["fournitures non stockees"] },
+      { num: "6061", label: "Fournitures non stockables (eau, énergie, ...)", cat: "CHARGE", sensNormal: "DEBIT", keywords: ["eau", "electricite", "edf", "gaz", "energie", "carburant", "essence"] },
+      { num: "6063", label: "Fournitures d'entretien et de petit équipement", cat: "CHARGE", sensNormal: "DEBIT", keywords: ["petit equipement", "outillage", "entretien"] },
+      { num: "6064", label: "Fournitures administratives", cat: "CHARGE", sensNormal: "DEBIT", keywords: ["papeterie", "fourniture de bureau", "stylo", "ramette"] },
+      { num: "607", label: "Achats de marchandises", cat: "CHARGE", sensNormal: "DEBIT", keywords: ["achat de marchandises", "poudre", "serum", "kit", "ballon", "vetement"] },
+      { num: "609", label: "Rabais, remises et ristournes obtenus sur achats", cat: "RRR_ACHAT", sensNormal: "CREDIT", keywords: ["rrr obtenus", "remise sur achat"] },
+
       { num: "611", label: "Sous-traitance générale", cat: "CHARGE", sensNormal: "DEBIT", keywords: ["sous-traitance"] },
-      { num: "612", label: "Redevances de crédit-bail (Leasing)", cat: "CHARGE", sensNormal: "DEBIT", keywords: ["credit-bail", "leasing", "loa"] },
-      { num: "613", label: "Locations (Loyers immobiliers et mobiliers)", cat: "CHARGE", sensNormal: "DEBIT", keywords: ["loyer", "location", "bail"] },
-      { num: "6132", label: "Locations immobilières (Loyer du local)", cat: "CHARGE", sensNormal: "DEBIT", keywords: ["loyer", "location local"] },
-      { num: "615", label: "Entretien et réparations", cat: "CHARGE", sensNormal: "DEBIT", keywords: ["reparation", "maintenance", "entretien", "garage"] },
-      { num: "616", label: "Primes d'assurances", cat: "CHARGE", sensNormal: "DEBIT", keywords: ["assurance", "axa", "maif", "allianz"] },
-      { num: "622", label: "Rémunérations d'intermédiaires et honoraires (Expert-comptable, Avocat)", cat: "CHARGE", sensNormal: "DEBIT", keywords: ["honoraire", "expert-comptable", "avocat", "notaire", "commission"] },
-      { num: "623", label: "Publicité, publications, relations publiques", cat: "CHARGE", sensNormal: "DEBIT", keywords: ["publicite", "pub", "flyer", "annonce", "cadeau client", "instagram"] },
-      { num: "624", label: "Transports de biens et transports collectifs du personnel", cat: "CHARGE", sensNormal: "DEBIT", keywords: ["frais de port", "transport sur achat", "livraison", "chronopost", "ups"] },
-      { num: "625", label: "Déplacements, missions et réceptions (Hôtel, Restaurant, Péage, Train)", cat: "CHARGE", sensNormal: "DEBIT", keywords: ["deplacement", "restaurant", "hotel", "peage", "train", "sncf", "mission", "reception"] },
-      { num: "626", label: "Frais postaux et de télécommunications (Internet, Orange, Timbres)", cat: "CHARGE", sensNormal: "DEBIT", keywords: ["telecom", "telephone", "internet", "orange", "sfr", "bouygues", "free", "timbre", "La Poste", "frais postaux"] },
-      { num: "626000", label: "Frais postaux et de télécommunications", cat: "CHARGE", sensNormal: "DEBIT", keywords: ["orange", "telecom", "frais postaux"] },
-      { num: "627", label: "Services bancaires et assimilés (Frais de tenue de compte, commissions CB)", cat: "CHARGE", sensNormal: "DEBIT", keywords: ["frais bancaires", "service bancaire", "commission bancaire"] },
-      { num: "635", label: "Autres impôts, taxes et versements assimilés (CFE, CVAE, Taxe foncière)", cat: "CHARGE", sensNormal: "DEBIT", keywords: ["impot", "taxe fonciere", "cfe", "cvae", "timbre fiscal"] },
-      { num: "641", label: "Rémunérations du personnel (Salaires bruts)", cat: "CHARGE", sensNormal: "DEBIT", keywords: ["salaire brut", "remuneration du personnel", "paie"] },
-      { num: "645", label: "Charges de sécurité sociale et de prévoyance (Cotisations patronales)", cat: "CHARGE", sensNormal: "DEBIT", keywords: ["charge patronale", "cotisation patronale", "urssaf"] },
-      { num: "65", label: "Autres charges de gestion courante", cat: "CHARGE", sensNormal: "DEBIT", keywords: ["redevance", "perte sur creance"] },
-      { num: "661", label: "Charges d'intérêts (Intérêts des emprunts et découverts)", cat: "CHARGE_FIN", sensNormal: "DEBIT", keywords: ["interet", "agios", "frais financiers"] },
-      { num: "661000", label: "Charges d'intérêts", cat: "CHARGE_FIN", sensNormal: "DEBIT", keywords: ["interet"] },
-      { num: "665", label: "Escomptes accordés aux clients", cat: "CHARGE_FIN", sensNormal: "DEBIT", keywords: ["escompte accorde"] },
-      { num: "671", label: "Charges exceptionnelles sur opérations de gestion (Pénalités, Amendes, Dons)", cat: "CHARGE_EXCEP", sensNormal: "DEBIT", keywords: ["amende", "penalite", "exceptionnel", "sinistre"] },
-      { num: "675", label: "Valeurs comptables des éléments d'actif cédés (VNC)", cat: "CHARGE_EXCEP", sensNormal: "DEBIT", keywords: ["vnc", "cession"] },
-      { num: "681", label: "Dotations aux amortissements, dépréciations et provisions", cat: "CHARGE", sensNormal: "DEBIT", keywords: ["dotation aux amortissements"] },
-      { num: "695", label: "Impôts sur les bénéfices (IS)", cat: "CHARGE", sensNormal: "DEBIT", keywords: ["impot sur les benefices"] },
+      { num: "612", label: "Redevances de crédit-bail", cat: "CHARGE", sensNormal: "DEBIT", keywords: ["credit-bail", "leasing"] },
+      { num: "613", label: "Locations", cat: "CHARGE", sensNormal: "DEBIT", keywords: ["loyer", "location"] },
+      { num: "6132", label: "Locations immobilières", cat: "CHARGE", sensNormal: "DEBIT", keywords: ["loyer immobilier", "local"] },
+      { num: "6135", label: "Locations mobilières", cat: "CHARGE", sensNormal: "DEBIT", keywords: ["location vehicule", "location materiel"] },
+      { num: "614", label: "Charges locatives et de copropriété", cat: "CHARGE", sensNormal: "DEBIT", keywords: ["charges locatives"] },
+      { num: "615", label: "Entretien et réparations", cat: "CHARGE", sensNormal: "DEBIT", keywords: ["entretien", "reparation", "maintenance", "garage"] },
+      { num: "616", label: "Primes d'assurances", cat: "CHARGE", sensNormal: "DEBIT", keywords: ["assurance"] },
+      { num: "618", label: "Divers (Documentation générale et technique, colloques, séminaires)", cat: "CHARGE", sensNormal: "DEBIT", keywords: ["documentation"] },
 
-      // CLASSE 7 : COMPTES DE PRODUITS
-      { num: "701", label: "Ventes de produits finis", cat: "PRODUIT", sensNormal: "CREDIT", keywords: ["vente de produit fini", "sneakers", "fabrication"] },
-      { num: "706", label: "Prestations de services", cat: "PRODUIT", sensNormal: "CREDIT", keywords: ["prestation de service", "atelier", "reparation", "main d'oeuvre"] },
-      { num: "706000", label: "Prestations de services", cat: "PRODUIT", sensNormal: "CREDIT", keywords: ["prestation"] },
-      { num: "707", label: "Ventes de marchandises", cat: "PRODUIT", sensNormal: "CREDIT", keywords: ["vente de marchandise", "vente kit", "vente poudre"] },
-      { num: "707000", label: "Ventes de marchandises", cat: "PRODUIT", sensNormal: "CREDIT", keywords: ["vente de marchandise"] },
-      { num: "707001", label: "Vente poudre collagène", cat: "PRODUIT", sensNormal: "CREDIT", keywords: ["vente poudre collagene"] },
-      { num: "707002", label: "Vente pack / kit sérum", cat: "PRODUIT", sensNormal: "CREDIT", keywords: ["vente kit serum", "vente pack serum"] },
-      { num: "707005", label: "Vente poudre teint", cat: "PRODUIT", sensNormal: "CREDIT", keywords: ["vente poudre teint"] },
-      { num: "707010", label: "Vente kit ongulaire", cat: "PRODUIT", sensNormal: "CREDIT", keywords: ["vente kit ongulaire"] },
-      { num: "708", label: "Produits des activités annexes (Port forfaitaire facturé aux clients)", cat: "PRODUIT", sensNormal: "CREDIT", keywords: ["port facture", "frais de port facture", "location diverse"] },
-      { num: "7085", label: "Ports et frais accessoires facturés", cat: "PRODUIT", sensNormal: "CREDIT", keywords: ["port facture"] },
-      { num: "709", label: "Rabais, remises et ristournes accordés par l'entreprise", cat: "RRR_VENTE", sensNormal: "DEBIT", keywords: ["remise accordee", "rabais accorde"] },
-      { num: "74", label: "Subventions d'exploitation", cat: "PRODUIT", sensNormal: "CREDIT", keywords: ["subvention"] },
-      { num: "75", label: "Autres produits de gestion courante", cat: "PRODUIT", sensNormal: "CREDIT", keywords: ["produit de gestion"] },
-      { num: "76", label: "Produits financiers (Intérêts des prêts, revenus de placements)", cat: "PRODUIT_FIN", sensNormal: "CREDIT", keywords: ["produit financier", "interet recu", "dividende"] },
-      { num: "765", label: "Escomptes obtenus des fournisseurs", cat: "PRODUIT_FIN", sensNormal: "CREDIT", keywords: ["escompte obtenu"] },
-      { num: "775", label: "Produits des cessions d'éléments d'actif", cat: "PRODUIT_EXCEP", sensNormal: "CREDIT", keywords: ["prix de cession", "vente immobilisation"] },
-      { num: "781", label: "Reprises sur amortissements, dépréciations et provisions", cat: "PRODUIT", sensNormal: "CREDIT", keywords: ["reprise"] }
+      { num: "621", label: "Personnel extérieur à l'entreprise", cat: "CHARGE", sensNormal: "DEBIT", keywords: ["interim"] },
+      { num: "622", label: "Rémunérations d'intermédiaires et honoraires", cat: "CHARGE", sensNormal: "DEBIT", keywords: ["honoraires", "expert-comptable", "avocat", "notaire", "commission"] },
+      { num: "623", label: "Publicité, publications, relations publiques", cat: "CHARGE", sensNormal: "DEBIT", keywords: ["publicite", "annonce", "cadeaux", "catalogue"] },
+      { num: "624", label: "Transports de biens et transports collectifs du personnel", cat: "CHARGE", sensNormal: "DEBIT", keywords: ["transport", "frais de port", "livraison"] },
+      { num: "6241", label: "Transports sur achats", cat: "CHARGE", sensNormal: "DEBIT", keywords: ["port sur achat"] },
+      { num: "6242", label: "Transports sur ventes", cat: "CHARGE", sensNormal: "DEBIT", keywords: ["port sur vente"] },
+      { num: "625", label: "Déplacements, missions et réceptions", cat: "CHARGE", sensNormal: "DEBIT", keywords: ["deplacement", "hotel", "restaurant", "peage", "billet train"] },
+      { num: "626", label: "Frais postaux et de télécommunications", cat: "CHARGE", sensNormal: "DEBIT", keywords: ["timbres", "telephone", "internet", "orange", "sfr", "free", "telecom"] },
+      { num: "627", label: "Services bancaires et assimilés", cat: "CHARGE", sensNormal: "DEBIT", keywords: ["frais bancaires", "commission cb", "tenue de compte"] },
+
+      { num: "631", label: "Impôts, taxes et versements assimilés sur rémunérations (administrations des impôts)", cat: "CHARGE", sensNormal: "DEBIT", keywords: ["taxe sur les salaires"] },
+      { num: "633", label: "Impôts, taxes et versements assimilés sur rémunérations (autres organismes)", cat: "CHARGE", sensNormal: "DEBIT", keywords: ["formation", "apprentissage"] },
+      { num: "635", label: "Autres impôts, taxes et versements assimilés (administrations des impôts)", cat: "CHARGE", sensNormal: "DEBIT", keywords: ["cfe", "cvae", "taxe fonciere"] },
+      { num: "63511", label: "Contribution économique territoriale (CET : CFE / CVAE)", cat: "CHARGE", sensNormal: "DEBIT", keywords: ["cfe", "cvae", "cet"] },
+      { num: "63512", label: "Taxes foncières", cat: "CHARGE", sensNormal: "DEBIT", keywords: ["taxe fonciere"] },
+
+      { num: "641", label: "Rémunérations du personnel", cat: "CHARGE", sensNormal: "DEBIT", keywords: ["salaire brut", "appointements"] },
+      { num: "6411", label: "Salaires, appointements", cat: "CHARGE", sensNormal: "DEBIT", keywords: ["salaire"] },
+      { num: "645", label: "Charges de sécurité sociale et de prévoyance", cat: "CHARGE", sensNormal: "DEBIT", keywords: ["charges patronales", "cotisations patronales"] },
+      { num: "6451", label: "Cotisations à l'URSSAF", cat: "CHARGE", sensNormal: "DEBIT", keywords: ["cotisations urssaf"] },
+      { num: "646", label: "Cotisations sociales personnelles de l'exploitant", cat: "CHARGE", sensNormal: "DEBIT", keywords: ["ssi", "urssaf exploitant"] },
+
+      { num: "651", label: "Redevances pour concessions, brevets, licences, marques, procédés, solutions informatiques", cat: "CHARGE", sensNormal: "DEBIT", keywords: ["redevance logiciel"] },
+      { num: "654", label: "Pertes sur créances irrécouvrables", cat: "CHARGE", sensNormal: "DEBIT", keywords: ["creance irrecouvrable"] },
+      { num: "657", label: "Valeurs comptables des immobilisations incorporelles et corporelles cédées (PCG 2026)", cat: "CHARGE", sensNormal: "DEBIT", keywords: ["vnc", "cession immobilisation"] },
+      { num: "658", label: "Pénalités et autres charges (PCG 2026)", cat: "CHARGE", sensNormal: "DEBIT", keywords: ["penalite sur marche", "dons"] },
+
+      { num: "661", label: "Charges d'intérêts", cat: "CHARGE_FIN", sensNormal: "DEBIT", keywords: ["interets d'emprunt", "agios"] },
+      { num: "6611", label: "Intérêts des emprunts et dettes", cat: "CHARGE_FIN", sensNormal: "DEBIT", keywords: ["interets emprunt"] },
+      { num: "665", label: "Escomptes accordés", cat: "CHARGE_FIN", sensNormal: "DEBIT", keywords: ["escompte accorde"] },
+      { num: "666", label: "Pertes de change financières", cat: "CHARGE_FIN", sensNormal: "DEBIT", keywords: ["perte de change"] },
+      { num: "671", label: "Charges exceptionnelles", cat: "CHARGE_EXCEP", sensNormal: "DEBIT", keywords: ["charge exceptionnelle"] },
+      { num: "681", label: "Dotations aux amortissements, aux dépréciations et aux provisions - Charges d'exploitation", cat: "CHARGE", sensNormal: "DEBIT", keywords: ["dotation aux amortissements"] },
+      { num: "695", label: "Impôts sur les bénéfices", cat: "CHARGE", sensNormal: "DEBIT", keywords: ["is", "impot sur les societes"] },
+
+      // CLASSE 7 (Conforme PCG 2026)
+      { num: "701", label: "Ventes de produits finis", cat: "PRODUIT", sensNormal: "CREDIT", keywords: ["vente produits finis"] },
+      { num: "706", label: "Prestations de services", cat: "PRODUIT", sensNormal: "CREDIT", keywords: ["prestation de services", "atelier"] },
+      { num: "707", label: "Ventes de marchandises", cat: "PRODUIT", sensNormal: "CREDIT", keywords: ["vente de marchandises", "vente kit", "vente poudre"] },
+      { num: "708", label: "Produits des activités annexes", cat: "PRODUIT", sensNormal: "CREDIT", keywords: ["activites annexes", "port facture"] },
+      { num: "7085", label: "Ports et frais accessoires facturés", cat: "PRODUIT", sensNormal: "CREDIT", keywords: ["port forfaitaire facture", "frais de port facture"] },
+      { num: "709", label: "Rabais, remises et ristournes accordés", cat: "RRR_VENTE", sensNormal: "DEBIT", keywords: ["rrr accordes", "remise accordee"] },
+      { num: "713", label: "Variation des stocks (en-cours de production, produits)", cat: "PRODUIT", sensNormal: "BOTH", keywords: ["production stockee"] },
+      { num: "72", label: "Production immobilisée", cat: "PRODUIT", sensNormal: "CREDIT", keywords: ["production immobilisee"] },
+      { num: "74", label: "Subventions d'exploitation", cat: "PRODUIT", sensNormal: "CREDIT", keywords: ["subvention d'exploitation"] },
+      { num: "751", label: "Redevances pour concessions, brevets, licences, marques, procédés, solutions informatiques", cat: "PRODUIT", sensNormal: "CREDIT", keywords: ["redevance"] },
+      { num: "757", label: "Produits des cessions d'immobilisations incorporelles et corporelles (PCG 2026)", cat: "PRODUIT", sensNormal: "CREDIT", keywords: ["prix de cession", "cession immobilisation"] },
+      { num: "758", label: "Indemnités et autres produits (PCG 2026)", cat: "PRODUIT", sensNormal: "CREDIT", keywords: ["indemnite d'assurance"] },
+      { num: "761", label: "Produits de participations", cat: "PRODUIT_FIN", sensNormal: "CREDIT", keywords: ["dividendes recus"] },
+      { num: "762", label: "Produits des autres immobilisations financières", cat: "PRODUIT_FIN", sensNormal: "CREDIT", keywords: ["revenus des prets"] },
+      { num: "764", label: "Revenus des valeurs mobilières de placement", cat: "PRODUIT_FIN", sensNormal: "CREDIT", keywords: ["revenus vmp"] },
+      { num: "765", label: "Escomptes obtenus", cat: "PRODUIT_FIN", sensNormal: "CREDIT", keywords: ["escompte obtenu"] },
+      { num: "766", label: "Gains de change financiers", cat: "PRODUIT_FIN", sensNormal: "CREDIT", keywords: ["gain de change"] },
+      { num: "771", label: "Produits exceptionnels", cat: "PRODUIT_EXCEP", sensNormal: "CREDIT", keywords: ["produit exceptionnel"] },
+      { num: "781", label: "Reprises sur amortissements, dépréciations et provisions (à inscrire dans les produits d'exploitation)", cat: "PRODUIT", sensNormal: "CREDIT", keywords: ["reprise sur provision"] }
     ];
 
-    // Recherche d'un compte dans la base PCG (exact ou par préfixe le plus long)
+    let activePcgClass = 4; // Classe affichée par défaut à l'ouverture (Classe 4 Tiers, très utilisée, ou modifiable en 1 clic)
+
+    // Recherche d'un compte dans la base PCG (reconnaît aussi les comptes saisis avec des zéros ex: 607000 -> 607)
     function trouverComptePCG(numeroSaisi) {
-      const clean = (numeroSaisi || '').trim();
+      let clean = (numeroSaisi || '').trim();
       if (!clean) return null;
-      // 1. Correspondance exacte
+
+      // 1. Correspondance directe
       let exact = PCG_DATABASE.find(c => c.num === clean);
       if (exact) return exact;
-      // 2. Si l'utilisateur tape 607000 et qu'on a 607, ou s'il tape 411 et qu'on a 411000
+
+      // 2. Si l'étudiant tape un compte à 6 chiffres avec des zéros (ex: 445660 -> 44566, 401000 -> 401, 512100 -> 512)
+      let sansZerosFin = clean.replace(/0+$/, '');
+      if (sansZerosFin.length >= 2) {
+        let matchSansZero = PCG_DATABASE.find(c => c.num === sansZerosFin);
+        if (matchSansZero) return matchSansZero;
+      }
+
+      // 3. Recherche par préfixe le plus précis
       let prefixMatch = PCG_DATABASE
-        .filter(c => clean.startsWith(c.num) || c.num.startsWith(clean))
+        .filter(c => clean.startsWith(c.num))
         .sort((a, b) => b.num.length - a.num.length)[0];
       return prefixMatch || null;
     }
 
-    // Initialisation de la datalist et de la modale PCG
+    // Initialisation du système PCG 2026
     function initPcgSystem() {
       const dl = document.getElementById('pcg-accounts-datalist');
       if (dl) {
-        dl.innerHTML = PCG_DATABASE.map(c => `<option value="${c.num}">${c.num} - ${c.label}</option>`).join('');
+        dl.innerHTML = PCG_DATABASE.map(c => `<option value="${c.num}">${c.num} — ${c.label}</option>`).join('');
       }
-      filtrerPcgModal();
+      renderPcgClassTabs();
+      renderPcgOfficialView();
+    }
+
+    function selectPcgClass(clNum) {
+      activePcgClass = clNum;
+      const searchInput = document.getElementById('pcg-search-input');
+      if (searchInput) searchInput.value = '';
+      renderPcgClassTabs();
+      renderPcgOfficialView();
+    }
+
+    function clearPcgSearch() {
+      const searchInput = document.getElementById('pcg-search-input');
+      if (searchInput) searchInput.value = '';
+      renderPcgOfficialView();
+    }
+
+    function renderPcgClassTabs() {
+      const tabsContainer = document.getElementById('pcg-class-tabs');
+      if (!tabsContainer) return;
+
+      tabsContainer.innerHTML = Object.values(PCG_CLASSES_META).map(meta => {
+        const isActive = (meta.code === activePcgClass);
+        return `
+          <button type="button" onclick="selectPcgClass(${meta.code})" class="px-2.5 py-2 rounded-xl text-[11px] font-extrabold transition flex items-center justify-center gap-1 border ${isActive ? `${meta.bgHeader} text-white ${meta.border} shadow-lg scale-[1.02]` : 'bg-slate-950 text-slate-400 border-slate-800 hover:text-white hover:border-slate-700'}">
+            <span>${meta.short}</span>
+          </button>
+        `;
+      }).join('');
+    }
+
+    function copierNumeroComptePCG(num, label) {
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(num);
+      }
+      const toast = document.getElementById('pcg-copy-toast');
+      if (toast) {
+        toast.innerHTML = `<i class="fa-solid fa-circle-check"></i> Compte ${num} (${label}) copié !`;
+        setTimeout(() => { toast.innerHTML = ''; }, 3500);
+      }
+    }
+
+    // Affichage moderne style dépliant PCG officiel (une seule classe affichée à la fois, ou résultats de recherche)
+    function renderPcgOfficialView() {
+      const query = normTxt(document.getElementById('pcg-search-input')?.value || '');
+      const clearBtn = document.getElementById('pcg-clear-btn');
+      const banner = document.getElementById('pcg-class-banner');
+      const listContainer = document.getElementById('pcg-modal-list');
+      if (!listContainer || !banner) return;
+
+      if (clearBtn) {
+        if (query.length > 0) clearBtn.classList.remove('hidden');
+        else clearBtn.classList.add('hidden');
+      }
+
+      // Filtrage : si recherche active -> cherche dans les 7 classes ; sinon -> affiche uniquement la classe sélectionnée
+      let comptes = [];
+      if (query.length > 0) {
+        comptes = PCG_DATABASE.filter(c =>
+          c.num.includes(query) ||
+          normTxt(c.label).includes(query) ||
+          (c.keywords || []).some(k => normTxt(k).includes(query))
+        );
+        banner.className = "px-5 py-2.5 bg-indigo-900 text-white font-black text-xs sm:text-sm uppercase flex items-center justify-between";
+        banner.innerHTML = `<span><i class="fa-solid fa-magnifying-glass mr-2"></i>Résultats dans tout le PCG 2026 pour "${query}"</span><span class="font-mono text-xs bg-slate-950/50 px-2.5 py-0.5 rounded-full">${comptes.length} compte(s)</span>`;
+      } else {
+        const meta = PCG_CLASSES_META[activePcgClass];
+        comptes = PCG_DATABASE.filter(c => c.num.startsWith(String(activePcgClass)));
+        banner.className = `px-5 py-3 ${meta.bgHeader} text-white font-black text-xs sm:text-sm tracking-wide uppercase flex items-center justify-between shadow-md`;
+        banner.innerHTML = `<span>${meta.title}</span><span class="font-mono text-xs bg-black/25 px-2.5 py-0.5 rounded-full">PCG 2026 • ${comptes.length} comptes</span>`;
+      }
+
+      if (comptes.length === 0) {
+        listContainer.innerHTML = `<div class="p-8 text-center text-slate-400 text-xs">Aucun compte trouvé pour cette recherche.</div>`;
+        return;
+      }
+
+      // Regroupement par rubrique à 2 chiffres (ex: 40, 41, 42, 43, 44...) comme sur l'imprimé officiel du PCG
+      const groupesParRubrique = {};
+      comptes.forEach(c => {
+        const codeRub = c.num.substring(0, 2);
+        if (!groupesParRubrique[codeRub]) groupesParRubrique[codeRub] = [];
+        groupesParRubrique[codeRub].push(c);
+      });
+
+      listContainer.innerHTML = Object.keys(groupesParRubrique).sort().map(codeRub => {
+        const clNum = parseInt(codeRub[0], 10);
+        const meta = PCG_CLASSES_META[clNum] || PCG_CLASSES_META[4];
+        const titreRubrique = PCG_RUBRIQUES_2026[codeRub] || `${codeRub}. COMPTES ${codeRub}`;
+        const items = groupesParRubrique[codeRub];
+
+        const lignesHtml = items.map(c => {
+          const isMainAccount = c.num.length <= 3;
+          const isSub4 = c.num.length === 4;
+          const isSub5 = c.num.length >= 5;
+
+          const indentClass = isMainAccount ? "pl-1" : isSub4 ? "pl-6 sm:pl-8" : "pl-10 sm:pl-14";
+          const sensBadge = c.sensNormal === 'DEBIT'
+            ? '<span class="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">Débit (+)</span>'
+            : c.sensNormal === 'CREDIT'
+            ? '<span class="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-500/15 text-amber-300 border border-amber-500/30">Crédit (+)</span>'
+            : '<span class="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-800 text-slate-300">Débit / Crédit</span>';
+
+          if (isMainAccount) {
+            return `
+              <div onclick="copierNumeroComptePCG('${c.num}', '${c.label.replace(/'/g, "\\'")}')" class="cursor-pointer group flex items-center justify-between gap-3 py-2 px-3 rounded-xl hover:bg-slate-900/90 transition ${indentClass}">
+                <div class="flex items-baseline gap-2.5">
+                  <span class="font-mono font-black text-xs px-2 py-0.5 rounded ${meta.badgeBg} text-white shadow-sm">${c.num}</span>
+                  <span class="font-bold text-white text-xs sm:text-sm group-hover:text-amber-300 transition">${c.label}.</span>
+                </div>
+                <div class="flex items-center gap-2 shrink-0">
+                  ${sensBadge}
+                </div>
+              </div>
+            `;
+          } else {
+            return `
+              <div onclick="copierNumeroComptePCG('${c.num}', '${c.label.replace(/'/g, "\\'")}')" class="cursor-pointer group flex items-center justify-between gap-3 py-1.5 px-3 rounded-lg hover:bg-slate-900/70 transition ${indentClass}">
+                <div class="flex items-baseline gap-2">
+                  <span class="font-mono font-bold text-xs ${meta.subText}">${c.num}.</span>
+                  <span class="font-medium ${meta.subText} text-xs group-hover:text-white transition">${c.label}.</span>
+                </div>
+                <div class="flex items-center gap-2 shrink-0">
+                  ${sensBadge}
+                </div>
+              </div>
+            `;
+          }
+        }).join('');
+
+        return `
+          <div class="rounded-2xl border border-slate-800/90 bg-slate-900/40 overflow-hidden shadow-sm">
+            <div class="px-4 py-2 border-b ${meta.rubBg} font-extrabold text-xs tracking-wider uppercase flex items-center justify-between">
+              <span>${titreRubrique}</span>
+              <span class="text-[10px] font-mono opacity-75">Classe ${clNum}</span>
+            </div>
+            <div class="p-2 divide-y divide-slate-800/40">
+              ${lignesHtml}
+            </div>
+          </div>
+        `;
+      }).join('');
     }
 
     function togglePcgModal() {
       const m = document.getElementById('pcg-modal');
       m.classList.toggle('hidden');
       if (!m.classList.contains('hidden')) {
-        document.getElementById('pcg-search-input').focus();
+        renderPcgClassTabs();
+        renderPcgOfficialView();
       }
-    }
-
-    function filtrerPcgModal() {
-      const q = normTxt(document.getElementById('pcg-search-input')?.value || '');
-      const list = document.getElementById('pcg-modal-list');
-      if (!list) return;
-      const filtered = PCG_DATABASE.filter(c => {
-        if (!q) return true;
-        return c.num.includes(q) || normTxt(c.label).includes(q) || (c.keywords || []).some(k => normTxt(k).includes(q));
-      });
-      list.innerHTML = filtered.map(c => `
-        <div class="p-2.5 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between hover:border-indigo-500/50 transition">
-          <div>
-            <span class="font-bold text-indigo-400 mr-2">${c.num}</span>
-            <span class="text-slate-200">${c.label}</span>
-          </div>
-          <span class="text-[10px] px-2 py-0.5 rounded bg-slate-800 text-slate-400">${c.cat} • Sens normal : ${c.sensNormal === 'DEBIT' ? 'Débit' : c.sensNormal === 'CREDIT' ? 'Crédit' : 'Débit/Crédit'}</span>
-        </div>
-      `).join('');
     }
 
     // ============================================================================
@@ -647,16 +908,15 @@
 
       const compte = trouverComptePCG(numEl.value);
       if (compte) {
-        // Si l'intitulé est vide, on le pré-remplit automatiquement pour aider l'étudiant
         if (!libEl.value.trim()) {
           libEl.value = compte.label;
         }
         if (badgeEl) {
-          badgeEl.innerHTML = `<span class="text-[10px] text-emerald-400 font-mono"><i class="fa-solid fa-check"></i> PCG : ${compte.label}</span>`;
+          badgeEl.innerHTML = `<span class="text-[10px] text-emerald-400 font-mono"><i class="fa-solid fa-check"></i> Compte officiel PCG 2026 : <b>${compte.num} — ${compte.label}</b></span>`;
         }
       } else if (numEl.value.trim().length >= 3) {
         if (badgeEl) {
-          badgeEl.innerHTML = `<span class="text-[10px] text-amber-400 font-mono">Compte personnalisé (Classe ${numEl.value.trim()[0]})</span>`;
+          badgeEl.innerHTML = `<span class="text-[10px] text-amber-400 font-mono">Subdivision de compte (Classe ${numEl.value.trim()[0]})</span>`;
         }
       } else {
         if (badgeEl) badgeEl.innerHTML = '';
@@ -670,7 +930,7 @@
       container.innerHTML = p1OperationsState.map((op, opIdx) => {
         const lignesHtml = op.lignes.map((lig, ligIdx) => {
           const compteInfo = trouverComptePCG(lig.num);
-          const badgeText = compteInfo ? `<span class="text-[10px] text-emerald-400 font-mono"><i class="fa-solid fa-check"></i> PCG : ${compteInfo.label}</span>` : '';
+          const badgeText = compteInfo ? `<span class="text-[10px] text-emerald-400 font-mono"><i class="fa-solid fa-check"></i> Compte officiel PCG 2026 : <b>${compteInfo.num} — ${compteInfo.label}</b></span>` : '';
           return `
             <div class="space-y-1">
               <div class="grid grid-cols-12 gap-2 items-center">
@@ -678,10 +938,10 @@
                   <input type="text" list="pcg-accounts-datalist" id="op-${opIdx}-l-${ligIdx}-num" value="${lig.num}" oninput="autoRemplirIntitulePCG(${opIdx}, ${ligIdx})" placeholder="N° (ex: 411)" class="sim-input w-full rounded-xl p-2 text-xs font-mono font-bold">
                 </div>
                 <div class="col-span-2 sm:col-span-2">
-                  <input type="text" id="op-${opIdx}-l-${ligIdx}-tiers" value="${lig.tiers || ''}" placeholder="Tiers (0CARP)" class="sim-input w-full rounded-xl p-2 text-xs font-mono">
+                  <input type="text" id="op-${opIdx}-l-${ligIdx}-tiers" value="${lig.tiers || ''}" placeholder="Tiers (opt.)" class="sim-input w-full rounded-xl p-2 text-xs font-mono">
                 </div>
                 <div class="col-span-7 sm:col-span-4">
-                  <input type="text" id="op-${opIdx}-l-${ligIdx}-lib" value="${lig.lib}" placeholder="Intitulé du compte (tolérant)" class="sim-input w-full rounded-xl p-2 text-xs">
+                  <input type="text" id="op-${opIdx}-l-${ligIdx}-lib" value="${lig.lib}" placeholder="Ton intitulé (souple sur l'orthographe)" class="sim-input w-full rounded-xl p-2 text-xs">
                 </div>
                 <div class="col-span-5 sm:col-span-2">
                   <input type="number" step="0.01" id="op-${opIdx}-l-${ligIdx}-deb" value="${lig.deb}" placeholder="Débit €" class="sim-input-deb w-full rounded-xl p-2 text-right text-xs font-mono font-bold">
@@ -730,15 +990,15 @@
                 </select>
               </div>
               <div class="sm:col-span-7">
-                <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Libellé de l'opération / Facture / Règlement</label>
+                <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Libellé de l'opération (écriture souple)</label>
                 <input type="text" id="op-${opIdx}-libelle" value="${op.libelle}" placeholder="Ex: Vente de marchandises 1000 € HT TVA 20% ou Règlement CB..." class="sim-input w-full rounded-xl p-2 text-xs">
               </div>
             </div>
 
             <div class="hidden sm:grid grid-cols-12 gap-2 text-[11px] text-slate-400 font-bold px-1 pt-1">
-              <span class="col-span-2">N° Compte</span>
+              <span class="col-span-2">N° Compte PCG</span>
               <span class="col-span-2">Code Tiers (opt.)</span>
-              <span class="col-span-4">Intitulé du compte</span>
+              <span class="col-span-4">Intitulé saisi (souple)</span>
               <span class="col-span-2 text-right text-emerald-400">Débit (€)</span>
               <span class="col-span-1 text-right text-amber-400">Crédit (€)</span>
               <span class="col-span-1 text-right">Action</span>
@@ -752,7 +1012,6 @@
               <button type="button" onclick="ajouterLigneP1(${opIdx})" class="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-indigo-300 border border-slate-700 text-xs font-bold transition flex items-center gap-1.5">
                 <i class="fa-solid fa-plus"></i> Ajouter une ligne de compte
               </button>
-              <div id="op-${opIdx}- diagnostic-rapide" class="text-xs font-mono text-slate-400"></div>
             </div>
           </div>
         `;
@@ -795,7 +1054,6 @@
       document.getElementById('sim-ecr-resultat-box').innerHTML = '';
     }
 
-    // Scénarios types pré-configurés (dont la vente payée moitié CB et moitié espèces)
     function chargerScenarioP1(nom) {
       if (nom === 'vente_mixte') {
         p1OperationsState = [
@@ -805,9 +1063,9 @@
             journal: 'VTE',
             libelle: "Facture de vente de marchandises 1000 € HT avec TVA 20% (1200 € TTC)",
             lignes: [
-              { num: '411000', tiers: '0CLIE', lib: 'Client', deb: '1200', cre: '0' },
-              { num: '707000', tiers: '', lib: 'Ventes de marchandises', deb: '0', cre: '1000' },
-              { num: '445710', tiers: '', lib: 'TVA collectée', deb: '0', cre: '200' }
+              { num: '411', tiers: '0CLIE', lib: 'Clients', deb: '1200', cre: '0' },
+              { num: '707', tiers: '', lib: 'Ventes de marchandises', deb: '0', cre: '1000' },
+              { num: '44571', tiers: '', lib: 'TVA collectée', deb: '0', cre: '200' }
             ]
           },
           {
@@ -816,8 +1074,8 @@
             journal: 'BQ',
             libelle: "Règlement du client de la moitié par Carte Bancaire (600 €)",
             lignes: [
-              { num: '512100', tiers: '', lib: 'Banque', deb: '600', cre: '0' },
-              { num: '411000', tiers: '0CLIE', lib: 'Client', deb: '0', cre: '600' }
+              { num: '512', tiers: '', lib: 'Banques', deb: '600', cre: '0' },
+              { num: '411', tiers: '0CLIE', lib: 'Clients', deb: '0', cre: '600' }
             ]
           },
           {
@@ -826,8 +1084,8 @@
             journal: 'CA',
             libelle: "Règlement du client de l'autre moitié en espèces (600 €)",
             lignes: [
-              { num: '530000', tiers: '', lib: 'Caisse', deb: '600', cre: '0' },
-              { num: '411000', tiers: '0CLIE', lib: 'Client', deb: '0', cre: '600' }
+              { num: '530', tiers: '', lib: 'Caisse', deb: '600', cre: '0' },
+              { num: '411', tiers: '0CLIE', lib: 'Clients', deb: '0', cre: '600' }
             ]
           }
         ];
@@ -839,9 +1097,9 @@
             journal: 'ACH',
             libelle: "Facture d'achat d'une voiture utilitaire 1000 € HT avec TVA 20%",
             lignes: [
-              { num: '218200', tiers: '', lib: 'Matériel de transport', deb: '1000', cre: '0' },
-              { num: '445620', tiers: '', lib: 'TVA déductible sur immobilisations', deb: '200', cre: '0' },
-              { num: '404000', tiers: '9AUTO', lib: "Fournisseur d'immobilisations", deb: '0', cre: '1200' }
+              { num: '2182', tiers: '', lib: 'Matériel de transport', deb: '1000', cre: '0' },
+              { num: '44562', tiers: '', lib: 'TVA sur immobilisations', deb: '200', cre: '0' },
+              { num: '404', tiers: '9AUTO', lib: "Fournisseurs d'immobilisations", deb: '0', cre: '1200' }
             ]
           },
           {
@@ -850,8 +1108,8 @@
             journal: 'BQ',
             libelle: "Règlement par chèque du fournisseur d'immobilisations",
             lignes: [
-              { num: '404000', tiers: '9AUTO', lib: "Fournisseur d'immobilisations", deb: '1200', cre: '0' },
-              { num: '512100', tiers: '', lib: 'Banque', deb: '0', cre: '1200' }
+              { num: '404', tiers: '9AUTO', lib: "Fournisseurs d'immobilisations", deb: '1200', cre: '0' },
+              { num: '512', tiers: '', lib: 'Banques', deb: '0', cre: '1200' }
             ]
           }
         ];
@@ -863,9 +1121,9 @@
             journal: 'BQ',
             libelle: "Prélèvement annuité d'emprunt (Capital 10 000 € et Intérêts 3 600 €)",
             lignes: [
-              { num: '164000', tiers: '', lib: 'Emprunts auprès des établissements de crédit', deb: '10000', cre: '0' },
-              { num: '661000', tiers: '', lib: "Charges d'intérêts", deb: '3600', cre: '0' },
-              { num: '512100', tiers: '', lib: 'Banque', deb: '0', cre: '13600' }
+              { num: '164', tiers: '', lib: 'Emprunts auprès des établissements de crédit', deb: '10000', cre: '0' },
+              { num: '661', tiers: '', lib: "Charges d'intérêts", deb: '3600', cre: '0' },
+              { num: '512', tiers: '', lib: 'Banques', deb: '0', cre: '13600' }
             ]
           }
         ];
@@ -877,11 +1135,11 @@
             journal: 'ACH',
             libelle: "Facture F20N-099 : Achat poudre teint (200€), kit sérum (300€), kit ongulaire (350€) + TVA 20%",
             lignes: [
-              { num: '607005', tiers: '', lib: 'Achat poudre teint', deb: '200', cre: '0' },
-              { num: '607002', tiers: '', lib: 'Achat kit sérum', deb: '300', cre: '0' },
-              { num: '607010', tiers: '', lib: 'Achat kit ongulaire', deb: '350', cre: '0' },
-              { num: '445660', tiers: '', lib: 'TVA déductible sur biens et services', deb: '170', cre: '0' },
-              { num: '401000', tiers: '9TOUT', lib: "Fournisseur Tout pour l'esthétisme", deb: '0', cre: '1020' }
+              { num: '607', tiers: '', lib: 'Achat poudre teint', deb: '200', cre: '0' },
+              { num: '607', tiers: '', lib: 'Achat kit sérum', deb: '300', cre: '0' },
+              { num: '607', tiers: '', lib: 'Achat kit ongulaire', deb: '350', cre: '0' },
+              { num: '44566', tiers: '', lib: 'TVA sur autres biens et services', deb: '170', cre: '0' },
+              { num: '401', tiers: '9TOUT', lib: "Fournisseur Tout pour l'esthétisme", deb: '0', cre: '1020' }
             ]
           }
         ];
@@ -890,13 +1148,12 @@
       verifierToutLeBordereauP1();
     }
 
-    // Normalisation tolérante pour ignorer accents et majuscules
     function normTxt(str) {
       return (str || '').toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
     }
 
     // ============================================================================
-    // MOTEUR D'AUDIT COMPTABLE INTELLIGENT (VÉRIFIE TOUTES LES OPÉRATIONS)
+    // MOTEUR D'AUDIT COMPTABLE INTELLIGENT (STRICT SUR LES COMPTES, SOUPLE SUR TES LIBELLÉS)
     // ============================================================================
     function verifierToutLeBordereauP1() {
       synchroniserDOMVersStateP1();
@@ -930,12 +1187,10 @@
           return;
         }
 
-        // 1. Équilibre Partie Double de l'opération
         if (Math.abs(totDeb - totCre) > 0.01 || totDeb === 0) {
           erreursGlobales.push(`<b>Opération #${numOp} (${journal})</b> : Partie double non équilibrée ! Total Débit (<b>${totDeb.toFixed(2)} €</b>) ≠ Total Crédit (<b>${totCre.toFixed(2)} €</b>). Écart de ${Math.abs(totDeb - totCre).toFixed(2)} €.`);
         }
 
-        // Contexte de l'opération
         const has70 = lignesActives.some(l => l.num.startsWith('70')) || lignesActives.some(l => l.lib.includes('vente'));
         const has60_62 = lignesActives.some(l => /^6[012]/.test(l.num)) || lignesActives.some(l => l.lib.includes('achat'));
         const hasImmo2 = lignesActives.some(l => /^2[01]/.test(l.num));
@@ -943,7 +1198,6 @@
         const isAchat = (journal === 'ACH') || libGlobal.includes('achat') || has60_62 || hasImmo2;
         const isAvoir = libGlobal.includes('avoir') || libGlobal.includes('retour');
 
-        // 2. Analyse ligne par ligne avec la banque PCG
         let vuCredit = false;
 
         lignesActives.forEach(l => {
@@ -962,16 +1216,11 @@
             erreursGlobales.push(`<b>Opération #${numOp}, Ligne ${l.idx} (compte ${l.num})</b> : Montant à zéro.`);
           }
 
-          // Ordre Débit avant Crédit
           if (l.cre > 0) vuCredit = true;
           if (l.deb > 0 && vuCredit) {
             erreursGlobales.push(`<b>Opération #${numOp}, Ligne ${l.idx} (compte ${l.num})</b> : <b>Ordre incorrect</b>. Au journal, tous les comptes débités doivent être placés en haut avant les comptes crédités.`);
           }
 
-          // Vérification via la base PCG
-          const pcg = trouverComptePCG(l.num);
-
-          // Contrôle strict de la TVA
           const estTvaDed = l.num.startsWith('4456') || l.lib.includes('deduct');
           const estTvaCol = l.num.startsWith('4457') || l.lib.includes('collect');
 
@@ -983,10 +1232,10 @@
               erreursGlobales.push(`<b>Opération #${numOp}, Ligne ${l.idx} (${l.num})</b> : La TVA déductible est une créance sur l'État, elle s'enregistre au <b>DÉBIT</b>.`);
             }
             if (!l.num.startsWith('4456')) {
-              erreursGlobales.push(`<b>Opération #${numOp}, Ligne ${l.idx}</b> : Vous avez écrit TVA déductible mais le numéro <b>${l.num}</b> ne correspond pas (utilisez <b>44566</b> sur biens/services ou <b>44562</b> sur immobilisations).`);
+              erreursGlobales.push(`<b>Opération #${numOp}, Ligne ${l.idx}</b> : Vous avez écrit TVA déductible mais le numéro <b>${l.num}</b> ne correspond pas (utilisez <b>44566</b> sur autres biens et services ou <b>44562</b> sur immobilisations).`);
             }
             if (hasImmo2 && l.num.startsWith('44566')) {
-              erreursGlobales.push(`<b>Opération #${numOp}, Ligne ${l.idx}</b> : Sur l'achat d'une immobilisation (classe 2), utilisez le compte <b>44562 (TVA déductible sur immobilisations)</b> plutôt que 44566.`);
+              erreursGlobales.push(`<b>Opération #${numOp}, Ligne ${l.idx}</b> : Sur l'achat d'une immobilisation (classe 2), utilisez le compte <b>44562 (TVA sur immobilisations)</b> plutôt que 44566.`);
             }
           }
 
@@ -1002,11 +1251,10 @@
             }
           }
 
-          // Sens des comptes de charges (classe 6) et produits (classe 7)
-          if (l.num.startsWith('6') && !l.num.startsWith('609') && l.cre > 0 && !isAvoir) {
+          if (l.num.startsWith('6') && !l.num.startsWith('609') && !l.num.startsWith('603') && l.cre > 0 && !isAvoir) {
             erreursGlobales.push(`<b>Opération #${numOp}, Ligne ${l.idx} (compte ${l.num})</b> : Les comptes de <b>Charges (classe 6)</b> augmentent toujours au <b>DÉBIT</b>.`);
           }
-          if (l.num.startsWith('7') && !l.num.startsWith('709') && l.deb > 0 && !isAvoir) {
+          if (l.num.startsWith('7') && !l.num.startsWith('709') && !l.num.startsWith('713') && l.deb > 0 && !isAvoir) {
             erreursGlobales.push(`<b>Opération #${numOp}, Ligne ${l.idx} (compte ${l.num})</b> : Les comptes de <b>Produits / Ventes (classe 7)</b> augmentent toujours au <b>CRÉDIT</b>.`);
           }
           if (/^2[01]/.test(l.num) && l.cre > 0 && !isAvoir && !libGlobal.includes('cession')) {
@@ -1014,26 +1262,25 @@
           }
         });
 
-        // 3. Vérification de la cohérence des montants HT + TVA = TTC
-        if (isVente && has70) {
+        if (isVente && has70 && !isAvoir) {
           const sumVentesHT = lignesActives.filter(l => l.num.startsWith('70')).reduce((s, l) => s + l.cre, 0);
           const sumTvaCol = lignesActives.filter(l => l.num.startsWith('4457')).reduce((s, l) => s + l.cre, 0);
           const sumClientOuTresoDeb = lignesActives.filter(l => l.num.startsWith('411') || l.num.startsWith('512') || l.num.startsWith('53')).reduce((s, l) => s + l.deb, 0);
 
           if (sumClientOuTresoDeb === 0) {
-            erreursGlobales.push(`<b>Opération #${numOp} (Vente)</b> : Vous devez débiter le compte <b>411 (Client)</b> (ou 512/530 si paiement immédiat) en première ligne pour le montant TTC.`);
+            erreursGlobales.push(`<b>Opération #${numOp} (Vente)</b> : Vous devez débiter le compte <b>411 (Clients)</b> (ou 512/530 si paiement immédiat) en première ligne pour le montant TTC.`);
           } else if (Math.abs(sumClientOuTresoDeb - (sumVentesHT + sumTvaCol)) > 0.05) {
             erreursGlobales.push(`<b>Opération #${numOp} (Vente)</b> : Incohérence des montants ! Le Débit Client/Trésorerie TTC (<b>${sumClientOuTresoDeb.toFixed(2)} €</b>) doit être égal au total Ventes HT (<b>${sumVentesHT.toFixed(2)} €</b>) + TVA collectée (<b>${sumTvaCol.toFixed(2)} €</b>).`);
           }
         }
 
-        if (isAchat && (has60_62 || hasImmo2) && !isVente) {
+        if (isAchat && (has60_62 || hasImmo2) && !isVente && !isAvoir) {
           const sumAchatsHT = lignesActives.filter(l => l.num.startsWith('6') || l.num.startsWith('2')).reduce((s, l) => s + l.deb, 0);
           const sumTvaDed = lignesActives.filter(l => l.num.startsWith('4456')).reduce((s, l) => s + l.deb, 0);
           const sumFournOuTresoCre = lignesActives.filter(l => l.num.startsWith('401') || l.num.startsWith('404') || l.num.startsWith('512') || l.num.startsWith('53')).reduce((s, l) => s + l.cre, 0);
 
           if (sumFournOuTresoCre === 0) {
-            erreursGlobales.push(`<b>Opération #${numOp} (Achat)</b> : Vous devez créditer le compte <b>401 (Fournisseur)</b>, <b>404 (Fournisseur d'immo)</b> ou la trésorerie (512/530) pour le montant TTC.`);
+            erreursGlobales.push(`<b>Opération #${numOp} (Achat)</b> : Vous devez créditer le compte <b>401 (Fournisseurs)</b>, <b>404 (Fournisseurs d'immobilisations)</b> ou la trésorerie (512/530) pour le montant TTC.`);
           } else if (Math.abs(sumFournOuTresoCre - (sumAchatsHT + sumTvaDed)) > 0.05) {
             erreursGlobales.push(`<b>Opération #${numOp} (Achat)</b> : Le Crédit Fournisseur/Trésorerie TTC (<b>${sumFournOuTresoCre.toFixed(2)} €</b>) doit être égal au total HT (<b>${sumAchatsHT.toFixed(2)} €</b>) + TVA déductible (<b>${sumTvaDed.toFixed(2)} €</b>).`);
           }
@@ -1043,9 +1290,8 @@
           }
         }
 
-        // 4. Règles sur les journaux auxiliaires
         if (journal === 'BQ' && !lignesActives.some(l => l.num.startsWith('512') || l.num.startsWith('511'))) {
-          erreursGlobales.push(`<b>Opération #${numOp} (Journal BQ)</b> : Une écriture dans le journal de Banque (BQ) doit obligatoirement mouvementer le compte <b>512 (Banque)</b>.`);
+          erreursGlobales.push(`<b>Opération #${numOp} (Journal BQ)</b> : Une écriture dans le journal de Banque (BQ) doit obligatoirement mouvementer le compte <b>512 (Banques)</b>.`);
         }
         if (journal === 'CA' && !lignesActives.some(l => l.num.startsWith('53'))) {
           erreursGlobales.push(`<b>Opération #${numOp} (Journal CA)</b> : Une écriture dans le journal de Caisse (CA) doit obligatoirement mouvementer le compte <b>530 (Caisse)</b>.`);
@@ -1054,13 +1300,12 @@
           erreursGlobales.push(`<b>Opération #${numOp} (Journal ACH)</b> : Le journal des Achats (ACH) enregistre uniquement la facture avec le compte fournisseur (401/404). Le paiement (512 ou 530) doit être enregistré dans une autre opération avec le journal <b>BQ</b> ou <b>CA</b> !`);
         }
         if (journal === 'VTE' && lignesActives.some(l => l.num.startsWith('512') || l.num.startsWith('53'))) {
-          erreursGlobales.push(`<b>Opération #${numOp} (Journal VTE)</b> : Le journal des Ventes (VTE) enregistre la facture client (411). Pour enregistrer le règlement par carte (BQ) et/ou espèces (CA), cliquez sur <b>"+ Ajouter une opération"</b> ci-dessus avec les journaux BQ et CA !`);
+          erreursGlobales.push(`<b>Opération #${numOp} (Journal VTE)</b> : Le journal des Ventes (VTE) enregistre la facture client (411). Pour enregistrer le règlement par carte (BQ) et/ou espèces (CA), cliquez sur <b>"+ Ajouter une opération"</b> avec les journaux BQ et CA !`);
         }
 
         resumeOperations.push(`Opération #${numOp} (${journal}) : ${totDeb.toFixed(2)} €`);
       });
 
-      // Affichage du bilan de vérification
       if (erreursGlobales.length > 0) {
         resBox.innerHTML = `
           <div class="p-5 bg-rose-950/80 border border-rose-500 rounded-2xl text-xs space-y-2.5 text-rose-100 shadow-xl">
@@ -1074,7 +1319,7 @@
         resBox.innerHTML = `
           <div class="p-5 bg-emerald-950/80 border border-emerald-500 rounded-2xl text-xs space-y-2 text-emerald-100 shadow-xl">
             <div class="font-extrabold text-sm flex items-center gap-2 text-emerald-300">
-              <i class="fa-solid fa-circle-check text-lg"></i> Bordereau 100 % Conforme au Plan Comptable Général !
+              <i class="fa-solid fa-circle-check text-lg"></i> Bordereau 100 % Conforme au Plan Comptable Général 2026 !
             </div>
             <p>• <b>Total Général du Bordereau :</b> Débit = <b>${grandTotalDeb.toFixed(2)} €</b> | Crédit = <b>${grandTotalCre.toFixed(2)} €</b> (Partie double respectée sur les ${p1OperationsState.length} opération${p1OperationsState.length > 1 ? 's' : ''}).</p>
             <p>• <b>Détail validé :</b> ${resumeOperations.join(' • ')}</p>
